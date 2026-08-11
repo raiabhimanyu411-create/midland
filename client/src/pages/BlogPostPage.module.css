@@ -1,0 +1,31 @@
+.article {
+  width: min(820px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 72px 0 96px;
+}
+
+.meta,
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  color: #667085;
+}
+
+.content {
+  margin-top: 32px;
+  color: #18212f;
+  font-size: 1.08rem;
+  line-height: 1.85;
+  white-space: pre-wrap;
+}
+
+.tags {
+  margin-top: 40px;
+}
+
+.tags span {
+  padding: 7px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 999px;
+}

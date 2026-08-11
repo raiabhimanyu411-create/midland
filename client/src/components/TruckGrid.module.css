@@ -1,0 +1,244 @@
+.truckGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.truckGrid.listing {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.truckCard {
+  overflow: hidden;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 16px 34px rgb(16 24 40 / 8%);
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    border-color 160ms ease,
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 160ms ease,
+    opacity 560ms ease;
+}
+
+.truckCard.inView {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.truckCard:hover {
+  border-color: #2f6f9f;
+  transform: perspective(1000px) translateY(-7px) rotateX(1.1deg) rotateY(-1deg);
+  box-shadow: 0 24px 48px rgb(16 24 40 / 14%);
+}
+
+.truckImage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #d0d5dd;
+}
+
+.truckImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.truckImage::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(110deg, transparent 28%, rgb(255 255 255 / 20%) 46%, transparent 64%),
+    linear-gradient(0deg, rgb(8 13 23 / 22%), transparent 42%);
+  content: "";
+  pointer-events: none;
+  transform: translateX(-115%);
+  transition: transform 850ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.truckCard:hover .truckImage::after {
+  transform: translateX(115%);
+}
+
+.truckCard:hover .truckImage img {
+  transform: scale(1.06);
+}
+
+.truckImage span {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: #ffffff;
+  background: #18212f;
+  font-size: 0.78rem;
+  font-weight: 900;
+  transition: transform 200ms ease;
+}
+
+.truckCard:hover .truckImage span {
+  transform: translateY(-2px);
+}
+
+.truckImage .photoCount {
+  top: auto;
+  left: auto;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #ffffff;
+  background: rgb(8 13 23 / 68%);
+}
+
+.truckImage .photoCount svg {
+  width: 14px;
+  height: 14px;
+}
+
+.compareToggle {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: #18212f;
+  background: rgb(255 255 255 / 92%);
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.compareToggle input {
+  width: 15px;
+  height: 15px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #98a2b3;
+  border-radius: 3px;
+  background: #ffffff;
+}
+
+.compareToggle.compareDisabled {
+  color: #98a2b3;
+  cursor: not-allowed;
+}
+
+.truckBody {
+  padding: 18px;
+}
+
+.truckBody > p {
+  margin-bottom: 8px;
+  color: #667085;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.statusRow span {
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 6px 9px;
+  color: #475467;
+  background: #f8fafc;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid #eaecf0;
+  padding-top: 16px;
+}
+
+.cardFooter strong {
+  font-size: 1.05rem;
+}
+
+.cardFooter a {
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #ffffff;
+  background: #2f6f9f;
+  font-size: 0.9rem;
+  font-weight: 900;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.cardFooter a:hover {
+  background: #245a82;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgb(47 111 159 / 30%);
+}
+
+.skeletonCard {
+  min-height: 400px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: linear-gradient(100deg, #eef1f4 30%, #e4e7eb 45%, #eef1f4 60%);
+  background-size: 300% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .truckGrid,
+  .truckGrid.listing {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .truckCard {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .truckCard:hover {
+    transform: none;
+  }
+
+  .truckImage img,
+  .truckImage::after,
+  .truckCard:hover .truckImage img,
+  .truckImage span,
+  .cardFooter a {
+    transition: none;
+    transform: none;
+  }
+
+  .skeletonCard {
+    animation: none;
+  }
+}

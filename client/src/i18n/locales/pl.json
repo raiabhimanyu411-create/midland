@@ -1,0 +1,866 @@
+{
+  "common": {
+    "confirm": "Potwierdź",
+    "phone": "0121 496 0000"
+  },
+  "nav": {
+    "home": "Strona główna",
+    "trucks": "Ciężarówki",
+    "truckDetail": "Szczegóły pojazdu",
+    "finance": "Finansowanie",
+    "partExchange": "Rozliczenie pojazdu",
+    "delivery": "Dostawa",
+    "faq": "FAQ",
+    "privacy": "Prywatność",
+    "about": "O nas",
+    "contact": "Kontakt",
+    "admin": "Panel administracyjny"
+  },
+  "routeDescriptions": {
+    "home": "Kup sprawdzone używane ciężarówki, ciągniki siodłowe, pojazdy sztywne i naczepy w MidLand Trucks. Jasny status VAT i MOT, wsparcie w finansowaniu w Wielkiej Brytanii i dostawa w całym kraju.",
+    "trucks": "Przeglądaj pełną listę pojazdów MidLand Trucks z filtrami marki, typu nadwozia i ceny. Status VAT, MOT i klasa Euro widoczne przy każdej ofercie.",
+    "truckDetail": "Pełna specyfikacja, uwagi dotyczące stanu technicznego i cena tej używanej ciężarówki w ofercie MidLand Trucks.",
+    "finance": "Porównaj opcje leasingu, wykupu ratalnego i sezonowych płatności za kolejną używaną ciężarówkę dzięki wsparciu finansowemu MidLand Trucks.",
+    "partExchange": "Rozlicz swój obecny pojazd użytkowy przy zakupie kolejnej ciężarówki. Prześlij numer rejestracyjny, przebieg i zdjęcia, aby otrzymać wycenę.",
+    "delivery": "Dostawa i odbiór ciężarówek na terenie całej Wielkiej Brytanii z MidLand Trucks, z wyceną dostępną jeszcze przed rezerwacją.",
+    "faq": "Odpowiedzi na najczęstsze pytania dotyczące zakupu, finansowania, rozliczenia pojazdu i organizacji dostawy używanej ciężarówki.",
+    "privacy": "Jak MidLand Trucks gromadzi, wykorzystuje i chroni Twoje dane osobowe.",
+    "about": "MidLand Trucks to brytyjski partner sprzedaży używanych pojazdów użytkowych, skupiony na przejrzystych ogłoszeniach i praktycznym wsparciu kupujących.",
+    "contact": "Skontaktuj się z MidLand Trucks w sprawie dostępnych pojazdów, finansowania lub wyceny dostawy.",
+    "admin": "Panel administracyjny MidLand Trucks."
+  },
+  "header": {
+    "brandAria": "MidLand Trucks - strona główna",
+    "tagline": "Sprzedaż pojazdów użytkowych",
+    "navAria": "Nawigacja główna",
+    "languageAria": "Wybierz język"
+  },
+  "footer": {
+    "brandAria": "MidLand Trucks - strona główna",
+    "intro": "Sprzedaż używanych pojazdów użytkowych na terenie całej Wielkiej Brytanii, z jasnymi informacjami o VAT, MOT i finansowaniu przy każdej ofercie.",
+    "stockHeading": "Oferta",
+    "companyHeading": "Firma",
+    "navAria": "Stopka - linki: {{heading}}",
+    "links": {
+      "allTrucks": "Wszystkie ciężarówki",
+      "finance": "Finansowanie",
+      "partExchange": "Rozliczenie pojazdu",
+      "delivery": "Dostawa",
+      "aboutUs": "O nas",
+      "faq": "FAQ",
+      "contactUs": "Kontakt",
+      "privacyPolicy": "Polityka prywatności"
+    },
+    "legalLine": "Nr firmy 12345678 | Nr VAT GB 123 4567 89 | Pośrednictwo finansowe podlega ocenie zdolności kredytowej",
+    "credit": "© {{year}} MidLand Trucks. Zaprojektowane i wykonane przez Devmora Technology."
+  },
+  "cookie": {
+    "ariaLabel": "Zgoda na pliki cookie",
+    "message": "Używamy plików cookie do działania tej strony i analizy jej użytkowania. Przeczytaj naszą <1>Politykę prywatności</1>, aby dowiedzieć się więcej.",
+    "necessaryOnly": "Tylko niezbędne",
+    "acceptAll": "Akceptuj wszystkie"
+  },
+  "trustBar": {
+    "ariaLabel": "Dlaczego warto kupić w MidLand Trucks",
+    "badges": [
+      {
+        "title": "4,8 / 5 średnia ocena",
+        "copy": "Od ponad 240 zweryfikowanych kupujących od 2019 roku."
+      },
+      {
+        "title": "Pośrednik finansowy regulowany przez FCA",
+        "copy": "Pośrednictwo finansowe realizowane przez autoryzowanych brytyjskich kredytodawców."
+      },
+      {
+        "title": "Każda ciężarówka sprawdzona",
+        "copy": "Przebieg, MOT, opony i historia serwisowa sprawdzane przed wystawieniem oferty."
+      }
+    ]
+  },
+  "compareBar": {
+    "ariaLabel": "Panel porównania ciężarówek",
+    "removeAria": "Usuń {{title}} z porównania",
+    "clear": "Wyczyść",
+    "compare": "Porównaj ({{count}})"
+  },
+  "compareModal": {
+    "ariaLabel": "Porównaj ciężarówki",
+    "title": "Porównanie {{count}} ciężarówek",
+    "closeAria": "Zamknij porównanie",
+    "remove": "Usuń",
+    "viewDetails": "Zobacz szczegóły",
+    "rows": {
+      "price": "Cena",
+      "year": "Rok",
+      "mileage": "Przebieg",
+      "gearbox": "Skrzynia biegów",
+      "bodyType": "Typ nadwozia",
+      "euroRating": "Klasa Euro",
+      "mot": "MOT",
+      "location": "Lokalizacja"
+    }
+  },
+  "stockAlert": {
+    "badge": "Bezpłatny priorytetowy alert o ofertach",
+    "eyebrow": "Nie widzisz odpowiedniej ciężarówki",
+    "heading": "Niech odpowiednia ciężarówka znajdzie Ciebie.",
+    "copy": "Powiedz nam, czego potrzebujesz, tylko raz. Będziemy śledzić nowe i nadchodzące pojazdy i skontaktujemy się, gdy pojawi się trafna oferta.",
+    "previewLabel": "Przykładowy alert dopasowania",
+    "previewDefault": "Ciągnik siodłowy Euro 6 poniżej 55 tys. GBP",
+    "previewMeta": "Nowe dopasowanie · Przed chwilą",
+    "assurances": [
+      "Bez spamu",
+      "Anuluj w dowolnym momencie",
+      "Wcześniejszy dostęp do oferty"
+    ],
+    "formEyebrow": "Utwórz alert",
+    "formHeading": "Czego mamy dla Ciebie szukać?",
+    "formNote": "Pola oznaczone * są wymagane",
+    "nameLabel": "Imię i nazwisko *",
+    "namePlaceholder": "Twoje imię i nazwisko",
+    "phoneLabel": "Telefon *",
+    "phonePlaceholder": "07...",
+    "emailLabel": "E-mail *",
+    "emailPlaceholder": "ty@przyklad.pl",
+    "criteriaLabel": "Czego szukasz?",
+    "criteriaPlaceholder": "Przykład: Wywrotka Euro 6 poniżej 40 tys. GBP",
+    "popular": "Popularne:",
+    "quickChoices": [
+      "Ciągnik siodłowy",
+      "Wywrotka",
+      "Pojazd sztywny"
+    ],
+    "submit": "Utwórz bezpłatny alert",
+    "success": "Zostałeś zapisany na liście alertów o ofertach."
+  },
+  "contactForm": {
+    "nameLabel": "Imię i nazwisko",
+    "namePlaceholder": "Twoje imię i nazwisko",
+    "reasonLabel": "Powód kontaktu",
+    "reasons": [
+      "Ogólne zapytanie",
+      "Zakup ciężarówki",
+      "Finansowanie",
+      "Rozliczenie pojazdu",
+      "Dostawa"
+    ],
+    "phoneLabel": "Telefon",
+    "phonePlaceholder": "07...",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "ty@przyklad.pl",
+    "requirementLabel": "Wymagania",
+    "requirementPlaceholder": "Przykład: ciągnik siodłowy Euro 6 6x2 poniżej 55 tys. GBP",
+    "success": "Zapytanie zapisane w bazie danych.",
+    "submit": "Wyślij zapytanie"
+  },
+  "contactPreview": {
+    "badge": "Dział sprzedaży online",
+    "eyebrow": "Porozmawiaj ze sprzedażą",
+    "heading": "Powiedz nam, jakiej ciężarówki potrzebujesz.",
+    "intro": "Podaj rodzaj pracy, budżet i termin. Specjalista MidLand skontaktuje się z odpowiednią ofertą lub pojazdami, które wkrótce się pojawią.",
+    "benefits": [
+      {
+        "title": "Dopasowana oferta",
+        "copy": "Wliczając pojazdy, które wkrótce dotrą"
+      },
+      {
+        "title": "Bez presji",
+        "copy": "Jasne porady od specjalisty ds. ciężarówek"
+      },
+      {
+        "title": "Jedna prosta wycena",
+        "copy": "Pojazd, finansowanie i opcje dostawy"
+      }
+    ],
+    "preferTalk": "Wolisz porozmawiać?",
+    "hoursNote": "Poniedziałek-sobota · 8:00-18:00",
+    "quickEnquiry": "Szybkie zapytanie",
+    "quickEnquirySub": "Zajmuje mniej niż 60 sekund",
+    "stepBadge": "Krok 1 z 1",
+    "privacyNote": "Twoje dane pozostają prywatne i są wykorzystywane wyłącznie do odpowiedzi na Twoje zapytanie."
+  },
+  "locationsSection": {
+    "ariaLabel": "Lokalizacje MidLand Trucks",
+    "eyebrow": "Odwiedź nas",
+    "heading": "Zobacz ofertę osobiście.",
+    "getDirections": "Wyznacz trasę"
+  },
+  "teamSection": {
+    "ariaLabel": "Zespół MidLand Trucks",
+    "eyebrow": "Poznaj zespół",
+    "heading": "Ludzie stojący za każdym zapytaniem."
+  },
+  "testimonials": {
+    "ariaLabel": "Opinie klientów",
+    "eyebrow": "Co mówią brytyjscy przewoźnicy",
+    "heading": "Zaufany przez operatorów w całej Wielkiej Brytanii.",
+    "starsAria": "{{rating}} na 5 gwiazdek"
+  },
+  "timeline": {
+    "ariaLabel": "Kamienie milowe firmy",
+    "eyebrow": "Nasza historia",
+    "heading": "Jak powstał MidLand Trucks."
+  },
+  "videoWalkaround": {
+    "ariaLabel": "Filmy z prezentacją ciężarówek",
+    "eyebrow": "Zobacz, zanim pojedziesz",
+    "heading": "Do każdej zarezerwowanej ciężarówki nagramy pełny film z prezentacją.",
+    "copy": "Uruchomienie silnika, stan opon, wnętrze kabiny i znane usterki nagrane na życzenie, dzięki czemu podejmiesz decyzję jeszcze przed umówieniem oglądania lub dostawy.",
+    "cta": "Poproś o film z prezentacją",
+    "imageAlt": "Ciągnik siodłowy gotowy do filmu z prezentacją"
+  },
+  "searchBand": {
+    "ariaLabel": "Wyszukiwanie ciężarówek",
+    "make": "Marka",
+    "anyMake": "Dowolna marka",
+    "bodyType": "Typ nadwozia",
+    "anyType": "Dowolny typ",
+    "maxPrice": "Cena maksymalna",
+    "noLimit": "Bez limitu",
+    "priceUnder": "{{amount}} GBP",
+    "priceUnderPlus": "{{amount}} GBP+",
+    "search": "Szukaj ciężarówek"
+  },
+  "truckGrid": {
+    "compareRemoveHint": "Usuń ciężarówkę z porównania, aby dodać tę",
+    "compareAddHint": "Dodaj do porównania",
+    "compareLabel": "Porównaj",
+    "available": "Dostępny",
+    "vatConfirm": "Status VAT do potwierdzenia",
+    "specs": {
+      "year": "Rok",
+      "mileage": "Przebieg",
+      "body": "Nadwozie",
+      "gearbox": "Skrzynia",
+      "euro": "Euro",
+      "mot": "MOT"
+    },
+    "viewDetails": "Zobacz szczegóły"
+  },
+  "financeDisclosure": {
+    "label": "Przykład reprezentatywny:",
+    "body": "Cena gotówkowa 54 950 GBP, wpłata własna 5 495 GBP (10%), 48 rat miesięcznych, reprezentatywne RRSO 10,9%. Finansowanie podlega ocenie zdolności kredytowej, dostępne dla firm i kierowców-właścicieli z Wielkiej Brytanii w wieku 18+. MidLand Trucks jest pośrednikiem kredytowym, a nie kredytodawcą, i może otrzymywać prowizję od dostawcy finansowania."
+  },
+  "pages": {
+    "home": {
+      "hero": {
+        "kicker": "Świeża oferta dostępna już teraz",
+        "eyebrow": "Używane ciężarówki na sprzedaż w całej Wielkiej Brytanii",
+        "title": "Kupuj sprawdzone ciągniki siodłowe, pojazdy sztywne i naczepy z pewnością.",
+        "copy": "Przeglądaj sprawdzoną ofertę od zaufanych brytyjskich operatorów, sprawdzaj status VAT i MOT, poproś o wsparcie w finansowaniu i dostawę w całej Wielkiej Brytanii.",
+        "viewStock": "Zobacz dostępną ofertę",
+        "requestCallback": "Poproś o kontakt",
+        "proofAria": "Zapewnienia dla kupujących",
+        "proof": [
+          "Sprawdzona oferta",
+          "Jasny status VAT",
+          "Dostawa w całej Wielkiej Brytanii"
+        ],
+        "cardLabel": "Najnowsza dostawa",
+        "cardTitle": "2022 Mercedes-Benz Actros",
+        "cardMeta": "Jeden właściciel · Euro 6 · Gotowy do obejrzenia",
+        "cardCta": "Zobacz nową ofertę",
+        "scrollCue": "Przewiń, aby zobaczyć więcej"
+      },
+      "intro": {
+        "eyebrow": "Stworzone dla operatorów",
+        "heading": "Oferta gotowa do pracy, nie tylko do zdjęć.",
+        "copy": "Każda oferta jest przygotowana z jasnym przebiegiem, statusem VAT, uwagami dotyczącymi MOT, klasą Euro i wsparciem finansowym, dzięki czemu przewoźnicy mogą szybko porównywać opcje.",
+        "points": [
+          "Sprawdzone",
+          "Udokumentowane",
+          "Gotowe do pracy"
+        ]
+      },
+      "statsAria": "Statystyki MidLand Trucks",
+      "journey": {
+        "eyebrow": "Prostszy sposób zakupu",
+        "heading": "Od wyszukiwania do odbioru, bez niedomówień.",
+        "copy": "Jasne informacje na każdym etapie oznaczają mniej czasu na szukanie odpowiedzi i więcej czasu na prowadzenie floty.",
+        "cta": "Rozpocznij wyszukiwanie",
+        "steps": [
+          {
+            "number": "01",
+            "title": "Znajdź swoją ciężarówkę",
+            "copy": "Filtruj przygotowaną ofertę według marki, typu nadwozia i budżetu."
+          },
+          {
+            "number": "02",
+            "title": "Sprawdź każdy szczegół",
+            "copy": "Przejrzyj przebieg, VAT, MOT, uwagi z inspekcji i film z prezentacją."
+          },
+          {
+            "number": "03",
+            "title": "Rezerwuj z pewnością",
+            "copy": "Potwierdź finansowanie, rozliczenie pojazdu i dostawę przed wpłatą zaliczki."
+          }
+        ]
+      },
+      "featuredStock": {
+        "eyebrow": "Wyróżniona oferta",
+        "heading": "Ostatnio przygotowane ciężarówki",
+        "viewAll": "Zobacz pełną listę"
+      },
+      "serviceCard": {
+        "openPage": "Otwórz stronę"
+      },
+      "featureBand": {
+        "eyebrow": "Finansowanie i dostawa",
+        "heading": "Utrzymaj płynność finansową, gdy ciężarówka rusza do pracy.",
+        "copy": "Możemy zaproponować opcje finansowania, pomóc zorganizować rozliczenie pojazdu, przygotować filmy z prezentacją i wycenić dostawę w całej Wielkiej Brytanii przed przyjazdem lub rezerwacją.",
+        "items": [
+          {
+            "title": "Pakiet inspekcyjny",
+            "copy": "Zdjęcia, film, stan opon, status MOT i znana historia serwisowa."
+          },
+          {
+            "title": "Rozliczenie pojazdu",
+            "copy": "Prześlij numer rejestracyjny, przebieg i zdjęcia, aby otrzymać wycenę."
+          },
+          {
+            "title": "Ścieżka rezerwacji",
+            "copy": "Dostępność, status VAT, warunki zaliczki i koszty dostawy potwierdzone przed płatnością."
+          }
+        ]
+      }
+    },
+    "about": {
+      "hero": {
+        "eyebrow": "O MidLand Trucks",
+        "title": "Brytyjski partner sprzedaży ciężarówek oparty na przejrzystych ogłoszeniach.",
+        "copy": "Pomagamy przewoźnikom, budowlańcom, kierowcom-właścicielom i menedżerom flot porównywać używane pojazdy użytkowe z kluczowymi informacjami widocznymi jeszcze przed przyjazdem."
+      },
+      "approach": {
+        "eyebrow": "Nasze podejście",
+        "heading": "Utrzymujemy proces zakupu praktycznym i przejrzystym.",
+        "p1": "MidLand Trucks skupia się na sprzedaży używanych pojazdów użytkowych na terenie całej Wielkiej Brytanii. Nasza rola jest prosta: przygotować przydatne informacje, dopasować kupujących do odpowiedniej ciężarówki i ułatwić rezerwację, finansowanie, rozliczenie pojazdu i dostawę.",
+        "p2": "Każdy kupujący otrzymuje informacje potrzebne do właściwego porównania oferty: przebieg, rok, skrzynię biegów, typ kabiny, status VAT, uwagi dotyczące MOT, klasę Euro, uwagi o stanie technicznym i lokalizację. W przypadku poważnych zapytań możemy udostępnić dodatkowe zdjęcia, filmy z prezentacją i wsparcie inspekcyjne."
+      },
+      "values": [
+        {
+          "title": "Przejrzyste oferty",
+          "copy": "Status VAT, MOT, klasa Euro i gotowość do pracy widoczne od razu."
+        },
+        {
+          "title": "Wsparcie w całej Wielkiej Brytanii",
+          "copy": "Wycena dostawy i pomoc w zakupie na odległość na terenie całego kraju."
+        },
+        {
+          "title": "Porady zorientowane na operatora",
+          "copy": "Rozmawiamy o ładowności, trasie, wykorzystaniu stref czystego powietrza i kosztach eksploatacji."
+        }
+      ],
+      "statsAria": "Kamienie milowe MidLand Trucks",
+      "cta": {
+        "eyebrow": "Porozmawiaj z zespołem",
+        "heading": "Przyjedź zobaczyć ofertę lub zacznij od telefonu.",
+        "copy": "Umów wizytę w bazie, zapytaj o konkretną ciężarówkę lub uzyskaj poradę dotyczącą finansowania przed przyjazdem.",
+        "getInTouch": "Skontaktuj się",
+        "call": "Zadzwoń 0121 496 0000"
+      }
+    },
+    "contact": {
+      "hero": {
+        "eyebrow": "Kontakt",
+        "title": "Porozmawiaj ze specjalistą ds. sprzedaży ciężarówek.",
+        "copy": "Powiedz nam, czego potrzebujesz, zapytaj o ofertę, umów oglądanie lub prześlij dane do rozliczenia pojazdu. Odpowiemy z konkretnymi kolejnymi krokami."
+      },
+      "salesDesk": {
+        "eyebrow": "Dział sprzedaży",
+        "heading": "Uzyskaj szybką odpowiedź przed przyjazdem.",
+        "copy": "Zadzwoń do zespołu, poproś o film z prezentacją lub prześlij swoje wymagania zakupowe. Pomożemy również z rozliczeniem pojazdu i wyceną dostawy."
+      },
+      "details": {
+        "location": "Birmingham, West Midlands, Wielka Brytania",
+        "hours": "Poniedziałek-sobota, 8:30-18:00"
+      },
+      "responseNote": "Zwykle odpowiadamy w ciągu 2 godzin roboczych w godzinach pracy.",
+      "faqTeaser": "Szukasz szybkiej odpowiedzi? Sprawdź nasze FAQ"
+    },
+    "delivery": {
+      "hero": {
+        "eyebrow": "Dostawa i odbiór",
+        "title": "Dostarcz ciężarówkę z placu do miejsca pracy.",
+        "copy": "Zorganizuj odbiór, wycenę dostawy w Wielkiej Brytanii, planowanie trasy i praktyczne wsparcie przekazania pojazdu przed jego wyjazdem."
+      },
+      "items": [
+        {
+          "title": "Dostawa na terenie kraju",
+          "copy": "Wycena transportu z Midlands do baz, placów i portów w całej Wielkiej Brytanii."
+        },
+        {
+          "title": "Terminy odbioru",
+          "copy": "Umów oglądanie, ostateczne kontrole i termin przekazania dopasowany do harmonogramu kierowcy."
+        },
+        {
+          "title": "Wsparcie eksportowe",
+          "copy": "Przygotuj dane do faktury i uwagi dotyczące odbioru dla kupujących spoza kontynentalnej Wielkiej Brytanii."
+        }
+      ],
+      "support": {
+        "eyebrow": "Wsparcie transportu",
+        "heading": "Jasny harmonogram, zanim zaangażujesz pieniądze, czas lub kierowców.",
+        "copy": "Strona dostawy zapewnia przyszłym procesom backendowym miejsce na wyceny, status po sprzedaży, dokumenty przekazania i powiadomienia dla klientów."
+      }
+    },
+    "faq": {
+      "hero": {
+        "eyebrow": "Pytania",
+        "title": "Odpowiedzi, zanim zadzwonisz lub przyjedziesz.",
+        "copy": "Najczęstsze pytania dotyczące zakupu, finansowania, rezerwacji, dostawy i rozliczenia pojazdu w jednym miejscu."
+      }
+    },
+    "finance": {
+      "hero": {
+        "eyebrow": "Finansowanie komercyjne",
+        "title": "Opcje finansowania pojazdów roboczych.",
+        "copy": "Poznaj jasne kolejne kroki dotyczące zaliczek, rat miesięcznych i finansowania pojazdów firmowych przed decyzją o oglądaniu."
+      },
+      "how": {
+        "eyebrow": "Jak to działa",
+        "heading": "Utrzymuj ciężarówkę w pracy, gdy raty pozostają przewidywalne.",
+        "p1": "MidLand Trucks może pomóc przygotować zapytania o finansowanie dotyczące wykupu ratalnego, leasingu i ustrukturyzowanych zaliczek. Kupujący otrzymują praktyczne wskazówki dotyczące dokumentów, zdolności kredytowej i doboru pojazdu.",
+        "p2": "Finansowanie podlega ocenie zdolności kredytowej, zgodzie kredytodawcy i ostatecznym kontrolom pojazdu. Prowizję, status pośrednika i przykłady reprezentatywne należy potwierdzić przed złożeniem wniosku."
+      },
+      "items": [
+        {
+          "title": "Szybki pakiet wyceny",
+          "copy": "Cena pojazdu, docelowa zaliczka, dane firmy i oczekiwany przebieg."
+        },
+        {
+          "title": "Warunki przyjazne dla firm",
+          "copy": "Opcje można dopasować do przepływu gotówki, sposobu użytkowania i planów wymiany."
+        },
+        {
+          "title": "Wsparcie rozliczenia pojazdu",
+          "copy": "Wartość rozliczenia można uwzględnić razem z zaliczką finansową."
+        },
+        {
+          "title": "Najpierw ujawnienie warunków",
+          "copy": "Reprezentatywne RRSO, status prowizji i dane kredytodawcy są przekazywane przed dalszymi krokami."
+        }
+      ],
+      "calculator": {
+        "ariaLabel": "Kalkulator finansowania",
+        "eyebrow": "Szacunek",
+        "heading": "Szybki przewodnik po racie miesięcznej.",
+        "copy": "Wyłącznie orientacyjnie. Ostateczne kwoty zależą od zgody kredytodawcy, statusu VAT, RRSO, opłat i profilu firmy.",
+        "priceLabel": "Cena pojazdu",
+        "depositLabel": "Zaliczka",
+        "termLabel": "Okres",
+        "termOptions": [
+          "36 miesięcy",
+          "48 miesięcy",
+          "60 miesięcy"
+        ],
+        "resultLabel": "Szacowana rata miesięczna",
+        "resultNote": "Nie uwzględnia rozliczenia VAT, opłat i ostatecznego RRSO kredytodawcy."
+      }
+    },
+    "partExchange": {
+      "hero": {
+        "eyebrow": "Rozliczenie pojazdu",
+        "title": "Rozlicz swoją obecną ciężarówkę na kolejną.",
+        "copy": "Prześlij dane pojazdu, uwagi o stanie technicznym i zdjęcia, aby zespół sprzedaży przygotował praktyczną wycenę rozliczenia."
+      },
+      "details": {
+        "eyebrow": "Szczegóły wyceny",
+        "heading": "Szybka wycena z informacjami, których faktycznie potrzebują kupujący.",
+        "copy": "Numer rejestracyjny, przebieg, status MOT, historia serwisowa, stan opon oraz zdjęcia kabiny i nadwozia pomagają zespołowi oszacować wartość i przyspieszyć transakcję bez powtarzających się rozmów telefonicznych."
+      },
+      "form": {
+        "nameLabel": "Twoje imię i nazwisko",
+        "namePlaceholder": "Nazwa firmy lub osoby kontaktowej",
+        "phoneLabel": "Numer telefonu",
+        "phonePlaceholder": "Najlepszy numer do pytań o wycenę",
+        "emailLabel": "E-mail",
+        "emailPlaceholder": "ty@przyklad.pl",
+        "registrationLabel": "Numer rejestracyjny pojazdu",
+        "registrationPlaceholder": "AB12 CDE",
+        "mileageLabel": "Aktualny przebieg",
+        "mileagePlaceholder": "Przykład: 340 000 mil",
+        "notesLabel": "Uwagi dotyczące pojazdu",
+        "notesPlaceholder": "Stan techniczny, MOT, historia serwisowa, stan opon, dostępne zdjęcia nadwozia i docelowa ciężarówka zamienna",
+        "success": "Wniosek o wycenę zapisany w bazie danych.",
+        "submit": "Poproś o wycenę"
+      }
+    },
+    "privacy": {
+      "hero": {
+        "eyebrow": "Prywatność i warunki",
+        "title": "Jasne zasady dotyczące zapytań i rezerwacji ciężarówek w Wielkiej Brytanii.",
+        "copy": "Jak dane z zapytań, informacje o pojeździe, zaliczki, wprowadzenia finansowe i ustalenia dotyczące dostawy są obsługiwane przed zakończeniem sprzedaży."
+      },
+      "sections": [
+        {
+          "heading": "Dane klienta",
+          "copy": "Dane z zapytań są przechowywane w bazie strony i dostępne wyłącznie dla upoważnionych administratorów odpowiadających na pytania dotyczące pojazdu, finansowania, dostawy i rozliczenia. Skontaktuj się z zespołem sprzedaży, aby poprosić o dostęp, poprawienie lub usunięcie danych."
+        },
+        {
+          "heading": "Informacje o pojeździe",
+          "copy": "Oferty są przygotowywane w dobrej wierze na podstawie dostępnych informacji o ofercie. Kupujący powinni potwierdzić ostateczną specyfikację, status VAT, MOT, stan techniczny, przebieg, przydatność do stref czystego powietrza i dostępność przed zakupem."
+        },
+        {
+          "heading": "Warunki rezerwacji i płatności",
+          "copy": "Ta strona nie przyjmuje płatności online. Zaliczki, rezerwacje, finansowanie, dostawa, wartość rozliczenia, pełna cena, podatki i warunki anulowania są potwierdzane bezpośrednio z zespołem sprzedaży przed zakończeniem transakcji."
+        },
+        {
+          "heading": "Finansowanie i pliki cookie",
+          "copy": "Kalkulator finansowy ma charakter orientacyjny i nie wysyła wniosku do kredytodawcy. Preferencja plików cookie jest zapisywana w przeglądarce; strona nie uruchamia obecnie analitycznych ani marketingowych plików cookie."
+        }
+      ]
+    },
+    "truckDetail": {
+      "hero": {
+        "eyebrow": "Szczegóły pojazdu",
+        "copy": "Zapoznaj się z kluczową specyfikacją, uwagami przygotowawczymi i kolejnymi krokami przed umówieniem oglądania lub wyceny finansowania."
+      },
+      "prepNotes": {
+        "eyebrow": "Uwagi przygotowawcze",
+        "heading": "Gotowy do inspekcji i kontroli przez kupującego."
+      },
+      "items": [
+        {
+          "title": "Pakiet inspekcyjny",
+          "copy": "Zestaw zdjęć, uwagi o oponach, stan kabiny, informacje serwisowe i znane prace przygotowawcze."
+        },
+        {
+          "title": "Ścieżka rezerwacji",
+          "copy": "Rezerwuj po ostatecznych kontrolach dostępności, wycenie finansowej lub potwierdzeniu terminu oglądania."
+        },
+        {
+          "title": "Kontrola VAT i faktury",
+          "copy": "Status VAT, warunki zaliczki, zakres gwarancji i koszty dostawy są potwierdzane przed płatnością."
+        }
+      ],
+      "galleryAria": "Galeria pojazdu",
+      "priceNoteVat": "Cena komercyjna pokazana {{vatStatus}}.",
+      "priceNoteConfirm": "Potwierdź status VAT przed wystawieniem faktury.",
+      "specs": {
+        "make": "Marka",
+        "body": "Nadwozie",
+        "year": "Rok",
+        "registration": "Rejestracja",
+        "mileage": "Przebieg",
+        "gearbox": "Skrzynia biegów",
+        "location": "Lokalizacja",
+        "cab": "Kabina",
+        "power": "Moc",
+        "axle": "Oś",
+        "weight": "Masa",
+        "payload": "Ładowność",
+        "euroCaz": "Euro / strefa czystego powietrza",
+        "mot": "MOT",
+        "service": "Serwis",
+        "owners": "Właściciele",
+        "warranty": "Gwarancja"
+      },
+      "reserveEnquire": "Zarezerwuj lub zapytaj",
+      "financeOptions": "Opcje finansowania",
+      "deliveryQuote": "Wycena dostawy"
+    },
+    "trucks": {
+      "hero": {
+        "eyebrow": "Lista ciężarówek",
+        "title": "Pojazdy komercyjne dostępne od ręki.",
+        "copy": "Przeglądaj ciągniki siodłowe, pojazdy sztywne i ofertę specjalistyczną od zaufanych źródeł brytyjskich. Użyj filtrów, aby zawęzić wybór do odpowiedniego pojazdu."
+      },
+      "filters": {
+        "make": "Marka",
+        "body": "Nadwozie",
+        "maxPrice": "Cena",
+        "year": "Rok",
+        "mileage": "Przebieg",
+        "gearbox": "Skrzynia biegów"
+      },
+      "sidebar": {
+        "eyebrow": "Zawęź wybór",
+        "activeCount": "{{count}} aktywne"
+      },
+      "filterSelect": {
+        "anyMake": "Dowolna marka",
+        "anyBody": "Dowolne nadwozie",
+        "anyYear": "Dowolny rok",
+        "anyMileage": "Dowolny przebieg",
+        "anyGearbox": "Dowolna skrzynia",
+        "noLimit": "Bez limitu",
+        "underMiles": "Poniżej {{amount}} mil",
+        "under": "{{amount}} GBP",
+        "underPlus": "{{amount}} GBP+",
+        "yearPlus": "{{year}}+"
+      },
+      "mileageOptions": [
+        "Poniżej 200 tys.",
+        "Poniżej 350 tys.",
+        "Poniżej 500 tys."
+      ],
+      "clearFilters": "Wyczyść filtry",
+      "clearFiltersCount": "Wyczyść filtry ({{count}})",
+      "toolbar": {
+        "eyebrow": "Dostępna oferta",
+        "heading": "{{count}} ciężarówek gotowych do zapytania"
+      },
+      "sortAria": "Sortuj ciężarówki",
+      "sortOptions": {
+        "newest": "Najpierw najnowsza oferta",
+        "yearOld": "Rok: od najstarszych",
+        "priceLow": "Cena: od najniższej",
+        "priceHigh": "Cena: od najwyższej",
+        "mileageLow": "Przebieg: od najniższego"
+      },
+      "activeFiltersAria": "Aktywne filtry",
+      "clearAll": "Wyczyść wszystko",
+      "loadMore": "Załaduj więcej ({{count}} pozostało)",
+      "emptyState": {
+        "heading": "Żadna ciężarówka nie pasuje do tych filtrów.",
+        "copy": "Wyczyść filtry lub wyślij zespołowi swoje wymagania dotyczące nadchodzącej oferty.",
+        "cta": "Wyślij wymagania"
+      }
+    }
+  },
+  "content": {
+    "stats": [
+      {
+        "value": "Jasny VAT",
+        "label": "Cena komercyjna pokazana przed zapytaniem"
+      },
+      {
+        "value": "MOT oznaczone",
+        "label": "Termin ważności lub status przygotowania przy każdej ofercie"
+      },
+      {
+        "value": "48 godz.",
+        "label": "Wycena dostawy w całym kraju"
+      }
+    ],
+    "serviceCards": [
+      {
+        "title": "Finansowanie",
+        "copy": "Porównaj wykup ratalny, leasing i sezonowe opcje płatności przed rezerwacją.",
+        "href": "/finance"
+      },
+      {
+        "title": "Rozliczenie pojazdu",
+        "copy": "Prześlij dane obecnego pojazdu i otrzymaj wycenę rozliczenia na kolejną ciężarówkę.",
+        "href": "/part-exchange"
+      },
+      {
+        "title": "Dostawa",
+        "copy": "Zaplanuj transport, terminy odbioru i wsparcie eksportowe na terenie całej Wielkiej Brytanii.",
+        "href": "/delivery"
+      }
+    ],
+    "aboutStats": [
+      {
+        "value": "2018",
+        "label": "Rok założenia MidLand Trucks"
+      },
+      {
+        "value": "500+",
+        "label": "Ciężarówek sprzedanych brytyjskim operatorom"
+      },
+      {
+        "value": "2",
+        "label": "Bazy inspekcyjne, Birmingham i Leeds"
+      }
+    ],
+    "companyMilestones": [
+      {
+        "year": "2018",
+        "title": "Powstanie MidLand Trucks",
+        "copy": "Firma powstała w Birmingham z inicjatywy dwóch byłych inżynierów flotowych, którzy chcieli tworzyć jaśniejsze, uczciwsze ogłoszenia dla brytyjskich przewoźników."
+      },
+      {
+        "year": "2020",
+        "title": "Otwarcie drugiej bazy inspekcyjnej",
+        "copy": "Dodano punkt inspekcyjny w Leeds, aby bezpośrednio obsłużyć ofertę i kupujących z północy Anglii."
+      },
+      {
+        "year": "2022",
+        "title": "Wprowadzenie filmów z prezentacją",
+        "copy": "Każda zarezerwowana ciężarówka mogła otrzymać pełny film z prezentacją, dzięki czemu kupujący mogli podjąć decyzję przed przyjazdem."
+      },
+      {
+        "year": "2024",
+        "title": "500. sprzedana ciężarówka",
+        "copy": "Osiągnięto 500 sprzedanych ciężarówek za pośrednictwem platformy, głównie dla powracających brytyjskich firm transportowych i budowlanych."
+      },
+      {
+        "year": "2026",
+        "title": "Rozszerzenie oferty finansowej",
+        "copy": "Dodano opcje sezonowe i leasingowe obok standardowego wykupu ratalnego dla uprawnionych kupujących."
+      }
+    ],
+    "teamMembers": [
+      {
+        "name": "Dave Whitfield",
+        "role": "Założyciel i Dyrektor Sprzedaży",
+        "bio": "20 lat doświadczenia w sprzedaży flotowej w Wielkiej Brytanii przed założeniem MidLand Trucks w 2018 roku."
+      },
+      {
+        "name": "Sarah Ellison",
+        "role": "Kierownik Operacyjny",
+        "bio": "Prowadzi inspekcje pojazdów i koordynuje rezerwacje dostaw na terenie całej Wielkiej Brytanii."
+      },
+      {
+        "name": "Ryan Coburn",
+        "role": "Finansowanie i Rozliczenia Pojazdów",
+        "bio": "Zajmuje się wprowadzeniami finansowymi i przygotowuje wyceny rozliczenia pojazdów."
+      },
+      {
+        "name": "Priya Anand",
+        "role": "Obsługa Klienta",
+        "bio": "Pierwszy punkt kontaktu w sprawie zapytań, oglądania i pytań o ofertę."
+      }
+    ],
+    "locations": [
+      {
+        "name": "Siedziba i sprzedaż w Birmingham",
+        "hours": "Pon-pt 8:30-18:00, sob 9:00-14:00"
+      },
+      {
+        "name": "Baza inspekcyjna w Leeds",
+        "hours": "Pon-pt 9:00-17:00, po umówieniu"
+      }
+    ],
+    "testimonials": [
+      {
+        "name": "Callum Reid",
+        "role": "Właściciel-kierowca, Reid Haulage, Glasgow",
+        "quote": "Kupiłem ciągnik siodłowy Scania bez oglądania na żywo, tylko na podstawie filmu z prezentacją. Przebieg, MOT i skrzynia biegów były dokładnie takie, jak w ofercie, a dostawa do Glasgow zajęła dwa dni."
+      },
+      {
+        "name": "Priya Shah",
+        "role": "Kierownik floty, Shah Distribution, Leicester",
+        "quote": "Kupiliśmy trzy pojazdy sztywne od MidLand w ciągu dwóch lat. Jasny status VAT i wsparcie finansowe ułatwiają szybkie uzyskanie akceptacji naszego działu księgowości."
+      },
+      {
+        "name": "Tomasz Nowak",
+        "role": "Dyrektor, Nowak Groundworks, Derby",
+        "quote": "Rozliczyłem starszą wywrotkę na MAN-a 8x4. Wycena była uczciwa, a cały proces przekazania, wraz z dostawą, załatwiono w ciągu tygodnia."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Czy mogę zarezerwować ciężarówkę zdalnie?",
+        "answer": "Tak. Możemy udostępnić dodatkowe zdjęcia, zorganizować film z prezentacją i zatrzymać pojazd po ostatecznych kontrolach dostępności i uzgodnionych warunkach zaliczki."
+      },
+      {
+        "question": "Czy pomagacie w finansowaniu?",
+        "answer": "Możemy zaproponować opcje finansowania komercyjnego dla uprawnionych brytyjskich firm i kierowców-właścicieli."
+      },
+      {
+        "question": "Czy mogę rozliczyć swój pojazd?",
+        "answer": "Tak. Prześlij numer rejestracyjny, przebieg, uwagi dotyczące stanu technicznego i zdjęcia, aby zespół mógł przygotować szacunkową wycenę."
+      },
+      {
+        "question": "Czy ceny zawierają VAT?",
+        "answer": "Każda oferta powinna wskazywać, czy cena jest podana plus VAT, z VAT, czy bez VAT. Ostateczny status VAT jest potwierdzany na fakturze przed płatnością."
+      },
+      {
+        "question": "Czy ciężarówki mogą być dostarczone?",
+        "answer": "Wycena dostawy jest dostępna na terenie całej kontynentalnej Wielkiej Brytanii, z możliwością odbioru z miejsca sprzedaży."
+      },
+      {
+        "question": "Czy pokazujecie informacje o MOT i strefach czystego powietrza?",
+        "answer": "Oferty zawierają status MOT oraz uwagi Euro/CAZ, o ile są dostępne. Kupujący powinni jednak zweryfikować szczegóły dotyczące konkretnej rejestracji przed użytkowaniem."
+      }
+    ]
+  },
+  "chat": {
+    "launcher": "Zapytaj o ciężarówki",
+    "headerTitle": "Asystent MidLand",
+    "checkingStock": "Sprawdzam aktualną ofertę...",
+    "stockSummary": "{{count}} aktywnych ciężarówek od {{range}}.",
+    "closeAria": "Zamknij czat",
+    "welcome": "Cześć, jestem wirtualnym asystentem sprzedaży MidLand. Pomogę Ci znaleźć ciężarówkę, sprawdzić specyfikację, zapytać o finansowanie lub rozliczenie pojazdu oraz umówić oglądanie lub kontakt telefoniczny. Jakiego typu pojazdu szukasz?",
+    "quickPrompts": {
+      "bestUnder55k": "Najlepsza ciężarówka poniżej 55 tys. GBP",
+      "scaniaMileage": "Przebieg Scanii?",
+      "automaticEuro6": "Automatyczne ciężarówki Euro 6",
+      "teamPhone": "Numer telefonu zespołu",
+      "bookEnquiry": "Umów zapytanie"
+    },
+    "form": {
+      "nameLabel": "Imię i nazwisko",
+      "namePlaceholder": "Twoje imię i nazwisko",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "07...",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "ty@przyklad.pl",
+      "companyLabel": "Firma",
+      "postcodeLabel": "Kod pocztowy (UK)",
+      "postcodePlaceholder": "B1 1AA",
+      "vehicleTypeLabel": "Typ pojazdu",
+      "vehicleTypePlaceholder": "Ciągnik siodłowy, wywrotka...",
+      "budgetLabel": "Budżet (£)",
+      "budgetBasisLabel": "Podstawa budżetu",
+      "budgetBasisExcl": "bez VAT",
+      "budgetBasisIncl": "z VAT",
+      "timelineLabel": "Kiedy planujesz zakup?",
+      "timelineSelect": "Wybierz",
+      "timelineThisWeek": "W tym tygodniu",
+      "timelineWithin7": "W ciągu 7 dni",
+      "timelineThisMonth": "W tym miesiącu",
+      "timelineWithin3Months": "W ciągu 3 miesięcy",
+      "timelineResearching": "Tylko sprawdzam opcje",
+      "callbackLabel": "Preferowany termin kontaktu",
+      "callbackPlaceholder": "Dni robocze, 14:00-16:00",
+      "financeRequired": "Potrzebne finansowanie",
+      "partExchange": "Rozliczenie pojazdu",
+      "requirementLabel": "Wymagania",
+      "consentText": "Zgadzam się, że MidLand Trucks może się ze mną skontaktować w sprawie tego zapytania. Zobacz <1>Politykę prywatności</1>.",
+      "submitSending": "Bezpieczne wysyłanie…",
+      "submitCallback": "Poproś o kontakt telefoniczny"
+    },
+    "suggestedAria": "Sugerowane pytania",
+    "composerPlaceholder": "Zapytaj o przebieg, cenę, MOT, finansowanie...",
+    "composerAria": "Zapytaj asystenta czatu",
+    "sendAria": "Wyślij wiadomość na czacie",
+    "send": "Wyślij",
+    "actions": {
+      "contactPage": "Strona kontaktowa",
+      "allTrucks": "Wszystkie ciężarówki",
+      "financePage": "Strona finansowania",
+      "deliveryPage": "Strona dostawy",
+      "partExchangePage": "Strona rozliczenia pojazdu"
+    },
+    "replies": {
+      "enquiry": "Jasne. Podaj swoje dane, a zespół skontaktuje się z ceną, dostępnością, terminem oglądania oraz opcjami finansowania i dostawy.",
+      "partExchange": "Możemy wycenić Twój obecny pojazd użytkowy w rozliczeniu za ciężarówkę MidLand. Podaj numer rejestracyjny, przebieg, stan, historię serwisową i dołącz kilka wyraźnych zdjęć, a zespół przygotuje wstępną wycenę.",
+      "phoneInfo": "{{name}} obsługuje pierwsze zapytania. Sprzedaż w Birmingham: {{birminghamPhone}}. Baza inspekcyjna w Leeds: {{leedsPhone}}. Godziny pracy: {{hours}}.",
+      "finance": "Finansowanie może zostać zaproponowane uprawnionym brytyjskim firmom i kierowcom-właścicielom. Podaj ciężarówkę, zaliczkę i preferowany okres, albo wyślij zapytanie, a {{financePerson}} przygotuje opcje.",
+      "delivery": "Wycena dostawy jest dostępna na terenie całej kontynentalnej Wielkiej Brytanii, z możliwością odbioru z miejsca sprzedaży. Podaj kod pocztowy i docelową ciężarówkę, aby otrzymać dokładną wycenę.",
+      "budgetWithAmount": "To najlepsze dopasowania poniżej {{amount}} GBP.",
+      "budgetGeneric": "Oto obecnie najkorzystniej wycenione ciężarówki w ofercie.",
+      "specMatch": "Te oferty pasują do wymagań. Otwórz jedną, aby zobaczyć pełne zdjęcia i uwagi z inspekcji.",
+      "specNoMatch": "Nie znalazłem dokładnego dopasowania w ofercie. Wyślij zapytanie, a zespół zaproponuje alternatywy.",
+      "viewing": "Oględziny odbywają się po umówieniu, aby zespół mógł przygotować ciężarówkę i dokumentację inspekcji. Podaj pojazd, preferowany dzień i numer kontaktowy, a ustalimy termin.",
+      "availability": "Status pojazdów może szybko się zmieniać. Poniżej są najbliższe aktywne oferty; otwórz pojazd, aby sprawdzić status, lub wyślij zapytanie przed przyjazdem.",
+      "stockOptions": "W aktualnej ofercie znajduje się {{count}} ciężarówek. Poniżej najlepsze dostępne opcje; pełną listę znajdziesz na stronie Wszystkie ciężarówki.",
+      "thanks": "Nie ma za co. Podaj markę, rodzaj zabudowy, skrzynię biegów, budżet lub preferowany rocznik, a zawężę wyniki.",
+      "greeting": "Cześć, pytaj o co chcesz. Odpowiem na pytania o przebieg, cenę, MOT, skrzynię biegów, Euro/CAZ, gwarancję, lokalizację, finansowanie, dostawę i zapiszę zapytanie. {{stockNote}}",
+      "greetingStockChecking": "Wciąż sprawdzam aktualną ofertę, ale zapasowa oferta jest gotowa.",
+      "greetingStockReady": "Obecna oferta: {{count}} ciężarówek.",
+      "fallback": "Poniżej znalazłem najbliższe dopasowania w ofercie. Aby uzyskać dokładną dostępność, ostateczny VAT, termin oglądania i arkusz inspekcji, wyślij zapytanie lub zadzwoń do zespołu.",
+      "thankYou": "Dziękujemy, {{name}}. Twoje zapytanie o priorytecie {{temperature}} zostało przesłane do naszego zespołu sprzedaży. Skontaktujemy się w preferowanym przez Ciebie terminie. W pilnych sprawach zadzwoń pod {{phone}}.",
+      "sendError": "Nie udało się teraz wysłać tego zapytania. Spróbuj ponownie lub zadzwoń do naszego zespołu sprzedaży pod numer {{phone}}.",
+      "mileageLine": "{{title}} ma przebieg {{mileage}}.",
+      "priceLine": "Cena wynosi {{price}}.",
+      "motLine": "MOT/przygotowanie: {{mot}}. Serwis: {{service}}.",
+      "gearboxLine": "Skrzynia biegów to {{gearbox}}.",
+      "locationLine": "Lokalizacja to {{location}}.",
+      "warrantyLine": "Właściciele: {{owners}}. Gwarancja: {{warranty}}.",
+      "cleanAirLine": "Czyste powietrze: {{cleanAir}}.",
+      "availabilityLine": "Aktualny status oferty: {{status}}.",
+      "vatLine": "Podstawa VAT: {{vat}}.",
+      "axleLine": "Konfiguracja osi: {{axle}}.",
+      "powerLine": "Moc: {{power}}.",
+      "cabLine": "Kabina: {{cab}}.",
+      "fullSummaryLine": "{{title}}: {{price}}, {{mileage}}, {{year}}, {{gearbox}}, {{location}}. {{description}}",
+      "callToAction": "Aby sprawdzić dostępność lub umówić oglądanie, zadzwoń pod {{phone}} lub wyślij tutaj zapytanie.",
+      "confirmWithSales": "potwierdź z działem sprzedaży",
+      "currentStockFallback": "aktualną ofertę"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+.trustBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  width: min(1180px, calc(100% - 36px));
+  margin: 48px auto 0;
+  overflow: hidden;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #d0d5dd;
+  box-shadow: 0 16px 34px rgb(16 24 40 / 8%);
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: #ffffff;
+  transition: background 320ms ease, transform 420ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.badge:hover {
+  z-index: 1;
+  background: #fffafb;
+  transform: translateY(-4px);
+}
+
+.iconWrap {
+  display: grid;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 8px;
+  color: #b4232c;
+  background: #fff1f2;
+  transition: color 280ms ease, background 280ms ease, transform 520ms cubic-bezier(.16, 1, .3, 1), box-shadow 320ms ease;
+}
+
+.badge:hover .iconWrap {
+  color: #ffffff;
+  background: #b4232c;
+  box-shadow: 0 12px 24px rgb(180 35 44 / 25%);
+  transform: rotate(-6deg) scale(1.08);
+}
+
+.badge strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.badge span {
+  display: block;
+  margin-top: 3px;
+  color: #667085;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .trustBar {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .trustBar {
+    width: calc(100% - 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .iconWrap {
+    transition: none;
+  }
+
+  .badge:hover,
+  .badge:hover .iconWrap {
+    transform: none;
+  }
+}

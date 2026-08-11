@@ -1,0 +1,269 @@
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { serviceCardHrefs, trucks } from '../data/siteData.js';
+import { ContactPreview } from '../components/ContactPreview.jsx';
+import { FinanceDisclosure } from '../components/FinanceDisclosure.jsx';
+import {
+  IconCheckBadge,
+  IconDelivery,
+  IconExchange,
+  IconFinance,
+  IconShield
+} from '../components/icons.jsx';
+import { InfoCard } from '../components/InfoList.jsx';
+import { SearchBand } from '../components/SearchBand.jsx';
+import { StockAlert } from '../components/StockAlert.jsx';
+import { TruckGrid } from '../components/TruckGrid.jsx';
+import { VideoWalkaround } from '../components/VideoWalkaround.jsx';
+import { api } from '../utils/api.js';
+import { demoDataEnabled } from '../utils/runtime.js';
+import { useInView } from '../utils/useInView.js';
+import styles from './HomePage.module.css';
+
+const serviceIcons = [IconFinance, IconExchange, IconDelivery];
+
+export function HomePage() {
+  const { t } = useTranslation();
+  const introPoints = t('pages.home.intro.points', { returnObjects: true });
+
+  return (
+    <div className={styles.homePage}>
+      <Hero />
+      <SearchBand />
+      <RevealSection className={`section ${styles.introSection}`}>
+        <div className={styles.introHeading}>
+          <p className="eyebrow">{t('pages.home.intro.eyebrow')}</p>
+          <h2>{t('pages.home.intro.heading')}</h2>
+        </div>
+        <div className={styles.introCopy}>
+          <span className={styles.introRule} aria-hidden="true" />
+          <p>{t('pages.home.intro.copy')}</p>
+          <div className={styles.introPoints}>
+            {introPoints.map((point) => (
+              <span key={point}>{point}</span>
+            ))}
+          </div>
+        </div>
+      </RevealSection>
+      <StatsGrid />
+      <FeaturedStock />
+      <BuyerJourney />
+      <VideoWalkaround />
+      <ServiceCards />
+      <FeatureBand />
+      <StockAlert />
+      <ContactPreview />
+    </div>
+  );
+}
+
+function Hero() {
+  const { t } = useTranslation();
+  const proof = t('pages.home.hero.proof', { returnObjects: true });
+
+  return (
+    <section className={styles.hero}>
+      <div className={styles.heroFrame} aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className={styles.heroMedia} aria-hidden="true">
+        <img
+          src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85"
+          alt=""
+        />
+      </div>
+      <div className={styles.heroContent}>
+        <div className={styles.heroKicker}>
+          <span className={styles.liveDot} />
+          {t('pages.home.hero.kicker')}
+        </div>
+        <p className="eyebrow">{t('pages.home.hero.eyebrow')}</p>
+        <h1>{t('pages.home.hero.title')}</h1>
+        <p className={styles.heroCopy}>{t('pages.home.hero.copy')}</p>
+        <div className={styles.heroActions}>
+          <a className="button primary" href="/trucks">{t('pages.home.hero.viewStock')}</a>
+          <a className="button secondary" href="/contact">{t('pages.home.hero.requestCallback')}</a>
+        </div>
+        <div className={styles.heroProof} aria-label={t('pages.home.hero.proofAria')}>
+          {proof.map((item) => (
+            <span key={item}>✓ {item}</span>
+          ))}
+        </div>
+      </div>
+      <aside className={styles.heroCard} aria-label={t('pages.home.hero.cardLabel')}>
+        <span className={styles.heroCardLabel}>{t('pages.home.hero.cardLabel')}</span>
+        <strong>{t('pages.home.hero.cardTitle')}</strong>
+        <span>{t('pages.home.hero.cardMeta')}</span>
+        <a href="/trucks">{t('pages.home.hero.cardCta')} <span aria-hidden="true">→</span></a>
+      </aside>
+      <div className={styles.scrollCue} aria-hidden="true">
+        <span />
+        {t('pages.home.hero.scrollCue')}
+      </div>
+    </section>
+  );
+}
+
+function StatsGrid() {
+  const { t } = useTranslation();
+  const stats = t('content.stats', { returnObjects: true });
+  const icons = [IconShield, IconCheckBadge, IconDelivery];
+
+  return (
+    <section className={styles.statsGrid} aria-label={t('pages.home.statsAria')}>
+      {stats.map(({ value, label }, index) => {
+        const Icon = icons[index];
+        return (
+        <div className={styles.stat} key={label} style={{ '--delay': `${index * 100}ms` }}>
+          <div className={styles.statTop}>
+            <Icon />
+            <small>0{index + 1}</small>
+          </div>
+          <div>
+            <strong>{value}</strong>
+            <span>{label}</span>
+          </div>
+          <span className={styles.statLine} aria-hidden="true" />
+        </div>
+        );
+      })}
+    </section>
+  );
+}
+
+function RevealSection({ className, children }) {
+  const [ref, inView] = useInView();
+
+  return (
+    <section
+      ref={ref}
+      className={`${className} ${styles.reveal} ${inView ? styles.inView : ''}`}
+    >
+      {children}
+    </section>
+  );
+}
+
+function BuyerJourney() {
+  const { t } = useTranslation();
+  const steps = t('pages.home.journey.steps', { returnObjects: true });
+
+  return (
+    <RevealSection className={styles.journeySection}>
+      <div className={styles.journeyIntro}>
+        <p className="eyebrow">{t('pages.home.journey.eyebrow')}</p>
+        <h2>{t('pages.home.journey.heading')}</h2>
+        <p>{t('pages.home.journey.copy')}</p>
+        <a className="text-link" href="/trucks">{t('pages.home.journey.cta')} →</a>
+      </div>
+      <div className={styles.journeySteps}>
+        {steps.map(({ number, title, copy }) => (
+          <article className={styles.journeyStep} key={number}>
+            <span>{number}</span>
+            <div>
+              <h3>{title}</h3>
+              <p>{copy}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </RevealSection>
+  );
+}
+
+function FeaturedStock() {
+  const { t } = useTranslation();
+  const [featuredTrucks, setFeaturedTrucks] = useState(() => demoDataEnabled ? trucks.slice(0, 3) : []);
+
+  useEffect(() => {
+    async function loadFeatured() {
+      try {
+        const response = await api.listTrucks({ sort: 'newest' });
+        setFeaturedTrucks((response.data || []).slice(0, 3));
+      } catch {
+        setFeaturedTrucks(demoDataEnabled ? trucks.slice(0, 3) : []);
+      }
+    }
+
+    loadFeatured();
+  }, []);
+
+  const [headingRef, headingInView] = useInView();
+
+  return (
+    <section className="section">
+      <div
+        ref={headingRef}
+        className={`${styles.sectionHeading} ${styles.reveal} ${headingInView ? styles.inView : ''}`}
+      >
+        <div>
+          <p className="eyebrow">{t('pages.home.featuredStock.eyebrow')}</p>
+          <h2>{t('pages.home.featuredStock.heading')}</h2>
+        </div>
+        <a className="text-link" href="/trucks">{t('pages.home.featuredStock.viewAll')}</a>
+      </div>
+      <TruckGrid trucks={featuredTrucks} />
+    </section>
+  );
+}
+
+function ServiceCards() {
+  const { t } = useTranslation();
+  const serviceCards = t('content.serviceCards', { returnObjects: true });
+
+  return (
+    <section className={styles.serviceGrid} aria-label={t('pages.home.featuredStock.eyebrow')}>
+      {serviceCards.map(({ title, copy }, index) => (
+        <ServiceCard key={title} title={title} copy={copy} href={serviceCardHrefs[index]} index={index} />
+      ))}
+    </section>
+  );
+}
+
+function ServiceCard({ title, copy, href, index }) {
+  const { t } = useTranslation();
+  const [ref, inView] = useInView();
+  const Icon = serviceIcons[index];
+
+  return (
+    <a
+      ref={ref}
+      className={`${styles.serviceCard} ${styles.reveal} ${inView ? styles.inView : ''}`}
+      href={href}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      {Icon && (
+        <span className={styles.serviceIcon}>
+          <Icon />
+        </span>
+      )}
+      <span className={styles.serviceTitle}>{title}</span>
+      <p>{copy}</p>
+      <strong>{t('pages.home.serviceCard.openPage')}</strong>
+    </a>
+  );
+}
+
+export function FeatureBand() {
+  const { t } = useTranslation();
+  const items = t('pages.home.featureBand.items', { returnObjects: true });
+
+  return (
+    <section className={styles.featureBand}>
+      <div className={styles.featureCopy}>
+        <p className="eyebrow">{t('pages.home.featureBand.eyebrow')}</p>
+        <h2>{t('pages.home.featureBand.heading')}</h2>
+        <p>{t('pages.home.featureBand.copy')}</p>
+      </div>
+      <div className={styles.featureList}>
+        {items.map((item) => (
+          <InfoCard title={item.title} copy={item.copy} key={item.title} />
+        ))}
+        <FinanceDisclosure />
+      </div>
+    </section>
+  );
+}

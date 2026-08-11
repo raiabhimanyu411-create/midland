@@ -1,0 +1,148 @@
+.detailLayout {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.65fr);
+  gap: clamp(28px, 5vw, 70px);
+  align-items: start;
+  padding-top: 84px;
+}
+
+.detailImage {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #d0d5dd;
+}
+
+.thumbnailRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.thumbnailRow img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #d0d5dd;
+}
+
+.copyBlock {
+  padding-top: 26px;
+}
+
+.copyBlock p {
+  color: #667085;
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.detailPanel {
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 18px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 24px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgb(16 24 40 / 8%);
+}
+
+.detailPanel > strong {
+  color: #b4232c;
+  font-size: clamp(1.7rem, 3vw, 2rem);
+  line-height: 1.05;
+}
+
+.detailPanel dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 2px 0 8px;
+}
+
+.detailPanel dl > div {
+  min-width: 0;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+  padding: 11px 12px;
+  background: #f8fafc;
+}
+
+.detailPanel dl > div:nth-child(7),
+.detailPanel dl > div:nth-child(13),
+.detailPanel dl > div:nth-child(15),
+.detailPanel dl > div:nth-child(17) {
+  grid-column: 1 / -1;
+}
+
+.detailPanel dt {
+  margin-bottom: 5px;
+  color: #667085;
+  font-size: 0.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.detailPanel dd {
+  overflow-wrap: anywhere;
+  color: #18212f;
+  font-size: 0.92rem;
+  line-height: 1.28;
+}
+
+.detailPanel :global(.button) {
+  width: 100%;
+}
+
+.statusBadge {
+  width: fit-content;
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: #ffffff;
+  background: #18212f;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.priceNote {
+  margin: -8px 0 0;
+  color: #667085;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .detailLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .detailPanel {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .detailLayout {
+    width: calc(100% - 24px);
+  }
+
+  .detailPanel {
+    padding: 18px;
+  }
+
+  .detailPanel dl {
+    grid-template-columns: 1fr;
+  }
+
+  .thumbnailRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

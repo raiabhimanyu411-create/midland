@@ -1,0 +1,33 @@
+.policyPage {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+  padding: 84px 0 96px;
+}
+
+.policyPage article {
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: clamp(20px, 4vw, 30px);
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgb(16 24 40 / 7%);
+}
+
+.policyPage h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 900;
+}
+
+.policyPage p {
+  margin-bottom: 0;
+  color: #667085;
+  line-height: 1.7;
+}
+
+@media (max-width: 560px) {
+  .policyPage {
+    width: calc(100% - 24px);
+  }
+}

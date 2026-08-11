@@ -1,0 +1,23 @@
+{
+  "name": "midland",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace client\" \"npm run dev --workspace backend\"",
+    "dev:client": "npm run dev --workspace client",
+    "dev:backend": "npm run dev --workspace backend",
+    "build": "npm run build --workspace client",
+    "start": "npm run start --workspace backend",
+    "check": "npm run build && npm run check --workspace backend && npm audit --audit-level=high"
+  },
+  "workspaces": [
+    "client",
+    "backend"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

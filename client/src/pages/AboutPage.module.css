@@ -1,0 +1,123 @@
+.aboutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.75fr);
+  gap: clamp(28px, 6vw, 80px);
+  align-items: start;
+}
+
+.aboutGrid p {
+  color: #667085;
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.valuesPanel {
+  display: grid;
+  gap: 12px;
+}
+
+.valuesPanel div {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 20px;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgb(16 24 40 / 7%);
+}
+
+.valuesPanel strong {
+  font-size: 1.08rem;
+}
+
+.valuesPanel span {
+  color: #667085;
+  line-height: 1.55;
+}
+
+.statsGrid {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #d0d5dd;
+}
+
+.stat {
+  display: grid;
+  gap: 7px;
+  min-height: 138px;
+  align-content: center;
+  padding: 26px;
+  background: #ffffff;
+}
+
+.stat strong {
+  color: #b4232c;
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.stat span {
+  color: #475467;
+  font-weight: 800;
+}
+
+.aboutCta {
+  width: min(1180px, calc(100% - 36px));
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.55fr);
+  gap: clamp(24px, 6vw, 72px);
+  align-items: center;
+  margin: 96px auto;
+  padding: clamp(28px, 5vw, 56px);
+  border-radius: 8px;
+  color: #ffffff;
+  background: #17202a;
+}
+
+.aboutCta :global(.eyebrow) {
+  color: #ffccd1;
+}
+
+.aboutCta p:last-of-type {
+  color: #d0d5dd;
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-self: start;
+}
+
+@media (max-width: 900px) {
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .aboutCta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .statsGrid,
+  .aboutCta {
+    width: calc(100% - 24px);
+  }
+
+  .ctaActions {
+    width: 100%;
+  }
+}

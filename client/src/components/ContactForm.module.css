@@ -1,0 +1,106 @@
+.contactForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 22px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgb(16 24 40 / 8%);
+  text-transform: capitalize;
+}
+
+.contactForm.embedded {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.contactForm > label:not(.halfField),
+.contactForm > button,
+.contactForm > p {
+  grid-column: 1 / -1;
+}
+
+.contactForm input,
+.contactForm select,
+.contactForm textarea {
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.contactForm input:hover,
+.contactForm select:hover,
+.contactForm textarea:hover {
+  border-color: #98a2b3;
+}
+
+.contactForm button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 18px;
+  color: #ffffff;
+  background: #b4232c;
+  font-weight: 900;
+  box-shadow: 0 10px 22px rgb(180 35 44 / 22%);
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.contactForm button:hover {
+  background: #8f1c24;
+  box-shadow: 0 14px 28px rgb(180 35 44 / 30%);
+  transform: translateY(-2px);
+}
+
+.contactForm button span {
+  margin-left: 10px;
+  transition: transform 180ms ease;
+}
+
+.contactForm button:hover span {
+  transform: translateX(4px);
+}
+
+.formStatus {
+  margin: 0;
+  border-radius: 8px;
+  padding: 12px;
+  color: #155b36;
+  background: #e9f8ef;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.formError {
+  margin: 0;
+  border-radius: 8px;
+  padding: 12px;
+  color: #8f1c24;
+  background: #fff1f2;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+@media (max-width: 560px) {
+  .contactForm {
+    grid-template-columns: 1fr;
+  }
+
+  .halfField {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contactForm button,
+  .contactForm button:hover,
+  .contactForm button span,
+  .contactForm button:hover span {
+    transition: none;
+    transform: none;
+  }
+}
