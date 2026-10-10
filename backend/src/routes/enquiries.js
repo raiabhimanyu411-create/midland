@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { pool } from '../db/mysql.js';
-import { cleanText, createRecord, requireFields } from '../utils/validation.js';
+import { cleanText, createRecord, positiveInt, requireFields } from '../utils/validation.js';
 import { requireAuth } from '../middleware/auth.js';
 
 export const enquiriesRouter = Router();
@@ -23,11 +23,11 @@ enquiriesRouter.post('/', async (req, res, next) => {
     }
 
     const record = createRecord('enquiry', {
-      name: cleanText(req.body.name),
-      phone: cleanText(req.body.phone),
-      email: cleanText(req.body.email),
-      requirement: cleanText(req.body.requirement),
-      truckId: req.body.truckId ? Number(req.body.truckId) : null
+      name: cleanText(req.body.name, 120),
+      phone: cleanText(req.body.phone, 60),
+      email: cleanText(req.body.email, 160),
+      requirement: cleanText(req.body.requirement, 5000),
+      truckId: positiveInt(req.body.truckId)
     });
 
     const [result] = await pool.query(

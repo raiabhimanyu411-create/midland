@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supportedLanguages } from '../i18n/index.js';
+import { changeLanguage, supportedLanguages } from '../i18n/index.js';
 import { primaryRoutes, routePaths } from '../utils/routes.js';
 import styles from './Header.module.css';
 
@@ -48,7 +48,7 @@ export function Header({ route }) {
         className={styles.languageSelect}
         aria-label={t('header.languageAria')}
         value={i18n.language}
-        onChange={(event) => i18n.changeLanguage(event.target.value)}
+        onChange={(event) => changeLanguage(event.target.value)}
       >
         {supportedLanguages.map((language) => (
           <option value={language.code} key={language.code}>

@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import { mapBlog, pool } from '../db/mysql.js';
-import { cleanText, requireFields } from '../utils/validation.js';
+import { clampInt, cleanText, positiveInt, queryText, requireFields } from '../utils/validation.js';
 import { allowRoles, audit, requireAuth } from '../middleware/auth.js';
 
 export const blogsRouter = Router();
 
 blogsRouter.get('/', async (req, res, next) => {
   try {
-    const { tag, page = 1, limit = 9 } = req.query;
+    const tag = queryText(req.query.tag);
+    const page = clampInt(req.query.page, { min: 1, max: 10000, fallback: 1 });
+    const limit = clampInt(req.query.limit, { min: 1, max: 50, fallback: 9 });
     const where = ["status = 'published'"];
     const values = [];
 
@@ -16,16 +18,16 @@ blogsRouter.get('/', async (req, res, next) => {
       values.push(tag);
     }
 
-    const offset = (Math.max(1, Number(page)) - 1) * Number(limit);
+    const offset = (page - 1) * limit;
     const [rows] = await pool.query(
       `SELECT * FROM blogs WHERE ${where.join(' AND ')} ORDER BY published_at DESC LIMIT ? OFFSET ?`,
-      [...values, Number(limit), offset]
+      [...values, limit, offset]
     );
     const [[{ total }]] = await pool.query(`SELECT COUNT(*) total FROM blogs WHERE ${where.join(' AND ')}`, values);
 
     res.json({
       data: rows.map(mapBlog),
-      pagination: { page: Number(page), limit: Number(limit), total, pages: Math.ceil(total / Number(limit)) || 1 }
+      pagination: { page, limit, total: Number(total), pages: Math.ceil(Number(total) / limit) || 1 }
     });
   } catch (error) {
     next(error);
@@ -43,7 +45,7 @@ blogsRouter.get('/admin/list', requireAuth, allowRoles('admin', 'manager'), asyn
 
 blogsRouter.get('/admin/:id', requireAuth, allowRoles('admin', 'manager'), async (req, res, next) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM blogs WHERE id = ?', [Number(req.params.id)]);
+    const [rows] = await pool.query('SELECT * FROM blogs WHERE id = ?', [positiveInt(req.params.id)]);
     if (!rows[0]) return res.status(404).json({ message: 'Post not found' });
     res.json({ data: mapBlog(rows[0]) });
   } catch (error) {
@@ -67,6 +69,7 @@ blogsRouter.post('/', requireAuth, allowRoles('admin', 'manager'), async (req, r
     if (!validation.valid) return res.status(400).json({ message: validation.message });
 
     const payload = normalizeBlogPayload(req.body);
+    if (!payload.slug) return res.status(400).json({ message: 'URL slug must contain letters or numbers' });
     const [existing] = await pool.query('SELECT id FROM blogs WHERE slug = ?', [payload.slug]);
     if (existing[0]) return res.status(409).json({ message: 'A post with that URL slug already exists' });
 
@@ -94,7 +97,9 @@ blogsRouter.put('/:id', requireAuth, allowRoles('admin', 'manager'), async (req,
     if (!validation.valid) return res.status(400).json({ message: validation.message });
 
     const payload = normalizeBlogPayload(req.body);
-    const id = Number(req.params.id);
+    if (!payload.slug) return res.status(400).json({ message: 'URL slug must contain letters or numbers' });
+    const id = positiveInt(req.params.id);
+    if (!id) return res.status(404).json({ message: 'Post not found' });
     const [existing] = await pool.query('SELECT id FROM blogs WHERE slug = ? AND id != ?', [payload.slug, id]);
     if (existing[0]) return res.status(409).json({ message: 'A post with that URL slug already exists' });
 
@@ -119,7 +124,7 @@ blogsRouter.put('/:id', requireAuth, allowRoles('admin', 'manager'), async (req,
 
 blogsRouter.delete('/:id', requireAuth, allowRoles('admin', 'manager'), async (req, res, next) => {
   try {
-    const [result] = await pool.query('DELETE FROM blogs WHERE id = ?', [Number(req.params.id)]);
+    const [result] = await pool.query('DELETE FROM blogs WHERE id = ?', [positiveInt(req.params.id)]);
     if (result.affectedRows === 0) return res.status(404).json({ message: 'Post not found' });
     await audit(req, 'delete-blog', 'blog', req.params.id);
     res.json({ message: 'Post deleted' });
@@ -130,14 +135,14 @@ blogsRouter.delete('/:id', requireAuth, allowRoles('admin', 'manager'), async (r
 
 function normalizeBlogPayload(body) {
   return {
-    title: cleanText(body.title),
-    slug: cleanText(body.slug).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
-    excerpt: cleanText(body.excerpt),
+    title: cleanText(body.title, 220),
+    slug: cleanText(body.slug).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 220).replace(/-+$/, ''),
+    excerpt: cleanText(body.excerpt, 320),
     content: cleanText(body.content),
-    coverImage: cleanText(body.coverImage),
-    tags: cleanText(body.tags),
-    metaTitle: cleanText(body.metaTitle),
-    metaDescription: cleanText(body.metaDescription),
+    coverImage: cleanText(body.coverImage, 2000),
+    tags: cleanText(body.tags, 255),
+    metaTitle: cleanText(body.metaTitle, 70),
+    metaDescription: cleanText(body.metaDescription, 160),
     status: body.status === 'published' ? 'published' : 'draft'
   };
 }

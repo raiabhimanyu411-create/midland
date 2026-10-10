@@ -1,13 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trucks } from '../data/siteData.js';
+import { api } from '../utils/api.js';
+import { demoDataEnabled } from '../utils/runtime.js';
 import styles from './SearchBand.module.css';
 
-export function SearchBand({ value, onChange, onSubmit }) {
+const fallbackOptions = {
+  makes: demoDataEnabled ? [...new Set(trucks.map((truck) => truck.make))] : [],
+  bodies: demoDataEnabled ? [...new Set(trucks.map((truck) => truck.type))] : []
+};
+
+export function SearchBand({ value, onChange, onSubmit, options }) {
   const { t, i18n } = useTranslation();
   const isControlled = Boolean(value && onChange);
   const [internal, setInternal] = useState({ make: '', body: '', maxPrice: '' });
+  const [loadedOptions, setLoadedOptions] = useState(fallbackOptions);
   const state = isControlled ? value : internal;
+  const { makes = [], bodies = [] } = options || loadedOptions;
+
+  useEffect(() => {
+    if (options) return undefined;
+    let active = true;
+    api.getTruckFilters()
+      .then((data) => { if (active) setLoadedOptions({ makes: data.makes || [], bodies: data.bodies || [] }); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [options]);
 
   function setField(field, fieldValue) {
     if (isControlled) {
@@ -39,7 +57,7 @@ export function SearchBand({ value, onChange, onSubmit }) {
           {t('searchBand.make')}
           <select value={state.make} onChange={(event) => setField('make', event.target.value)}>
             <option value="">{t('searchBand.anyMake')}</option>
-            {[...new Set(trucks.map((truck) => truck.make))].map((truckMake) => (
+            {makes.map((truckMake) => (
               <option key={truckMake}>{truckMake}</option>
             ))}
           </select>
@@ -48,7 +66,7 @@ export function SearchBand({ value, onChange, onSubmit }) {
           {t('searchBand.bodyType')}
           <select value={state.body} onChange={(event) => setField('body', event.target.value)}>
             <option value="">{t('searchBand.anyType')}</option>
-            {[...new Set(trucks.map((truck) => truck.type))].map((truckBody) => (
+            {bodies.map((truckBody) => (
               <option key={truckBody}>{truckBody}</option>
             ))}
           </select>

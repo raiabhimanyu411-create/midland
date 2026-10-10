@@ -21,6 +21,7 @@ export function Footer() {
       links: [
         { label: t('footer.links.aboutUs'), href: '/about' },
         { label: t('footer.links.faq'), href: '/faq' },
+        { label: t('footer.links.news', { defaultValue: 'Guides & news' }), href: '/blog' },
         { label: t('footer.links.contactUs'), href: '/contact' },
         { label: t('footer.links.privacyPolicy'), href: '/privacy' }
       ]

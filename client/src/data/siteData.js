@@ -218,9 +218,6 @@ export const teamMembers = [
   { key: 'support', initials: 'PA' }
 ];
 
-export const locations = [
-  { address: '14 Fleet Way, Birmingham, B12 0JR', phone: '0121 496 0000' },
-  { address: 'Unit 6, Aire Valley Trading Estate, Leeds, LS10 1AB', phone: '0113 496 0000' }
-];
+export { businessLocations as locations } from '../../../shared/seo.js';
 
 export const testimonialRatings = [5, 5, 4];

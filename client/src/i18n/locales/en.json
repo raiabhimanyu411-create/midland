@@ -935,7 +935,7 @@
       "greetingStockChecking": "I am still checking live stock, but fallback stock is ready.",
       "greetingStockReady": "Current stock: {{count}} trucks.",
       "fallback": "I found the closest stock options below. For exact availability, final VAT, viewing and inspection sheet, send an enquiry or call the team.",
-      "thankYou": "Thank you, {{name}}. Your {{temperature}} priority enquiry has been sent to our sales team. They'll contact you at your preferred time. If it's urgent, call {{phone}}.",
+      "thankYou": "Thank you, {{name}}. Your enquiry has been sent to our sales team. They'll contact you at your preferred time. If it's urgent, call {{phone}}.",
       "sendError": "I couldn't send that enquiry just now. Please try again or call our sales team on {{phone}}.",
       "mileageLine": "{{title}} has {{mileage}} showing.",
       "priceLine": "Price is {{price}}.",

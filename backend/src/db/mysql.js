@@ -13,10 +13,15 @@ export const dbConfig = {
     : {}),
   waitForConnections: true,
   connectionLimit: 10,
-  namedPlaceholders: true
+  namedPlaceholders: true,
+  // Store and read every date in UTC so follow-ups and expiries do not drift with the server timezone.
+  timezone: 'Z'
 };
 
 export const pool = mysql.createPool(dbConfig);
+pool.on('connection', (connection) => {
+  connection.query("SET time_zone = '+00:00'");
+});
 
 export async function initializeDatabase() {
   await pool.query(`
@@ -150,6 +155,18 @@ export async function initializeDatabase() {
     INDEX idx_notification_user(user_id, is_read)
   )`);
 
+  await pool.query(`CREATE TABLE IF NOT EXISTS admin_notification_reads (
+    notification_id INT NOT NULL, user_id INT NOT NULL, read_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (notification_id, user_id),
+    FOREIGN KEY (notification_id) REFERENCES admin_notifications(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES admin_users(id) ON DELETE CASCADE
+  )`);
+  // One-time migration from the old shared is_read flag to per-user read state.
+  await pool.query(`INSERT IGNORE INTO admin_notification_reads (notification_id, user_id)
+    SELECT n.id, u.id FROM admin_notifications n JOIN admin_users u ON n.user_id IS NULL OR n.user_id = u.id
+    WHERE n.is_read = 1`);
+  await pool.query('UPDATE admin_notifications SET is_read = 0 WHERE is_read = 1');
+
   await pool.query(`CREATE TABLE IF NOT EXISTS blogs (
     id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(220) NOT NULL, slug VARCHAR(220) NOT NULL UNIQUE,
     excerpt VARCHAR(320) DEFAULT '', content LONGTEXT NOT NULL, cover_image TEXT,
@@ -193,34 +210,33 @@ async function seedTruckData() {
     return;
   }
 
-  await Promise.all(
-    seedTrucks.map((truck) =>
-      pool.query(
-        `INSERT INTO trucks (
-          title, make, type, location, price, price_value, mileage, mileage_value,
-          year, gearbox, badge, cab, power, mot, description, image
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          truck.title,
-          truck.make,
-          truck.type,
-          truck.location,
-          truck.price,
-          truck.priceValue,
-          truck.mileage,
-          truck.mileageValue,
-          truck.year,
-          truck.gearbox,
-          truck.badge,
-          truck.cab,
-          truck.power,
-          truck.mot,
-          truck.description,
-          truck.image
-        ]
-      )
-    )
-  );
+  // Insert one at a time so ids follow the seed order (the demo data on the client is matched by id).
+  for (const truck of seedTrucks) {
+    await pool.query(
+      `INSERT INTO trucks (
+        title, make, type, location, price, price_value, mileage, mileage_value,
+        year, gearbox, badge, cab, power, mot, description, image
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        truck.title,
+        truck.make,
+        truck.type,
+        truck.location,
+        truck.price,
+        truck.priceValue,
+        truck.mileage,
+        truck.mileageValue,
+        truck.year,
+        truck.gearbox,
+        truck.badge,
+        truck.cab,
+        truck.power,
+        truck.mot,
+        truck.description,
+        truck.image
+      ]
+    );
+  }
 }
 
 export function mapTruck(row) {

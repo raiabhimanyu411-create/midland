@@ -4,6 +4,7 @@ import { trucks as fallbackTrucks } from '../data/siteData.js';
 import { useInView } from '../utils/useInView.js';
 import { IconCamera } from './icons.jsx';
 import { demoDataEnabled } from '../utils/runtime.js';
+import { formatTruckStatus } from '../utils/truckStatus.js';
 import styles from './TruckGrid.module.css';
 
 export function TruckGrid({ trucks: truckList, variant = '', compareEnabled = false, compareIds = [], onToggleCompare }) {
@@ -52,9 +53,9 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
       style={{ transitionDelay: `${Math.min(index, 5) * 90}ms` }}
     >
       <div className={styles.truckImage}>
-        <img src={truck.image} alt={truck.title} />
+        <img src={truck.image} alt={truck.title} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
         <span>{truck.badge}</span>
-        {truck.photoCount && (
+        {truck.photoCount > 0 && (
           <span className={styles.photoCount}>
             <IconCamera /> {truck.photoCount}
           </span>
@@ -78,7 +79,7 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
         <p>{truck.location}</p>
         <h3>{truck.title}</h3>
         <div className={styles.statusRow}>
-          <span>{truck.status || t('truckGrid.available')}</span>
+          <span>{formatTruckStatus(t, truck.status)}</span>
           <span>{truck.vatStatus || t('truckGrid.vatConfirm')}</span>
         </div>
         <dl>
@@ -99,7 +100,7 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
 }
 
 function formatPrice(truck) {
-  if (!truck.vatStatus || truck.price.includes('VAT')) {
+  if (!truck.vatStatus || String(truck.price || '').includes('VAT')) {
     return truck.price;
   }
 

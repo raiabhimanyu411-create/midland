@@ -14,7 +14,7 @@ import styles from './TrucksPage.module.css';
 
 const PAGE_SIZE = 6;
 
-export function TrucksPage({ routeHash }) {
+export function TrucksPage() {
   const { t, i18n } = useTranslation();
   const filterFieldLabels = {
     make: t('pages.trucks.filters.make'),
@@ -32,13 +32,16 @@ export function TrucksPage({ routeHash }) {
     return value;
   }
 
-  const [filters, setFilters] = useState({
-    make: '',
-    body: '',
-    maxPrice: '',
-    year: '',
-    mileage: '',
-    gearbox: ''
+  const [filters, setFilters] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      make: params.get('make') || '',
+      body: params.get('body') || '',
+      maxPrice: params.get('maxPrice') || '',
+      year: '',
+      mileage: '',
+      gearbox: ''
+    };
   });
   const [sort, setSort] = useState('newest');
   const [trucks, setTrucks] = useState([]);
@@ -55,44 +58,37 @@ export function TrucksPage({ routeHash }) {
   const resultsRef = useRef(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setFilters((current) => ({
-      ...current,
-      make: params.get('make') || '',
-      body: params.get('body') || '',
-      maxPrice: params.get('maxPrice') || ''
-    }));
-  }, [routeHash]);
+    let active = true;
+    api.getTruckFilters()
+      .then((optionData) => { if (active) setFilterOptions(optionData); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
+    let active = true;
+
     async function loadTrucks() {
       setLoading(true);
       setError('');
       try {
-        const [truckData, optionData] = await Promise.all([
-          api.listTrucks({
-            make: filters.make,
-            body: filters.body,
-            maxPrice: filters.maxPrice,
-            year: filters.year,
-            mileage: filters.mileage,
-            gearbox: filters.gearbox,
-            sort
-          }),
-          api.getTruckFilters()
-        ]);
+        const truckData = await api.listTrucks({ ...filters, sort });
+        if (!active) return;
         setTrucks(truckData.data || []);
-        setFilterOptions(optionData);
       } catch (requestError) {
+        if (!active) return;
         setError(requestError.message);
         setTrucks(demoDataEnabled ? fallbackTrucks : []);
       } finally {
-        setLoading(false);
-        setVisibleCount(PAGE_SIZE);
+        if (active) {
+          setLoading(false);
+          setVisibleCount(PAGE_SIZE);
+        }
       }
     }
 
     loadTrucks();
+    return () => { active = false; };
   }, [filters, sort]);
 
   const filteredTrucks = useMemo(() => trucks, [trucks]);
@@ -135,6 +131,7 @@ export function TrucksPage({ routeHash }) {
       />
       <SearchBand
         value={{ make: filters.make, body: filters.body, maxPrice: filters.maxPrice }}
+        options={filterOptions}
         onChange={updateFilter}
         onSubmit={() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
       />

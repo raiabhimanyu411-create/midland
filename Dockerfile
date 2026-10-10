@@ -6,6 +6,7 @@ COPY client/package.json ./client/package.json
 COPY backend/package.json ./backend/package.json
 RUN npm ci
 
+COPY shared ./shared
 COPY client ./client
 RUN npm run build
 
@@ -19,6 +20,7 @@ COPY client/package.json ./client/package.json
 COPY backend/package.json ./backend/package.json
 RUN npm ci --omit=dev --workspace backend
 
+COPY shared ./shared
 COPY backend ./backend
 COPY --from=build /app/client/dist ./client/dist
 

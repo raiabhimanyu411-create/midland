@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { readStorage, writeStorage } from '../utils/storage.js';
 import styles from './CookieConsent.module.css';
 
 const STORAGE_KEY = 'midland-cookie-consent';
@@ -9,13 +10,13 @@ export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!window.localStorage.getItem(STORAGE_KEY)) {
+    if (!readStorage(STORAGE_KEY)) {
       setVisible(true);
     }
   }, []);
 
   function decide(value) {
-    window.localStorage.setItem(STORAGE_KEY, value);
+    writeStorage(STORAGE_KEY, value);
     setVisible(false);
   }
 

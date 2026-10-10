@@ -16,7 +16,8 @@ export function StockAlert() {
     event.preventDefault();
     setSubmitted(false);
     setError('');
-    const formData = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const formData = new FormData(formElement);
 
     try {
       await api.createEnquiry({
@@ -25,7 +26,7 @@ export function StockAlert() {
         email: formData.get('email'),
         requirement: `STOCK ALERT SIGN-UP: notify me about ${formData.get('criteria') || 'new stock matching my needs'}.`
       });
-      event.currentTarget.reset();
+      formElement.reset();
       setCriteria('');
       setSubmitted(true);
     } catch (requestError) {

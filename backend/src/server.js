@@ -17,6 +17,8 @@ import { chatLeadsRouter } from './routes/chatLeads.js';
 import { authRouter } from './routes/auth.js';
 import { adminRouter } from './routes/admin.js';
 import { blogsRouter } from './routes/blogs.js';
+import { renderPage } from './seo/render.js';
+import { robotsTxt, sitemapXml } from './seo/sitemap.js';
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -49,6 +51,11 @@ if (allowedOrigins.length) {
 }
 
 app.use(express.json({ limit: '100kb' }));
+// Express 5 leaves req.body undefined when no body was sent; routes expect an object.
+app.use((req, _res, next) => {
+  if (req.body === undefined || req.body === null || typeof req.body !== 'object') req.body = {};
+  next();
+});
 app.use('/uploads', express.static(uploadDir, { maxAge: isProduction ? '1d' : 0 }));
 
 const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: 'draft-8', legacyHeaders: false });
@@ -93,13 +100,29 @@ app.use('/api/{*splat}', (_req, res) => {
   res.status(404).json({ message: 'API route not found' });
 });
 
+app.get('/robots.txt', robotsTxt);
+app.get('/sitemap.xml', sitemapXml);
+
 if (isProduction) {
   if (!existsSync(path.join(clientDistDir, 'index.html'))) {
     throw new Error(`Production frontend build not found at ${clientDistDir}`);
   }
 
+  // One URL per page: /trucks/ and /index.html permanently redirect to their canonical form.
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    const query = req.originalUrl.slice(req.path.length);
+    if (req.path === '/index.html') return res.redirect(301, `/${query}`);
+    if (req.path.length > 1 && req.path.endsWith('/')) {
+      // Collapse leading slashes so "//evil.com/" can never become an off-site redirect.
+      const target = `/${req.path.replace(/^\/+|\/+$/g, '')}`;
+      return res.redirect(301, `${target}${query}`);
+    }
+    next();
+  });
+  app.use('/assets', express.static(path.join(clientDistDir, 'assets'), { maxAge: '1y', immutable: true }));
   app.use(express.static(clientDistDir, { maxAge: '1h', index: false }));
-  app.get('/{*splat}', (_req, res) => res.sendFile(path.join(clientDistDir, 'index.html')));
+  app.get('/{*splat}', renderPage);
 }
 
 app.use((error, _req, res, _next) => {

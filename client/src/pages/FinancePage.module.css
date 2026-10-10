@@ -72,7 +72,55 @@
   line-height: 1.45;
 }
 
+.quoteForm {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  border-top: 1px solid #eaecf0;
+  padding-top: 20px;
+}
+
+.quoteForm button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 18px;
+  color: #ffffff;
+  background: #b4232c;
+  font-weight: 900;
+}
+
+.quoteForm button:disabled {
+  opacity: 0.6;
+}
+
+.formStatus,
+.formError {
+  grid-column: 1 / -1;
+  margin: 0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.formStatus {
+  color: #155b36;
+  background: #e9f8ef;
+}
+
+.formError {
+  color: #8f1c24;
+  background: #fff1f2;
+}
+
 @media (max-width: 900px) {
+  .quoteForm {
+    grid-template-columns: 1fr;
+  }
+
   .splitPage,
   .calculatorPanel {
     grid-template-columns: 1fr;

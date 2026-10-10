@@ -73,6 +73,8 @@ function Hero() {
         <img
           src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85"
           alt=""
+          fetchPriority="high"
+          decoding="async"
         />
       </div>
       <div className={styles.heroContent}>

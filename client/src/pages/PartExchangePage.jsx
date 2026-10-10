@@ -29,7 +29,8 @@ export function PartExchangePage() {
             event.preventDefault();
             setSubmitted(false);
             setError('');
-            const formData = new FormData(event.currentTarget);
+            const formElement = event.currentTarget;
+            const formData = new FormData(formElement);
 
             try {
               await api.createPartExchange({
@@ -40,7 +41,7 @@ export function PartExchangePage() {
                 mileage: formData.get('mileage'),
                 notes: formData.get('notes')
               });
-              event.currentTarget.reset();
+              formElement.reset();
               setSubmitted(true);
             } catch (requestError) {
               setError(requestError.message);
@@ -49,11 +50,11 @@ export function PartExchangePage() {
         >
           <label>
             {t('pages.partExchange.form.nameLabel')}
-            <input name="name" type="text" placeholder={t('pages.partExchange.form.namePlaceholder')} />
+            <input name="name" type="text" placeholder={t('pages.partExchange.form.namePlaceholder')} required />
           </label>
           <label>
             {t('pages.partExchange.form.phoneLabel')}
-            <input name="phone" type="tel" placeholder={t('pages.partExchange.form.phonePlaceholder')} />
+            <input name="phone" type="tel" placeholder={t('pages.partExchange.form.phonePlaceholder')} required />
           </label>
           <label>
             {t('pages.partExchange.form.emailLabel')}

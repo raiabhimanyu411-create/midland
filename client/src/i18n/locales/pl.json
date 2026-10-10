@@ -843,7 +843,7 @@
       "greetingStockChecking": "Wciąż sprawdzam aktualną ofertę, ale zapasowa oferta jest gotowa.",
       "greetingStockReady": "Obecna oferta: {{count}} ciężarówek.",
       "fallback": "Poniżej znalazłem najbliższe dopasowania w ofercie. Aby uzyskać dokładną dostępność, ostateczny VAT, termin oglądania i arkusz inspekcji, wyślij zapytanie lub zadzwoń do zespołu.",
-      "thankYou": "Dziękujemy, {{name}}. Twoje zapytanie o priorytecie {{temperature}} zostało przesłane do naszego zespołu sprzedaży. Skontaktujemy się w preferowanym przez Ciebie terminie. W pilnych sprawach zadzwoń pod {{phone}}.",
+      "thankYou": "Dziękujemy, {{name}}. Twoje zapytanie zostało przesłane do naszego zespołu sprzedaży. Skontaktujemy się w preferowanym przez Ciebie terminie. W pilnych sprawach zadzwoń pod {{phone}}.",
       "sendError": "Nie udało się teraz wysłać tego zapytania. Spróbuj ponownie lub zadzwoń do naszego zespołu sprzedaży pod numer {{phone}}.",
       "mileageLine": "{{title}} ma przebieg {{mileage}}.",
       "priceLine": "Cena wynosi {{price}}.",

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { pool } from '../db/mysql.js';
-import { cleanText, createRecord, requireFields } from '../utils/validation.js';
+import { cleanText, createRecord, positiveInt, requireFields } from '../utils/validation.js';
 import { requireAuth } from '../middleware/auth.js';
 
 export const partExchangeRouter = Router();
@@ -16,20 +16,20 @@ partExchangeRouter.get('/', requireAuth, async (_req, res, next) => {
 
 partExchangeRouter.post('/', async (req, res, next) => {
   try {
-    const validation = requireFields(req.body, ['registration', 'mileage', 'notes']);
+    const validation = requireFields(req.body, ['name', 'phone', 'registration', 'mileage', 'notes']);
     if (!validation.valid) {
       res.status(400).json({ message: validation.message });
       return;
     }
 
     const record = createRecord('part_exchange', {
-      name: cleanText(req.body.name),
-      phone: cleanText(req.body.phone),
-      email: cleanText(req.body.email),
-      registration: cleanText(req.body.registration).toUpperCase(),
-      mileage: cleanText(req.body.mileage),
-      notes: cleanText(req.body.notes),
-      targetTruckId: req.body.targetTruckId ? Number(req.body.targetTruckId) : null
+      name: cleanText(req.body.name, 120),
+      phone: cleanText(req.body.phone, 60),
+      email: cleanText(req.body.email, 160),
+      registration: cleanText(req.body.registration, 40).toUpperCase(),
+      mileage: cleanText(req.body.mileage, 80),
+      notes: cleanText(req.body.notes, 5000),
+      targetTruckId: positiveInt(req.body.targetTruckId)
     });
 
     const [result] = await pool.query(

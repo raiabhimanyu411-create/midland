@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { api, apiAssetUrl } from '../utils/api.js';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { adminToken, api, apiAssetUrl, SESSION_EXPIRED_EVENT } from '../utils/api.js';
 import styles from './AdminPage.module.css';
 
 const emptyTruck = {
@@ -36,6 +36,24 @@ const emptyBlog = {
 
 function slugify(text) {
   return String(text || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// While typing, keep a trailing hyphen so words can be separated; the final slug is trimmed on save.
+function slugifyWhileTyping(text) {
+  return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+/, '');
+}
+
+function toDateTimeLocal(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const pad = (number) => String(number).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function getLeadIdFromUrl() {
+  const leadId = Number(new URLSearchParams(window.location.search).get('lead'));
+  return Number.isInteger(leadId) && leadId > 0 ? leadId : null;
 }
 
 const NAV_ITEMS = [
@@ -77,18 +95,20 @@ export function AdminPage() {
   const [leadFilters, setLeadFilters] = useState({ search: '', status: '', temperature: '', followUp: '', page: 1, limit: 10 });
   const [leadPagination, setLeadPagination] = useState(null);
   const [selectedLead, setSelectedLead] = useState(null);
+  const [leadSearchInput, setLeadSearchInput] = useState('');
+  const leadRequestRef = useRef(0);
 
   const isPrivileged = user ? ['admin', 'manager'].includes(user.role) : false;
 
   const dashboardStats = useMemo(
     () => [
-      ['Trucks', trucks.length],
+      ['Trucks', trucks.filter((truck) => truck.status !== 'archived').length],
       ['Enquiries', enquiries.length],
       ['Finance quotes', financeQuotes.length],
       ['Part exchange', partExchange.length],
-      ['Chat leads', chatLeads.length]
+      ['Chat leads', dashboard?.leads ?? leadPagination?.total ?? chatLeads.length]
     ],
-    [enquiries.length, financeQuotes.length, partExchange.length, trucks.length, chatLeads.length]
+    [enquiries.length, financeQuotes.length, partExchange.length, trucks.length, chatLeads.length, dashboard, leadPagination]
   );
 
   const visibleTrucks = useMemo(() => {
@@ -110,8 +130,29 @@ export function AdminPage() {
 
   const unreadCount = notifications.filter((item) => !item.is_read).length;
 
-  useEffect(() => { api.me().then((r) => setUser(r.user)).catch(() => localStorage.removeItem('midland_admin_token')).finally(() => setAuthLoading(false)); }, []);
-  useEffect(() => { if (user) loadAdminData(); }, [user, leadFilters]);
+  useEffect(() => { api.me().then((r) => setUser(r.user)).catch(() => adminToken.clear()).finally(() => setAuthLoading(false)); }, []);
+  useEffect(() => {
+    const handleExpired = () => {
+      setUser(null);
+      setSelectedLead(null);
+    };
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, handleExpired);
+  }, []);
+  useEffect(() => { if (user) loadAdminData(); }, [user]);
+  useEffect(() => { if (user) loadChatLeads(leadFilters); }, [user, leadFilters]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLeadFilters((current) => (current.search === leadSearchInput ? current : { ...current, search: leadSearchInput, page: 1 }));
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [leadSearchInput]);
+  useEffect(() => {
+    const leadId = getLeadIdFromUrl();
+    if (!user || !leadId) return;
+    setActiveTab('pipeline');
+    api.getChatLead(leadId).then((r) => setSelectedLead(r.data)).catch((error) => setMessage({ type: 'error', text: error.message }));
+  }, [user]);
   useEffect(() => { if (isPrivileged) loadUsers(); }, [user]);
   useEffect(() => { if (isPrivileged && activeTab === 'audit') loadAuditLogs(auditPage); }, [user, activeTab, auditPage]);
   useEffect(() => { if (isPrivileged && activeTab === 'blog') loadBlogPosts(); }, [user, activeTab]);
@@ -119,12 +160,11 @@ export function AdminPage() {
   async function loadAdminData() {
     setLoading(true);
     try {
-      const [truckData, enquiryData, financeData, partExchangeData, chatLeadData, dashboardData, notificationData] = await Promise.all([
-        api.listTrucks(),
+      const [truckData, enquiryData, financeData, partExchangeData, dashboardData, notificationData] = await Promise.all([
+        api.listAdminTrucks(),
         api.listEnquiries(),
         api.listFinanceQuotes(),
         api.listPartExchange(),
-        api.listChatLeads(leadFilters),
         api.getDashboard(),
         api.listNotifications()
       ]);
@@ -132,8 +172,6 @@ export function AdminPage() {
       setEnquiries(enquiryData.data || []);
       setFinanceQuotes(financeData.data || []);
       setPartExchange(partExchangeData.data || []);
-      setChatLeads(chatLeadData.data || []);
-      setLeadPagination(chatLeadData.pagination);
       setDashboard(dashboardData.data);
       setNotifications(notificationData.data || []);
     } catch (error) {
@@ -141,6 +179,22 @@ export function AdminPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function loadChatLeads(filters = leadFilters) {
+    const requestId = ++leadRequestRef.current;
+    try {
+      const chatLeadData = await api.listChatLeads(filters);
+      if (requestId !== leadRequestRef.current) return;
+      setChatLeads(chatLeadData.data || []);
+      setLeadPagination(chatLeadData.pagination);
+    } catch (error) {
+      if (requestId === leadRequestRef.current) setMessage({ type: 'error', text: error.message });
+    }
+  }
+
+  async function refreshAll() {
+    await Promise.all([loadAdminData(), loadChatLeads()]);
   }
 
   async function loadUsers() {
@@ -226,11 +280,13 @@ export function AdminPage() {
     event.preventDefault();
     setMessage(null);
     try {
+      const payload = { ...blogForm, slug: slugify(blogForm.slug) };
+      if (!payload.slug) throw new Error('Please enter a URL slug using letters or numbers.');
       if (editingBlogId) {
-        await api.updateBlog(editingBlogId, blogForm);
+        await api.updateBlog(editingBlogId, payload);
         setMessage({ type: 'success', text: 'Post updated.' });
       } else {
-        await api.createBlog(blogForm);
+        await api.createBlog(payload);
         setMessage({ type: 'success', text: 'Post created.' });
       }
       setBlogForm(emptyBlog);
@@ -254,7 +310,7 @@ export function AdminPage() {
     }
   }
 
-  async function logout() { try { await api.logout(); } finally { localStorage.removeItem('midland_admin_token'); setUser(null); } }
+  async function logout() { try { await api.logout(); } catch { /* Session may already be gone. */ } finally { adminToken.clear(); setUser(null); } }
 
   if (authLoading) return <section className={styles.loginShell}><p>Checking secure session…</p></section>;
   if (!user) return <AdminLogin onLogin={setUser} />;
@@ -388,7 +444,7 @@ export function AdminPage() {
             />
             <div className={styles.adminIdentity}>
               <span>{user.name} · {user.role}</span>
-              <button type="button" onClick={loadAdminData}>Refresh</button>
+              <button type="button" onClick={refreshAll}>Refresh</button>
               <button type="button" onClick={logout}>Log out</button>
             </div>
           </div>
@@ -530,7 +586,7 @@ export function AdminPage() {
                           <td><span className={`${styles.badge} ${styles['status-' + truck.status]}`}>{truck.status}</span></td>
                           <td>
                             <button type="button" onClick={() => editTruck(truck)}>Edit</button>
-                            <button type="button" onClick={() => deleteTruck(truck)}>Archive</button>
+                            {user.role === 'admin' && truck.status !== 'archived' && <button type="button" onClick={() => deleteTruck(truck)}>Archive</button>}
                           </td>
                         </tr>
                       ))}
@@ -550,7 +606,7 @@ export function AdminPage() {
               <h2>Chat sales pipeline</h2>
               <p className={styles.adminNote}>Qualified website leads, ordered newest first.</p>
               <div className={styles.leadFilters}>
-                <input placeholder="Search name, phone, email, postcode…" value={leadFilters.search} onChange={(e) => setLeadFilters((f) => ({ ...f, search: e.target.value, page: 1 }))} />
+                <input placeholder="Search name, phone, email, postcode…" value={leadSearchInput} onChange={(e) => setLeadSearchInput(e.target.value)} />
                 <select value={leadFilters.status} onChange={(e) => setLeadFilters((f) => ({ ...f, status: e.target.value, page: 1 }))}>
                   <option value="">All statuses</option>
                   <option>new</option>
@@ -570,7 +626,7 @@ export function AdminPage() {
               </div>
               <div className={styles.pipeline}>
                 {chatLeads.length === 0 && <p className={styles.adminNote}>No chatbot leads yet.</p>}
-                {chatLeads.map((lead) => <ChatLeadCard key={lead.id} lead={lead} onUpdated={loadAdminData} onOpen={async () => setSelectedLead((await api.getChatLead(lead.id)).data)} />)}
+                {chatLeads.map((lead) => <ChatLeadCard key={lead.id} lead={lead} onUpdated={() => Promise.all([loadChatLeads(), loadAdminData()])} onOpen={async () => { try { setSelectedLead((await api.getChatLead(lead.id)).data); } catch (error) { setMessage({ type: 'error', text: error.message }); } }} />)}
               </div>
               {leadPagination && (
                 <div className={styles.pagination}>
@@ -650,7 +706,7 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
         <form className={`${styles.contactForm} ${styles.adminForm}`} onSubmit={onSubmit}>
           <h2>{editingId ? 'Edit post' : 'Add post'}</h2>
           <AdminInput label="Title" value={form.title} onChange={onTitleChange} required />
-          <AdminInput label="URL slug" value={form.slug} onChange={(value) => onFieldChange('slug', slugify(value))} required />
+          <AdminInput label="URL slug" value={form.slug} onChange={(value) => onFieldChange('slug', slugifyWhileTyping(value))} required />
           <label>
             Excerpt (shown on blog listing and search results)
             <textarea value={form.excerpt} maxLength={320} onChange={(event) => onFieldChange('excerpt', event.target.value)} />
@@ -682,7 +738,7 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
             <textarea value={form.metaDescription} maxLength={160} onChange={(event) => onFieldChange('metaDescription', event.target.value)} />
             <span className={styles.charCount}>{form.metaDescription.length}/160</span>
           </label>
-          <button type="submit">{editingId ? 'Update post' : 'Publish post'}</button>
+          <button type="submit">{editingId ? 'Update post' : form.status === 'published' ? 'Publish post' : 'Save draft'}</button>
           {editingId && <button className={styles.adminSecondary} type="button" onClick={onCancelEdit}>Cancel edit</button>}
         </form>
       )}
@@ -743,7 +799,7 @@ function OverviewPanel({ enquiries, financeQuotes, partExchange, chatLeads, truc
         <h2>Snapshot</h2>
         <p className={styles.adminNote}>Everything else in one place.</p>
         <div className={styles.leadList}>
-          <article><span><strong>Live stock</strong>{trucks.filter((t) => t.status === 'available').length} available of {trucks.length} total</span></article>
+          <article><span><strong>Live stock</strong>{trucks.filter((t) => t.status === 'available').length} available of {trucks.filter((t) => t.status !== 'archived').length} listed</span></article>
           <article><span><strong>Website enquiries</strong>{enquiries.length} logged</span></article>
           <article><span><strong>Finance quotes</strong>{financeQuotes.length} requested</span></article>
           <article><span><strong>Part exchange</strong>{partExchange.length} requested</span></article>
@@ -769,7 +825,7 @@ function NotificationBell({ notifications, unread, open, onToggle, onMarkRead })
           {notifications.length === 0 && <p className={styles.adminNote}>You&apos;re all caught up.</p>}
           {notifications.map((item) => (
             <article key={item.id} className={`${styles.notifItem} ${item.is_read ? '' : styles.notifUnread}`}>
-              <strong>{item.title}</strong>
+              <strong>{item.link ? <a href={item.link}>{item.title}</a> : item.title}</strong>
               <p>{item.message}</p>
               <div className={styles.notifMeta}>
                 <time>{new Date(item.created_at).toLocaleString('en-GB')}</time>
@@ -933,11 +989,23 @@ function ChatLeadCard({ lead, onUpdated, onOpen }) {
   const [status, setStatus] = useState(lead.status);
   const [assignedTo, setAssignedTo] = useState(lead.assignedTo || '');
   const [salesNotes, setSalesNotes] = useState(lead.salesNotes || '');
-  const [followUpAt, setFollowUpAt] = useState(lead.followUpAt ? String(lead.followUpAt).slice(0, 16) : '');
+  const [followUpAt, setFollowUpAt] = useState(() => toDateTimeLocal(lead.followUpAt));
+  const [saveState, setSaveState] = useState({ status: 'idle', text: '' });
 
   async function save() {
-    await api.updateChatLead(lead.id, { status, assignedTo, salesNotes, followUpAt });
-    onUpdated();
+    setSaveState({ status: 'saving', text: 'Saving…' });
+    try {
+      await api.updateChatLead(lead.id, {
+        status,
+        assignedTo,
+        salesNotes,
+        followUpAt: followUpAt ? new Date(followUpAt).toISOString() : null
+      });
+      setSaveState({ status: 'saved', text: 'Saved.' });
+      onUpdated();
+    } catch (error) {
+      setSaveState({ status: 'error', text: error.message });
+    }
   }
 
   return <article className={styles.pipelineCard}>
@@ -955,14 +1023,15 @@ function ChatLeadCard({ lead, onUpdated, onOpen }) {
       <label>Follow-up<input type="datetime-local" value={followUpAt} onChange={(e) => setFollowUpAt(e.target.value)} /></label>
       <label>Sales notes<textarea value={salesNotes} onChange={(e) => setSalesNotes(e.target.value)} /></label>
       <button type="button" onClick={onOpen}>Details & transcript</button>
-      <button type="button" onClick={save}>Save lead</button>
+      <button type="button" onClick={save} disabled={saveState.status === 'saving'}>Save lead</button>
+      {saveState.text && <p className={`${styles.formStatus} ${saveState.status === 'error' ? styles.formError : ''}`}>{saveState.text}</p>}
     </div>
   </article>;
 }
 
 function AdminLogin({ onLogin }) {
   const [form, setForm] = useState({ email: 'admin@midlandtrucks.co.uk', password: '' }); const [error, setError] = useState(''); const [forgot, setForgot] = useState(false);
-  async function submit(e) { e.preventDefault(); setError(''); try { if (forgot) { const r = await api.forgotPassword(form.email); setError(r.message); return; } const r = await api.login(form); localStorage.setItem('midland_admin_token', r.token); onLogin(r.user); } catch (err) { setError(err.message); } }
+  async function submit(e) { e.preventDefault(); setError(''); try { if (forgot) { const r = await api.forgotPassword(form.email); setError(r.message); return; } const r = await api.login(form); adminToken.set(r.token); onLogin(r.user); } catch (err) { setError(err.message); } }
   return <section className={styles.loginShell}><form onSubmit={submit} className={styles.loginCard}><p className="eyebrow">Secure administration</p><h1>{forgot ? 'Reset password' : 'Welcome back'}</h1><label>Email<input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></label>{!forgot && <label>Password<input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></label>}{error && <p className={styles.formStatus}>{error}</p>}<button type="submit">{forgot ? 'Send reset instructions' : 'Log in securely'}</button><button className={styles.linkButton} type="button" onClick={() => setForgot(!forgot)}>{forgot ? 'Back to login' : 'Forgot password?'}</button></form></section>;
 }
 

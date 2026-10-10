@@ -3,6 +3,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { trucks as fallbackTrucks, locations, teamMembers } from '../data/siteData.js';
 import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
+import { createId } from '../utils/id.js';
+import { formatTruckStatus } from '../utils/truckStatus.js';
 import { IconClose, IconDelivery, IconMail, IconPin } from './icons.jsx';
 import styles from './ChatAssistant.module.css';
 
@@ -28,7 +30,7 @@ const intentTerms = {
     'هاتف', 'رقم', 'تليفون', 'تلفون', 'اتصال', 'فريق', 'مبيعات', 'ساعات العمل', 'مواعيد العمل'
   ],
   finance: [
-    'finance', 'financing', 'deposit', 'monthly', 'lease', 'leasing', 'hire purchase', 'hp', 'repayment', 'instalment',
+    'finance', 'financing', 'deposit', 'monthly', 'lease', 'leasing', 'hire purchase', 'repayment', 'instalment',
     'finans', 'zaliczk', 'wplata', 'miesiecz', 'leasing', 'raty', 'rata', 'kredyt',
     'تمويل', 'عربون', 'مقدم', 'شهري', 'قسط', 'اقساط', 'تقسيط', 'ايجار', 'دفعات'
   ],
@@ -97,7 +99,7 @@ const truckQueryAliases = [
   { canonical: 'mercedes', terms: ['mercedesa', 'مرسيدس'] },
   { canonical: 'volvo', terms: ['فولفو'] },
   { canonical: 'daf', terms: ['داف'] },
-  { canonical: 'man', terms: ['mana', 'مان'] },
+  { canonical: 'man', terms: ['mana', 'مان'], wholeWord: true },
   { canonical: 'iveco', terms: ['ايفيكو', 'إيفيكو'] },
   { canonical: 'renault', terms: ['رينو'] },
   { canonical: 'automatic', terms: ['automatycz', 'automat', 'اوتوماتيك', 'اتوماتيك'] },
@@ -129,7 +131,7 @@ export function ChatAssistant() {
   const [loadingStock, setLoadingStock] = useState(true);
   const [enquiry, setEnquiry] = useState({ active: false, name: '', phone: '', email: '', company: '', postcode: '', vehicleType: '', budget: '', budgetVat: 'excluding VAT', purchaseTimeline: '', preferredCallback: '', financeRequired: false, partExchange: false, consent: false, truckId: '', requirement: '' });
   const [submitting, setSubmitting] = useState(false);
-  const sessionId = useMemo(() => crypto.randomUUID(), []);
+  const sessionId = useMemo(() => createId(), []);
   const transcriptRef = useRef(null);
 
   useEffect(() => {
@@ -184,15 +186,17 @@ export function ChatAssistant() {
 
     setInput('');
     setEnquiry((current) => ({ ...current, active: false }));
-    const userMessage = { id: crypto.randomUUID(), sender: 'user', text: cleanMessage };
+    const userMessage = { id: createId(), sender: 'user', text: cleanMessage };
     const contextTruck = findContextTruck(messages, cleanMessage);
     const botMessage = buildReply(ctx, cleanMessage, trucks, loadingStock, contextTruck);
-    setMessages((current) => [...current, userMessage, { ...botMessage, id: crypto.randomUUID() }]);
+    setMessages((current) => [...current, userMessage, { ...botMessage, id: createId() }]);
 
     if (botMessage.showEnquiry) {
+      const referencedTruckId = getTruckIdFromPath() || (botMessage.trucks?.length === 1 ? botMessage.trucks[0].id : null);
       setEnquiry((current) => ({
         ...current,
         active: true,
+        truckId: referencedTruckId || current.truckId,
         requirement: botMessage.requirement || cleanMessage
       }));
     }
@@ -213,9 +217,9 @@ export function ChatAssistant() {
       setMessages((current) => [
         ...current,
         {
-          id: crypto.randomUUID(),
+          id: createId(),
           sender: 'bot',
-          text: t('chat.replies.thankYou', { name: enquiry.name, temperature: response.data.temperature, phone: salesPhone })
+          text: t('chat.replies.thankYou', { name: enquiry.name, phone: salesPhone })
         }
       ]);
       setEnquiry({ active: false, name: '', phone: '', email: '', company: '', postcode: '', vehicleType: '', budget: '', budgetVat: 'excluding VAT', purchaseTimeline: '', preferredCallback: '', financeRequired: false, partExchange: false, consent: false, truckId: '', requirement: '' });
@@ -223,7 +227,7 @@ export function ChatAssistant() {
       setMessages((current) => [
         ...current,
         {
-          id: crypto.randomUUID(),
+          id: createId(),
           sender: 'bot',
           text: t('chat.replies.sendError', { phone: salesPhone })
         }
@@ -292,7 +296,7 @@ export function ChatAssistant() {
                   <label>{t('chat.form.budgetLabel')}<input type="number" min="0" value={enquiry.budget} onChange={(event) => setEnquiry((c) => ({ ...c, budget: event.target.value }))} /></label>
                 </div>
                 <label>{t('chat.form.budgetBasisLabel')}<select value={enquiry.budgetVat} onChange={(event) => setEnquiry((c) => ({ ...c, budgetVat: event.target.value }))}><option value="excluding VAT">{t('chat.form.budgetBasisExcl')}</option><option value="including VAT">{t('chat.form.budgetBasisIncl')}</option></select></label>
-                <label>{t('chat.form.timelineLabel')}<select value={enquiry.purchaseTimeline} onChange={(event) => setEnquiry((c) => ({ ...c, purchaseTimeline: event.target.value }))}><option value="">{t('chat.form.timelineSelect')}</option><option>{t('chat.form.timelineThisWeek')}</option><option>{t('chat.form.timelineWithin7')}</option><option>{t('chat.form.timelineThisMonth')}</option><option>{t('chat.form.timelineWithin3Months')}</option><option>{t('chat.form.timelineResearching')}</option></select></label>
+                <label>{t('chat.form.timelineLabel')}<select value={enquiry.purchaseTimeline} onChange={(event) => setEnquiry((c) => ({ ...c, purchaseTimeline: event.target.value }))}><option value="">{t('chat.form.timelineSelect')}</option><option value="This week">{t('chat.form.timelineThisWeek')}</option><option value="Within 7 days">{t('chat.form.timelineWithin7')}</option><option value="This month">{t('chat.form.timelineThisMonth')}</option><option value="Within 3 months">{t('chat.form.timelineWithin3Months')}</option><option value="Just researching">{t('chat.form.timelineResearching')}</option></select></label>
                 <label>{t('chat.form.callbackLabel')}<input value={enquiry.preferredCallback} onChange={(event) => setEnquiry((c) => ({ ...c, preferredCallback: event.target.value }))} placeholder={t('chat.form.callbackPlaceholder')} /></label>
                 <div className={styles.checks}>
                   <label><input type="checkbox" checked={enquiry.financeRequired} onChange={(event) => setEnquiry((c) => ({ ...c, financeRequired: event.target.checked }))} /> {t('chat.form.financeRequired')}</label>
@@ -350,6 +354,11 @@ export function ChatAssistant() {
       </button>
     </section>
   );
+}
+
+function getTruckIdFromPath() {
+  const match = window.location.pathname.match(/^\/truck\/(\d+)\/?$/);
+  return match ? Number(match[1]) : null;
 }
 
 function ChatBubble({ message, t }) {
@@ -720,28 +729,35 @@ function convertArabicDigits(value) {
 }
 
 function canonicalizeTruckQuery(query) {
+  const words = new Set(query.split(/\s+/));
   const aliases = truckQueryAliases
-    .filter(({ terms }) => containsAny(query, terms))
+    .filter(({ terms, wholeWord }) => (wholeWord ? terms.some((term) => words.has(normalize(term))) : containsAny(query, terms)))
     .map(({ canonical }) => canonical);
   return `${query} ${aliases.join(' ')}`.trim();
 }
 
 function extractBudget(query) {
-  const raw = query.match(/(?:gbp|pound|under|below|less than)?\s*(\d+(?:\.\d+)?)\s*(k|000)?/);
-  if (!raw) return null;
+  const candidates = [...query.matchAll(/(gbp|pound|pounds|under|below|less than|ponizej|do|تحت|اقل من)?\s*(\d+(?:\.\d+)?)\s*(k|tys|000)?/g)]
+    .map((match) => ({
+      number: Number(match[2]),
+      hasPrefix: Boolean(match[1]),
+      hasSuffix: Boolean(match[3]),
+      afterEuro: /euro\s*$|يورو\s*$/.test(query.slice(0, match.index))
+    }))
+    .filter((item) => Number.isFinite(item.number) && !item.afterEuro);
 
-  const number = Number(raw[1]);
-  if (!Number.isFinite(number)) return null;
-  return raw[2] === 'k' || number < 1000 ? Math.round(number * 1000) : Math.round(number);
+  const best = candidates.find((item) => item.hasPrefix || item.hasSuffix) || candidates.find((item) => item.number >= 1000 && !(item.number >= 1980 && item.number <= 2039));
+  if (!best) return null;
+  return best.hasSuffix || best.number < 1000 ? Math.round(best.number * 1000) : Math.round(best.number);
 }
 
 function formatPrice(truck) {
-  if (!truck.vatStatus || truck.price.includes('VAT')) return truck.price;
+  if (!truck.vatStatus || String(truck.price || '').includes('VAT')) return truck.price;
   return `${truck.price} ${truck.vatStatus}`;
 }
 
 function formatTruckLine(t, truck) {
-  return `${formatPrice(truck)} | ${truck.mileage} | ${truck.gearbox} | ${truck.status || t('truckGrid.available')}`;
+  return `${formatPrice(truck)} | ${truck.mileage} | ${truck.gearbox} | ${formatTruckStatus(t, truck.status)}`;
 }
 
 function formatPriceRange(ctx, trucks) {

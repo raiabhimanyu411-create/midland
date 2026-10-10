@@ -1,13 +1,21 @@
 import { Router } from 'express';
 import { mapTruck, pool } from '../db/mysql.js';
-import { cleanNumber, cleanText, requireFields } from '../utils/validation.js';
+import { cleanNumber, cleanText, positiveInt, queryText, requireFields } from '../utils/validation.js';
 import { allowRoles, audit, requireAuth } from '../middleware/auth.js';
 
 export const trucksRouter = Router();
 
+const truckStatuses = ['available', 'reserved', 'sold', 'archived'];
+
 trucksRouter.get('/', async (req, res, next) => {
   try {
-  const { make, body, maxPrice, year, mileage, gearbox, sort = 'newest' } = req.query;
+    const make = queryText(req.query.make);
+    const body = queryText(req.query.body);
+    const gearbox = queryText(req.query.gearbox);
+    const sort = queryText(req.query.sort) || 'newest';
+    const maxPrice = positiveInt(req.query.maxPrice);
+    const year = positiveInt(req.query.year);
+    const mileage = positiveInt(req.query.mileage);
     const where = ['status != ?'];
     const values = ['archived'];
 
@@ -21,15 +29,15 @@ trucksRouter.get('/', async (req, res, next) => {
     }
     if (maxPrice) {
       where.push('price_value <= ?');
-      values.push(Number(maxPrice));
+      values.push(maxPrice);
     }
     if (year) {
       where.push('CAST(year AS UNSIGNED) >= ?');
-      values.push(Number(year));
+      values.push(year);
     }
     if (mileage) {
       where.push('mileage_value <= ?');
-      values.push(Number(mileage));
+      values.push(mileage);
     }
     if (gearbox) {
       where.push('gearbox = ?');
@@ -79,12 +87,24 @@ trucksRouter.get('/filters', async (_req, res, next) => {
   }
 });
 
+trucksRouter.get('/admin/all', requireAuth, async (_req, res, next) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM trucks ORDER BY updated_at DESC, id DESC');
+    res.json({ count: rows.length, data: rows.map(mapTruck) });
+  } catch (error) {
+    next(error);
+  }
+});
+
 trucksRouter.get('/:id', async (req, res, next) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM trucks WHERE id = ? AND status != ?', [
-      Number(req.params.id),
-      'archived'
-    ]);
+    const id = positiveInt(req.params.id);
+    if (!id) {
+      res.status(404).json({ message: 'Truck not found' });
+      return;
+    }
+
+    const [rows] = await pool.query('SELECT * FROM trucks WHERE id = ? AND status != ?', [id, 'archived']);
     const truck = rows[0] ? mapTruck(rows[0]) : null;
 
   if (!truck) {
@@ -107,6 +127,11 @@ trucksRouter.post('/', requireAuth, allowRoles('admin','manager'), async (req, r
     }
 
     const payload = normalizeTruckPayload(req.body);
+    const payloadError = validateTruckPayload(payload);
+    if (payloadError) {
+      res.status(400).json({ message: payloadError });
+      return;
+    }
     const [result] = await pool.query(
       `INSERT INTO trucks (
         title, make, type, location, price, price_value, mileage, mileage_value,
@@ -150,6 +175,11 @@ trucksRouter.put('/:id', requireAuth, allowRoles('admin','manager'), async (req,
     }
 
     const payload = normalizeTruckPayload(req.body);
+    const payloadError = validateTruckPayload(payload);
+    if (payloadError) {
+      res.status(400).json({ message: payloadError });
+      return;
+    }
     const [result] = await pool.query(
       `UPDATE trucks SET
         title = ?, make = ?, type = ?, location = ?, price = ?, price_value = ?,
@@ -174,7 +204,7 @@ trucksRouter.put('/:id', requireAuth, allowRoles('admin','manager'), async (req,
         payload.description,
         payload.image,
         payload.status,
-        Number(req.params.id)
+        positiveInt(req.params.id)
       ]
     );
 
@@ -183,7 +213,7 @@ trucksRouter.put('/:id', requireAuth, allowRoles('admin','manager'), async (req,
       return;
     }
 
-    const [rows] = await pool.query('SELECT * FROM trucks WHERE id = ?', [Number(req.params.id)]);
+    const [rows] = await pool.query('SELECT * FROM trucks WHERE id = ?', [positiveInt(req.params.id)]);
     await audit(req,'update-truck','truck',req.params.id,{title:payload.title}); res.json({ data: mapTruck(rows[0]) });
   } catch (error) {
     next(error);
@@ -192,7 +222,7 @@ trucksRouter.put('/:id', requireAuth, allowRoles('admin','manager'), async (req,
 
 trucksRouter.delete('/:id', requireAuth, allowRoles('admin'), async (req, res, next) => {
   try {
-    const [result] = await pool.query('UPDATE trucks SET status = ? WHERE id = ?', ['archived', Number(req.params.id)]);
+    const [result] = await pool.query('UPDATE trucks SET status = ? WHERE id = ?', ['archived', positiveInt(req.params.id)]);
 
     if (result.affectedRows === 0) {
       res.status(404).json({ message: 'Truck not found' });
@@ -207,22 +237,29 @@ trucksRouter.delete('/:id', requireAuth, allowRoles('admin'), async (req, res, n
 
 function normalizeTruckPayload(body) {
   return {
-    title: cleanText(body.title),
-    make: cleanText(body.make),
-    type: cleanText(body.type),
-    location: cleanText(body.location),
-    price: cleanText(body.price),
-    priceValue: cleanNumber(body.priceValue),
-    mileage: cleanText(body.mileage),
-    mileageValue: cleanNumber(body.mileageValue),
-    year: cleanText(body.year),
-    gearbox: cleanText(body.gearbox),
-    badge: cleanText(body.badge),
-    cab: cleanText(body.cab),
-    power: cleanText(body.power),
-    mot: cleanText(body.mot),
-    description: cleanText(body.description),
-    image: cleanText(body.image),
-    status: cleanText(body.status) || 'available'
+    title: cleanText(body.title, 255),
+    make: cleanText(body.make, 100),
+    type: cleanText(body.type, 100),
+    location: cleanText(body.location, 180),
+    price: cleanText(body.price, 50),
+    priceValue: Math.round(cleanNumber(body.priceValue)),
+    mileage: cleanText(body.mileage, 50),
+    mileageValue: Math.round(cleanNumber(body.mileageValue)),
+    year: cleanText(body.year, 10),
+    gearbox: cleanText(body.gearbox, 80),
+    badge: cleanText(body.badge, 80),
+    cab: cleanText(body.cab, 120),
+    power: cleanText(body.power, 80),
+    mot: cleanText(body.mot, 160),
+    description: cleanText(body.description, 20000),
+    image: cleanText(body.image, 2000),
+    status: cleanText(body.status).toLowerCase() || 'available'
   };
+}
+
+function validateTruckPayload(payload) {
+  if (!truckStatuses.includes(payload.status)) return `Status must be one of: ${truckStatuses.join(', ')}`;
+  if (payload.priceValue < 0 || payload.priceValue > 2_000_000_000) return 'Price number must be a positive amount';
+  if (payload.mileageValue < 0 || payload.mileageValue > 2_000_000_000) return 'Mileage number must be a positive amount';
+  return null;
 }

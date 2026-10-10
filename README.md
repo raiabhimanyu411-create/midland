@@ -53,11 +53,16 @@ DB_SSL=true
 JWT_SECRET=use-at-least-32-random-characters
 ADMIN_EMAIL=real-admin@example.com
 ADMIN_PASSWORD=use-a-unique-password-of-at-least-12-characters
+SITE_URL=https://www.example.com
 ```
 
 Set `DB_SSL=false` only if the database is on a trusted private network and does not support TLS. If the frontend is hosted separately, set `VITE_API_URL=https://api.example.com/api` at frontend build time and set `CLIENT_ORIGIN=https://www.example.com` on the API. Multiple origins are comma-separated.
 
 Uploaded files use `backend/uploads` by default. Mount persistent storage there, or replace local uploads with object storage before using an ephemeral/serverless host.
+
+## SEO
+
+In production, Express renders each page's `<title>`, meta description, canonical URL, Open Graph tags, JSON-LD and a crawlable HTML fallback into `index.html` before sending it, and returns `404` for unknown pages, missing trucks and missing posts. `/sitemap.xml` (static pages, live trucks, published posts) and `/robots.txt` are generated from the database. Set `SITE_URL` to the public domain so canonical and sitemap URLs are correct behind a proxy, then submit `https://<domain>/sitemap.xml` in Google Search Console. Shared SEO copy lives in `shared/seo.js`.
 
 Configure the platform health check to `/api/ready`. The application handles `SIGTERM` and closes its HTTP and MySQL connections cleanly.
 
@@ -84,4 +89,4 @@ Inventory writes, lead lists, users, audit logs, uploads, and blog administratio
 
 Replace and legally verify all company identity, VAT, FCA/finance, ratings, testimonial, address, phone, privacy, cookie, retention, and consent copy in `client/src/i18n/locales/*.json` and `client/src/data/siteData.js`. The current content includes demonstration values and is not a finished legal notice.
 
-Also confirm the production domain, add its canonical URL/sitemap, connect password-reset email delivery, and use a persistent upload volume or object storage.
+Also confirm the production domain (`SITE_URL`), connect password-reset email delivery, and use a persistent upload volume or object storage.

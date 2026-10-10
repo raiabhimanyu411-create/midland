@@ -1,3 +1,4 @@
+import { Breadcrumb } from '../components/Breadcrumb.jsx';
 import { InfoList, Spec } from '../components/InfoList.jsx';
 import { PageHero } from '../components/PageHero.jsx';
 import { useEffect, useState } from 'react';
@@ -5,42 +6,64 @@ import { useTranslation } from 'react-i18next';
 import { trucks as fallbackTrucks } from '../data/siteData.js';
 import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
+import { formatTruckStatus } from '../utils/truckStatus.js';
+import { notFoundPage, truckJsonLd, truckSeo } from '../../../shared/seo.js';
+import { setPageMeta, siteUrl } from '../utils/seo.js';
 import styles from './TruckDetailPage.module.css';
 
 export function TruckDetailPage({ truckId }) {
   const { t } = useTranslation();
   const confirm = t('common.confirm');
   const items = t('pages.truckDetail.items', { returnObjects: true });
-  const [truck, setTruck] = useState(() => demoDataEnabled ? fallbackTrucks.find((item) => item.id === truckId) || fallbackTrucks[0] : null);
-  const [allTrucks, setAllTrucks] = useState(() => demoDataEnabled ? fallbackTrucks : []);
+  const findFallbackTruck = (id) => (demoDataEnabled ? fallbackTrucks.find((item) => item.id === id) || null : null);
+  const [truck, setTruck] = useState(() => findFallbackTruck(truckId));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    let active = true;
+
     async function loadTruck() {
-      try {
-        const [truckData, listData] = await Promise.all([api.getTruck(truckId || 1), api.listTrucks()]);
-        const fallback = demoDataEnabled ? fallbackTrucks.find((item) => item.id === truckData.data.id) || {} : {};
-        setTruck({ ...fallback, ...truckData.data });
-        setAllTrucks(listData.data || []);
-      } catch (requestError) {
-        setError(requestError.message);
-        setTruck(demoDataEnabled ? fallbackTrucks.find((item) => item.id === truckId) || fallbackTrucks[0] : null);
-      } finally {
+      if (!truckId) {
+        setTruck(null);
         setLoading(false);
+        return;
+      }
+
+      try {
+        const truckData = await api.getTruck(truckId);
+        if (!active) return;
+        setTruck({ ...(findFallbackTruck(truckData.data.id) || {}), ...truckData.data });
+      } catch (requestError) {
+        if (!active) return;
+        setError(requestError.message);
+        setTruck(findFallbackTruck(truckId));
+      } finally {
+        if (active) setLoading(false);
       }
     }
 
     loadTruck();
+    return () => { active = false; };
   }, [truckId]);
+
+  useEffect(() => {
+    if (loading && !truck) return;
+    if (!truck) {
+      setPageMeta({ ...notFoundPage, path: null });
+      return;
+    }
+    setPageMeta({ ...truckSeo(truck), jsonLd: [truckJsonLd(truck, siteUrl())] });
+  }, [truck, loading]);
 
   if (loading && !truck) return <section className="section"><p>{t('common.loading', { defaultValue: 'Loading vehicle…' })}</p></section>;
   if (!truck) return <section className="section"><h1>{t('common.notFound', { defaultValue: 'Vehicle unavailable' })}</h1><p>{error}</p><a className="button primary" href="/trucks">{t('nav.trucks')}</a></section>;
 
-  const gallery = [truck.image, ...allTrucks.filter((item) => item.id !== truck.id).slice(0, 3).map((item) => item.image)].filter(Boolean);
+  const gallery = [truck.image].filter(Boolean);
 
   return (
     <>
+      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.trucks'), href: '/trucks' }, { label: truck.title }]} />
       <PageHero
         eyebrow={t('pages.truckDetail.hero.eyebrow')}
         title={truck.title}
@@ -49,12 +72,14 @@ export function TruckDetailPage({ truckId }) {
       />
       <section className={styles.detailLayout}>
         <div>
-          <img className={styles.detailImage} src={truck.image} alt={truck.title} />
-          <div className={styles.thumbnailRow} aria-label={t('pages.truckDetail.galleryAria')}>
-            {gallery.map((image) => (
-              <img src={image} alt="" key={image} />
-            ))}
-          </div>
+          <img className={styles.detailImage} src={truck.image} alt={truck.title} decoding="async" />
+          {gallery.length > 1 && (
+            <div className={styles.thumbnailRow} aria-label={t('pages.truckDetail.galleryAria')}>
+              {gallery.map((image) => (
+                <img src={image} alt="" key={image} />
+              ))}
+            </div>
+          )}
           <div className={styles.copyBlock}>
             <p className="eyebrow">{t('pages.truckDetail.prepNotes.eyebrow')}</p>
             <h2>{t('pages.truckDetail.prepNotes.heading')}</h2>
@@ -63,7 +88,7 @@ export function TruckDetailPage({ truckId }) {
           <InfoList items={items.map((item) => [item.title, item.copy])} />
         </div>
         <aside className={styles.detailPanel}>
-          <span className={styles.statusBadge}>{truck.status || t('truckGrid.available')}</span>
+          <span className={styles.statusBadge}>{formatTruckStatus(t, truck.status)}</span>
           <strong>{formatPrice(truck)}</strong>
           <p className={styles.priceNote}>
             {truck.vatStatus
@@ -89,7 +114,7 @@ export function TruckDetailPage({ truckId }) {
             <Spec label={t('pages.truckDetail.specs.owners')} value={truck.owners || confirm} />
             <Spec label={t('pages.truckDetail.specs.warranty')} value={truck.warranty || confirm} />
           </dl>
-          <a className="button primary" href="/contact">{t('pages.truckDetail.reserveEnquire')}</a>
+          <a className="button primary" href={`/contact?truck=${truck.id}`}>{t('pages.truckDetail.reserveEnquire')}</a>
           <a className="button outline" href="/finance">{t('pages.truckDetail.financeOptions')}</a>
           <a className="button outline" href="/delivery">{t('pages.truckDetail.deliveryQuote')}</a>
         </aside>
@@ -99,7 +124,7 @@ export function TruckDetailPage({ truckId }) {
 }
 
 function formatPrice(truck) {
-  if (!truck.vatStatus || truck.price.includes('VAT')) {
+  if (!truck.vatStatus || String(truck.price || '').includes('VAT')) {
     return truck.price;
   }
 

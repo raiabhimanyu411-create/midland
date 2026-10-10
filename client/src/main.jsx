@@ -2,30 +2,55 @@ import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { I18nextProvider, useTranslation } from 'react-i18next';
-import i18n from './i18n/index.js';
+import i18n, { i18nReady } from './i18n/index.js';
 import { ChatAssistant } from './components/ChatAssistant.jsx';
 import { CookieConsent } from './components/CookieConsent.jsx';
 import { CinematicEffects } from './components/CinematicEffects.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Header } from './components/Header.jsx';
-import { AboutPage } from './pages/AboutPage.jsx';
-import { BlogPostPage } from './pages/BlogPostPage.jsx';
-import { ContactPage } from './pages/ContactPage.jsx';
-import { DeliveryPage } from './pages/DeliveryPage.jsx';
-import { FaqPage } from './pages/FaqPage.jsx';
-import { FinancePage } from './pages/FinancePage.jsx';
 import { HomePage } from './pages/HomePage.jsx';
-import { PartExchangePage } from './pages/PartExchangePage.jsx';
-import { PrivacyPage } from './pages/PrivacyPage.jsx';
-import { TruckDetailPage } from './pages/TruckDetailPage.jsx';
-import { TrucksPage } from './pages/TrucksPage.jsx';
+import { adminPage, notFoundPage, organizationJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
 import { getRoute, getRouteDescription, getRouteTitle } from './utils/routes.js';
+import { setPageMeta, siteUrl } from './utils/seo.js';
 import './styles.css';
 
-const AdminPage = lazy(() => import('./pages/AdminPage.jsx').then((module) => ({ default: module.AdminPage })));
+// Every page except the home page is split into its own chunk to keep the first load small.
+const lazyPage = (loader, name) => lazy(() => loader().then((module) => ({ default: module[name] })));
+const AboutPage = lazyPage(() => import('./pages/AboutPage.jsx'), 'AboutPage');
+const AdminPage = lazyPage(() => import('./pages/AdminPage.jsx'), 'AdminPage');
+const BlogListPage = lazyPage(() => import('./pages/BlogListPage.jsx'), 'BlogListPage');
+const BlogPostPage = lazyPage(() => import('./pages/BlogPostPage.jsx'), 'BlogPostPage');
+const ContactPage = lazyPage(() => import('./pages/ContactPage.jsx'), 'ContactPage');
+const DeliveryPage = lazyPage(() => import('./pages/DeliveryPage.jsx'), 'DeliveryPage');
+const FaqPage = lazyPage(() => import('./pages/FaqPage.jsx'), 'FaqPage');
+const FinancePage = lazyPage(() => import('./pages/FinancePage.jsx'), 'FinancePage');
+const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage.jsx'), 'NotFoundPage');
+const PartExchangePage = lazyPage(() => import('./pages/PartExchangePage.jsx'), 'PartExchangePage');
+const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage.jsx'), 'PrivacyPage');
+const TruckDetailPage = lazyPage(() => import('./pages/TruckDetailPage.jsx'), 'TruckDetailPage');
+const TrucksPage = lazyPage(() => import('./pages/TrucksPage.jsx'), 'TrucksPage');
+
+// Truck and blog pages set their own metadata once their data has loaded.
+const pagesWithOwnMeta = new Set(['truckDetail', 'blogPost']);
+
+function routeMeta(t, language, routeName) {
+  if (routeName === 'admin') return { ...adminPage, path: null };
+  if (routeName === 'notFound') return { ...notFoundPage, path: null };
+
+  const page = staticPages[routeName] || staticPages.home;
+  const isEnglish = language === 'en';
+  return {
+    title: isEnglish ? page.title : `${getRouteTitle(t, routeName)} | ${SITE_NAME}`,
+    description: (isEnglish ? page.description : getRouteDescription(t, routeName)) || page.description,
+    path: page.path,
+    jsonLd: routeName === 'home'
+      ? [organizationJsonLd(siteUrl()), { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${siteUrl()}/` }]
+      : []
+  };
+}
 
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [route, setRoute] = useState(getRoute);
 
   useEffect(() => {
@@ -109,35 +134,31 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document.title = `${getRouteTitle(t, route.name) || 'Home'} | MidLand Trucks`;
-
-    const description = getRouteDescription(t, route.name) || getRouteDescription(t, 'home');
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) {
-      meta = document.createElement('meta');
-      meta.setAttribute('name', 'description');
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute('content', description);
-  }, [route.name, t]);
+    if (pagesWithOwnMeta.has(route.name)) return;
+    setPageMeta(routeMeta(t, i18n.language, route.name));
+  }, [route.name, t, i18n.language]);
 
   return (
     <>
       <main className="site-shell">
         <Header route={route} />
         <div className="page-stage" key={`${route.name}-${route.hash}`}>
-          {route.name === 'home' && <HomePage />}
-          {route.name === 'trucks' && <TrucksPage routeHash={route.hash} />}
-          {route.name === 'truckDetail' && <TruckDetailPage truckId={route.truckId} />}
-          {route.name === 'blogPost' && <BlogPostPage slug={route.blogSlug} />}
-          {route.name === 'finance' && <FinancePage />}
-          {route.name === 'partExchange' && <PartExchangePage />}
-          {route.name === 'delivery' && <DeliveryPage />}
-          {route.name === 'faq' && <FaqPage />}
-          {route.name === 'privacy' && <PrivacyPage />}
-          {route.name === 'about' && <AboutPage />}
-          {route.name === 'contact' && <ContactPage />}
-          {route.name === 'admin' && <Suspense fallback={<section className="section"><p>Loading administration…</p></section>}><AdminPage /></Suspense>}
+          <Suspense fallback={<section className="section" aria-busy="true" />}>
+            {route.name === 'home' && <HomePage />}
+            {route.name === 'trucks' && <TrucksPage />}
+            {route.name === 'truckDetail' && <TruckDetailPage truckId={route.truckId} />}
+            {route.name === 'blogPost' && <BlogPostPage slug={route.blogSlug} />}
+            {route.name === 'finance' && <FinancePage />}
+            {route.name === 'partExchange' && <PartExchangePage />}
+            {route.name === 'delivery' && <DeliveryPage />}
+            {route.name === 'faq' && <FaqPage />}
+            {route.name === 'privacy' && <PrivacyPage />}
+            {route.name === 'about' && <AboutPage />}
+            {route.name === 'contact' && <ContactPage />}
+            {route.name === 'blog' && <BlogListPage />}
+            {route.name === 'notFound' && <NotFoundPage />}
+            {route.name === 'admin' && <AdminPage />}
+          </Suspense>
         </div>
         <Footer />
       </main>
@@ -148,8 +169,10 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')).render(
-  <I18nextProvider i18n={i18n}>
-    <App />
-  </I18nextProvider>
-);
+i18nReady.finally(() => {
+  createRoot(document.getElementById('root')).render(
+    <I18nextProvider i18n={i18n}>
+      <App />
+    </I18nextProvider>
+  );
+});

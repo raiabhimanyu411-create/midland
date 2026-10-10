@@ -1,3 +1,21 @@
+import { readStorage, removeStorage, writeStorage } from './storage.js';
+
+const TOKEN_KEY = 'midland_admin_token';
+export const SESSION_EXPIRED_EVENT = 'midland:session-expired';
+
+export const adminToken = {
+  get: () => readStorage(TOKEN_KEY),
+  set: (token) => writeStorage(TOKEN_KEY, token),
+  clear: () => removeStorage(TOKEN_KEY)
+};
+
+function handleUnauthorized(response, token) {
+  if (response.status === 401 && token) {
+    adminToken.clear();
+    window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+  }
+}
+
 const configuredApiUrl = String(import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const API_BASE_URL = configuredApiUrl || '/api';
 
@@ -9,7 +27,7 @@ export function apiAssetUrl(assetPath) {
 }
 
 export async function apiRequest(path, options = {}) {
-  const token = localStorage.getItem('midland_admin_token');
+  const token = adminToken.get();
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -22,6 +40,7 @@ export async function apiRequest(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    handleUnauthorized(response, token);
     throw new Error(data.message || 'API request failed');
   }
 
@@ -38,6 +57,7 @@ export const api = {
   },
   getTruck: (id) => apiRequest(`/trucks/${id}`),
   getTruckFilters: () => apiRequest('/trucks/filters'),
+  listAdminTrucks: () => apiRequest('/trucks/admin/all'),
   createTruck: (payload) => apiRequest('/trucks', { method: 'POST', body: JSON.stringify(payload) }),
   updateTruck: (id, payload) => apiRequest(`/trucks/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
   deleteTruck: (id) => apiRequest(`/trucks/${id}`, { method: 'DELETE' }),
@@ -63,16 +83,18 @@ export const api = {
   ,listNotifications: () => apiRequest('/admin/notifications')
   ,markNotificationRead: (id) => apiRequest(`/admin/notifications/${id}/read`, { method: 'PATCH' })
   ,listBlogs: (query = {}) => apiRequest(`/blogs${Object.keys(query).length ? `?${new URLSearchParams(query)}` : ''}`)
-  ,getBlogBySlug: (slug) => apiRequest(`/blogs/${slug}`)
+  ,getBlogBySlug: (slug) => apiRequest(`/blogs/${encodeURIComponent(slug)}`)
   ,listAllBlogs: () => apiRequest('/blogs/admin/list')
   ,getBlogById: (id) => apiRequest(`/blogs/admin/${id}`)
   ,createBlog: (payload) => apiRequest('/blogs', { method: 'POST', body: JSON.stringify(payload) })
   ,updateBlog: (id, payload) => apiRequest(`/blogs/${id}`, { method: 'PUT', body: JSON.stringify(payload) })
   ,deleteBlog: (id) => apiRequest(`/blogs/${id}`, { method: 'DELETE' })
   ,uploadTruckImage: async (file) => {
-    const token = localStorage.getItem('midland_admin_token');
+    const token = adminToken.get();
     const form = new FormData(); form.append('image', file);
     const response = await fetch(`${API_BASE_URL}/admin/upload`, { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body: form });
-    const data = await response.json(); if (!response.ok) throw new Error(data.message || 'Upload failed'); return data;
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) { handleUnauthorized(response, token); throw new Error(data.message || 'Upload failed'); }
+    return data;
   }
 };

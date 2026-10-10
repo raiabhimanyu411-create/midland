@@ -1,16 +1,9 @@
+import { breadcrumbJsonLd, serializeJsonLd } from '../../../shared/seo.js';
+import { siteUrl } from '../utils/seo.js';
 import styles from './Breadcrumb.module.css';
 
 export function Breadcrumb({ items }) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.label,
-      ...(item.href ? { item: item.href } : {})
-    }))
-  };
+  const structuredData = breadcrumbJsonLd(items, siteUrl());
 
   return (
     <nav className={styles.breadcrumb} aria-label="Breadcrumb">
@@ -34,7 +27,7 @@ export function Breadcrumb({ items }) {
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
     </nav>
   );

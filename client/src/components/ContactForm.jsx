@@ -3,8 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { api } from '../utils/api.js';
 import styles from './ContactForm.module.css';
 
+function getTruckIdFromUrl() {
+  const truckId = Number(new URLSearchParams(window.location.search).get('truck'));
+  return Number.isInteger(truckId) && truckId > 0 ? truckId : null;
+}
+
 export function ContactForm({ embedded = false }) {
   const { t } = useTranslation();
+  const [truckId] = useState(getTruckIdFromUrl);
   const contactReasons = t('contactForm.reasons', { returnObjects: true });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -16,22 +22,29 @@ export function ContactForm({ embedded = false }) {
         event.preventDefault();
         setSubmitted(false);
         setError('');
-        const formData = new FormData(event.currentTarget);
+        const formElement = event.currentTarget;
+        const formData = new FormData(formElement);
 
         try {
           await api.createEnquiry({
             name: formData.get('name'),
             phone: formData.get('phone'),
             email: formData.get('email'),
-            requirement: `[${formData.get('reason')}] ${formData.get('requirement')}`
+            requirement: `[${formData.get('reason')}] ${formData.get('requirement')}`,
+            truckId
           });
-          event.currentTarget.reset();
+          formElement.reset();
           setSubmitted(true);
         } catch (requestError) {
           setError(requestError.message);
         }
       }}
     >
+      {truckId && (
+        <p className={styles.formStatus}>
+          {t('contactForm.truckReference', { id: truckId, defaultValue: 'Enquiry about vehicle #{{id}}' })}
+        </p>
+      )}
       <label className={styles.halfField}>
         {t('contactForm.nameLabel')}
         <input name="name" type="text" placeholder={t('contactForm.namePlaceholder')} required />
