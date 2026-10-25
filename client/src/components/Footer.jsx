@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { locations } from '../data/siteData.js';
+import { SITE_EMAIL } from '../../../shared/seo.js';
+import { BrandMark } from './BrandLogo.jsx';
 import styles from './Footer.module.css';
 
 export function Footer() {
@@ -11,9 +13,7 @@ export function Footer() {
       heading: t('footer.stockHeading'),
       links: [
         { label: t('footer.links.allTrucks'), href: '/trucks' },
-        { label: t('footer.links.finance'), href: '/finance' },
-        { label: t('footer.links.partExchange'), href: '/part-exchange' },
-        { label: t('footer.links.delivery'), href: '/delivery' }
+        { label: t('footer.links.partExchange'), href: '/part-exchange' }
       ]
     },
     {
@@ -21,7 +21,7 @@ export function Footer() {
       links: [
         { label: t('footer.links.aboutUs'), href: '/about' },
         { label: t('footer.links.faq'), href: '/faq' },
-        { label: t('footer.links.news', { defaultValue: 'Guides & news' }), href: '/blog' },
+        { label: t('footer.links.news'), href: '/blog' },
         { label: t('footer.links.contactUs'), href: '/contact' },
         { label: t('footer.links.privacyPolicy'), href: '/privacy' }
       ]
@@ -33,13 +33,13 @@ export function Footer() {
       <div className={styles.footerTop}>
         <div className={styles.brandColumn}>
           <a className={styles.brand} href="/" aria-label={t('footer.brandAria')}>
-            <span className={styles.brandMark}>M</span>
-            <strong>MidLand Trucks</strong>
+            <span className={styles.brandMark}><BrandMark /></span>
+            <span><strong>Midland</strong><small>Commercials</small></span>
           </a>
           <p>{t('footer.intro')}</p>
           {headquarters && <address>{headquarters.address}</address>}
-          <a className="text-link" href="tel:+441214960000">0121 496 0000</a>
-          <a className="text-link" href="mailto:sales@midlandtrucks.co.uk">sales@midlandtrucks.co.uk</a>
+          {headquarters && <a className="text-link" href={`tel:${headquarters.phone.replace(/\s+/g, '')}`}>{headquarters.phone}</a>}
+          <a className="text-link" href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>
         </div>
         {linkColumns.map((column) => (
           <div className={styles.linkColumn} key={column.heading}>

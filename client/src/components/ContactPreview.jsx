@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ContactForm } from './ContactForm.jsx';
 import { IconCheckBadge, IconDelivery, IconShield } from './icons.jsx';
+import { locations } from '../data/siteData.js';
 import { useInView } from '../utils/useInView.js';
 import styles from './ContactPreview.module.css';
 
@@ -37,7 +38,7 @@ export function ContactPreview() {
         </div>
         <div className={styles.directContact}>
           <span>{t('contactPreview.preferTalk')}</span>
-          <a href="tel:+441214960000">0121 496 0000 <b aria-hidden="true">→</b></a>
+          <a href={`tel:${locations[0].phone.replace(/\s+/g, '')}`}>{locations[0].phone} <b aria-hidden="true">→</b></a>
           <small>{t('contactPreview.hoursNote')}</small>
         </div>
       </div>

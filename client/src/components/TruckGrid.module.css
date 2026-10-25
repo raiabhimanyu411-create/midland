@@ -9,6 +9,8 @@
 }
 
 .truckCard {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid #d0d5dd;
   border-radius: 8px;
@@ -29,7 +31,7 @@
 }
 
 .truckCard:hover {
-  border-color: #2f6f9f;
+  border-color: #24324f;
   transform: perspective(1000px) translateY(-7px) rotateX(1.1deg) rotateY(-1deg);
   box-shadow: 0 24px 48px rgb(16 24 40 / 14%);
 }
@@ -92,7 +94,7 @@
   font-weight: 900;
   transition: transform 200ms ease;
 }
-.truckImage .featuredBadge { top: 52px; background: #b4232c; }
+.truckImage .featuredBadge { top: 52px; background: #1e3a8a; }
 
 .truckCard:hover .truckImage span {
   transform: translateY(-2px);
@@ -148,7 +150,15 @@
 }
 
 .truckBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 18px;
+}
+
+/* Keep price + button on the same line at the bottom of every card in a row. */
+.truckBody dl {
+  margin-bottom: 16px;
 }
 
 .truckBody > p {
@@ -177,6 +187,7 @@
 
 .cardFooter {
   display: flex;
+  margin-top: auto;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
@@ -189,19 +200,20 @@
 }
 
 .cardFooter a {
+  flex: 0 0 auto;
   border-radius: 8px;
   padding: 9px 12px;
   color: #ffffff;
-  background: #2f6f9f;
+  background: #24324f;
   font-size: 0.9rem;
   font-weight: 900;
   transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .cardFooter a:hover {
-  background: #245a82;
+  background: #18223a;
   transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgb(47 111 159 / 30%);
+  box-shadow: 0 8px 18px rgb(36 50 79 / 30%);
 }
 
 .skeletonCard {

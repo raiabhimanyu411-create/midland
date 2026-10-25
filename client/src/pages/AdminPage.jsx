@@ -136,7 +136,6 @@ export function AdminPage() {
   const [inventoryView, setInventoryView] = useState('stock');
   const [trucks, setTrucks] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
-  const [financeQuotes, setFinanceQuotes] = useState([]);
   const [partExchange, setPartExchange] = useState([]);
   const [chatLeads, setChatLeads] = useState([]);
   const [notifications, setNotifications] = useState([]);
@@ -174,11 +173,10 @@ export function AdminPage() {
     () => [
       ['Trucks', trucks.filter((truck) => truck.status !== 'archived').length],
       ['Enquiries', enquiries.length],
-      ['Finance quotes', financeQuotes.length],
       ['Part exchange', partExchange.length],
       ['Chat leads', dashboard?.leads ?? leadPagination?.total ?? chatLeads.length]
     ],
-    [enquiries.length, financeQuotes.length, partExchange.length, trucks.length, chatLeads.length, dashboard, leadPagination]
+    [enquiries.length, partExchange.length, trucks.length, chatLeads.length, dashboard, leadPagination]
   );
 
   const visibleTrucks = useMemo(() => {
@@ -234,17 +232,15 @@ export function AdminPage() {
   async function loadAdminData() {
     setLoading(true);
     try {
-      const [truckData, enquiryData, financeData, partExchangeData, dashboardData, notificationData] = await Promise.all([
+      const [truckData, enquiryData, partExchangeData, dashboardData, notificationData] = await Promise.all([
         api.listAdminTrucks(),
         api.listEnquiries(),
-        api.listFinanceQuotes(),
         api.listPartExchange(),
         api.getDashboard(),
         api.listNotifications()
       ]);
       setTrucks(truckData.data || []);
       setEnquiries(enquiryData.data || []);
-      setFinanceQuotes(financeData.data || []);
       setPartExchange(partExchangeData.data || []);
       setDashboard(dashboardData.data);
       setNotifications(notificationData.data || []);
@@ -657,7 +653,7 @@ export function AdminPage() {
       <nav className={styles.sidebar}>
         <div className={styles.brand}>
           <span className={styles.brandMark} aria-hidden="true"><i /><i /><i /><i /></span>
-          <span className={styles.brandText}><strong>MidLand</strong><small>TRUCKS · OPERATIONS</small></span>
+          <span className={styles.brandText}><strong>Midland</strong><small>COMMERCIALS · OPERATIONS</small></span>
         </div>
         <ul className={styles.navList}>
           {NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(user.role)).map((item) => (
@@ -683,7 +679,7 @@ export function AdminPage() {
       <div className={styles.adminMain}>
         <header className={styles.topbar}>
           <div>
-            <p className={styles.topbarEyebrow}>MidLand Trucks <span>/</span> Workspace</p>
+            <p className={styles.topbarEyebrow}>Midland Commercials <span>/</span> Workspace</p>
             <h1>{activeNavLabel}</h1>
           </div>
           <div className={styles.topbarActions}>
@@ -727,7 +723,7 @@ export function AdminPage() {
           {loading && <p className={styles.adminNote}>Loading admin data...</p>}
 
           {activeTab === 'overview' && (
-            <OverviewPanel enquiries={enquiries} financeQuotes={financeQuotes} partExchange={partExchange} chatLeads={chatLeads} trucks={trucks} />
+            <OverviewPanel enquiries={enquiries} partExchange={partExchange} chatLeads={chatLeads} trucks={trucks} />
           )}
 
           {activeTab === 'inventory' && (
@@ -1021,7 +1017,6 @@ export function AdminPage() {
           {activeTab === 'enquiries' && (
             <section className={styles.adminLeads}>
               <LeadList title="Enquiries" items={enquiries} fields={['name', 'phone', 'requirement']} />
-              <LeadList title="Finance quotes" items={financeQuotes} fields={['name', 'phone', 'monthlyEstimate']} />
               <LeadList title="Part exchange" items={partExchange} fields={['registration', 'mileage', 'notes']} />
             </section>
           )}
@@ -1184,7 +1179,7 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
   );
 }
 
-function OverviewPanel({ enquiries, financeQuotes, partExchange, chatLeads, trucks }) {
+function OverviewPanel({ enquiries, partExchange, chatLeads, trucks }) {
   const recentLeads = [...chatLeads].slice(0, 5);
   return (
     <section className={styles.adminGrid}>
@@ -1208,7 +1203,6 @@ function OverviewPanel({ enquiries, financeQuotes, partExchange, chatLeads, truc
         <div className={styles.leadList}>
           <article><span><strong>Live stock</strong>{trucks.filter((t) => t.status === 'available').length} available of {trucks.filter((t) => !['draft', 'archived'].includes(t.status)).length} listed</span></article>
           <article><span><strong>Website enquiries</strong>{enquiries.length} logged</span></article>
-          <article><span><strong>Finance quotes</strong>{financeQuotes.length} requested</span></article>
           <article><span><strong>Part exchange</strong>{partExchange.length} requested</span></article>
         </div>
       </div>
@@ -1475,10 +1469,10 @@ function ChatLeadCard({ lead, onUpdated, onOpen }) {
   return <article className={styles.pipelineCard}>
     <header><div><span className={`${styles.temperature} ${styles[lead.temperature]}`}>{lead.temperature} · {lead.leadScore}/100</span><h3>{lead.name}</h3><p>{lead.company || 'Private buyer'} · {lead.postcode || 'Postcode not supplied'}</p></div><time>{new Date(lead.createdAt).toLocaleString('en-GB')}</time></header>
     <div className={styles.leadFacts}>
-      <a href={`tel:${lead.phone}`}>Call: {lead.phone}</a><a href={`mailto:${lead.email}`}>Email: {lead.email || 'No email'}</a><a target="_blank" rel="noreferrer" href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '44')}?text=${encodeURIComponent(`Hello ${lead.name}, this is MidLand Trucks regarding your enquiry.`)}`}>WhatsApp</a>
+      <a href={`tel:${lead.phone}`}>Call: {lead.phone}</a><a href={`mailto:${lead.email}`}>Email: {lead.email || 'No email'}</a><a target="_blank" rel="noreferrer" href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '44')}?text=${encodeURIComponent(`Hello ${lead.name}, this is Midland Commercials regarding your enquiry.`)}`}>WhatsApp</a>
       <span>Budget: {lead.budget ? `£${Number(lead.budget).toLocaleString('en-GB')} ${lead.budgetVat}` : 'Not supplied'}</span>
       <span>Timeline: {lead.purchaseTimeline || 'Not supplied'}</span><span>Vehicle: {lead.vehicleType || 'Open requirement'}</span>
-      <span>{lead.financeRequired ? 'Finance required' : 'No finance request'} · {lead.partExchange ? 'Part exchange' : 'No part exchange'}</span>
+      <span>{lead.partExchange ? 'Part exchange' : 'No part exchange'}</span>
     </div>
     <p className={styles.requirement}>{lead.requirement}</p>
     <div className={styles.pipelineControls}>

@@ -4,7 +4,7 @@ export const trucks = [
     title: '2021 Scania R450 6x2 Tractor Unit',
     make: 'Scania',
     type: 'Tractor unit',
-    location: 'Birmingham, West Midlands',
+    location: 'Swadlincote, DE12',
     price: 'GBP 54,950 + VAT',
     priceValue: 54950,
     vatStatus: '+ VAT',
@@ -38,7 +38,7 @@ export const trucks = [
     title: '2020 Volvo FH 500 Globetrotter',
     make: 'Volvo',
     type: 'Tractor unit',
-    location: 'Leeds, West Yorkshire',
+    location: 'Swadlincote, DE12',
     price: 'GBP 61,500 + VAT',
     priceValue: 61500,
     vatStatus: '+ VAT',
@@ -47,7 +47,7 @@ export const trucks = [
     year: '2020',
     registration: '70 plate',
     gearbox: 'I-Shift',
-    badge: 'Low deposit',
+    badge: 'Globetrotter cab',
     status: 'Available',
     photoCount: 11,
     axle: '6x2 tractor unit',
@@ -72,7 +72,7 @@ export const trucks = [
     title: '2019 DAF XF 480 Super Space Cab',
     make: 'DAF',
     type: 'Tractor unit',
-    location: 'Manchester, Greater Manchester',
+    location: 'Swadlincote, DE12',
     price: 'GBP 42,750 + VAT',
     priceValue: 42750,
     vatStatus: '+ VAT',
@@ -106,7 +106,7 @@ export const trucks = [
     title: '2022 Mercedes-Benz Actros 2545',
     make: 'Mercedes-Benz',
     type: 'Tractor unit',
-    location: 'Coventry, West Midlands',
+    location: 'Swadlincote, DE12',
     price: 'GBP 69,995 + VAT',
     priceValue: 69995,
     vatStatus: '+ VAT',
@@ -140,7 +140,7 @@ export const trucks = [
     title: '2018 MAN TGS 32.420 8x4 Tipper',
     make: 'MAN',
     type: 'Tipper',
-    location: 'Derby, East Midlands',
+    location: 'Swadlincote, DE12',
     price: 'GBP 38,250 + VAT',
     priceValue: 38250,
     vatStatus: '+ VAT',
@@ -174,7 +174,7 @@ export const trucks = [
     title: '2020 Iveco Eurocargo 18T Curtainsider',
     make: 'Iveco',
     type: 'Rigid',
-    location: 'Northampton, Northamptonshire',
+    location: 'Swadlincote, DE12',
     price: 'GBP 32,950 + VAT',
     priceValue: 32950,
     vatStatus: '+ VAT',
@@ -209,12 +209,12 @@ export const trucks = [
 // "content" namespace, keyed by array index. This file keeps only fields that shouldn't be
 // translated: proper nouns, addresses, phone numbers, images and stable lookup keys.
 
-export const serviceCardHrefs = ['/finance', '/part-exchange', '/delivery'];
+export const serviceCardHrefs = ['/trucks', '/part-exchange', '/contact'];
 
 export const teamMembers = [
   { key: 'founder', initials: 'DW' },
   { key: 'operations', initials: 'SE' },
-  { key: 'finance', initials: 'RC' },
+  { key: 'buying', initials: 'RC' },
   { key: 'support', initials: 'PA' }
 ];
 

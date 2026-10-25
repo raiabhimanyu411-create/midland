@@ -21,9 +21,7 @@ const AdminPage = lazyPage(() => import('./pages/AdminPage.jsx'), 'AdminPage');
 const BlogListPage = lazyPage(() => import('./pages/BlogListPage.jsx'), 'BlogListPage');
 const BlogPostPage = lazyPage(() => import('./pages/BlogPostPage.jsx'), 'BlogPostPage');
 const ContactPage = lazyPage(() => import('./pages/ContactPage.jsx'), 'ContactPage');
-const DeliveryPage = lazyPage(() => import('./pages/DeliveryPage.jsx'), 'DeliveryPage');
 const FaqPage = lazyPage(() => import('./pages/FaqPage.jsx'), 'FaqPage');
-const FinancePage = lazyPage(() => import('./pages/FinancePage.jsx'), 'FinancePage');
 const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage.jsx'), 'NotFoundPage');
 const PartExchangePage = lazyPage(() => import('./pages/PartExchangePage.jsx'), 'PartExchangePage');
 const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage.jsx'), 'PrivacyPage');
@@ -148,9 +146,7 @@ function App() {
             {route.name === 'trucks' && <TrucksPage />}
             {route.name === 'truckDetail' && <TruckDetailPage truckId={route.truckId} />}
             {route.name === 'blogPost' && <BlogPostPage slug={route.blogSlug} />}
-            {route.name === 'finance' && <FinancePage />}
             {route.name === 'partExchange' && <PartExchangePage />}
-            {route.name === 'delivery' && <DeliveryPage />}
             {route.name === 'faq' && <FaqPage />}
             {route.name === 'privacy' && <PrivacyPage />}
             {route.name === 'about' && <AboutPage />}

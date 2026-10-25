@@ -56,9 +56,9 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
       <div className={styles.truckImage}>
         {truck.image
           ? <img src={truck.image} alt={truckDisplayTitle(truck)} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
-          : <div className={styles.imagePlaceholder}>Photo coming soon</div>}
+          : <div className={styles.imagePlaceholder}>{t('truckGrid.photoComingSoon')}</div>}
         {truck.badge && <span>{truck.badge}</span>}
-        {truck.featured && <span className={styles.featuredBadge}>Hot deal</span>}
+        {truck.featured && <span className={styles.featuredBadge}>{t('truckGrid.hotDeal')}</span>}
         {truck.photoCount > 0 && (
           <span className={styles.photoCount}>
             <IconCamera /> {truck.photoCount}
@@ -91,7 +91,7 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
           <Spec label={t('truckGrid.specs.mileage')} value={truck.mileage || confirm} />
           <Spec label={t('truckGrid.specs.body')} value={truck.type || confirm} />
           <Spec label={t('truckGrid.specs.gearbox')} value={truck.gearbox || confirm} />
-          <Spec label={t('truckGrid.specs.euro')} value={truck.euroRating || truck.badge || confirm} />
+          <Spec label={t('truckGrid.specs.euro')} value={truck.euroRating || (/euro/i.test(truck.badge || '') ? truck.badge : confirm)} />
           <Spec label={t('truckGrid.specs.mot')} value={truck.motExpiry || truck.mot || confirm} />
         </dl>
         <div className={styles.cardFooter}>

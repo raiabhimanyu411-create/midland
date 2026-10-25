@@ -3,6 +3,8 @@ import { Breadcrumb } from '../components/Breadcrumb.jsx';
 import { ContactForm } from '../components/ContactForm.jsx';
 import { LocationsSection } from '../components/LocationsSection.jsx';
 import { PageHero } from '../components/PageHero.jsx';
+import { locations } from '../data/siteData.js';
+import { SITE_EMAIL } from '../../../shared/seo.js';
 import styles from './ContactPage.module.css';
 
 export function ContactPage() {
@@ -23,8 +25,8 @@ export function ContactPage() {
           <h2>{t('pages.contact.salesDesk.heading')}</h2>
           <p>{t('pages.contact.salesDesk.copy')}</p>
           <div className={styles.contactDetails}>
-            <a href="tel:+441214960000">0121 496 0000</a>
-            <a href="mailto:sales@midlandtrucks.co.uk">sales@midlandtrucks.co.uk</a>
+            <a href={`tel:${locations[0].phone.replace(/\s+/g, '')}`}>{locations[0].phone}</a>
+            <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>
             <span>{t('pages.contact.details.location')}</span>
             <span>{t('pages.contact.details.hours')}</span>
           </div>

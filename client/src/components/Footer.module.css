@@ -1,6 +1,6 @@
 .siteFooter {
   color: #d0d5dd;
-  background: #17202a;
+  background: #111a2e;
 }
 
 .footerTop {
@@ -31,14 +31,29 @@
   height: 36px;
   place-items: center;
   border-radius: 8px;
-  color: #ffffff;
-  background: #b4232c;
-  font-weight: 900;
+  background: #1f2b45;
+}
+
+.brand strong,
+.brand small {
+  display: block;
+  text-transform: uppercase;
 }
 
 .brand strong {
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.brand small {
+  margin-top: 4px;
+  color: #8fb0e8;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.34em;
 }
 
 .brandColumn p {
@@ -63,7 +78,7 @@
 }
 
 .brandColumn :global(.text-link):hover {
-  color: #ffccd1;
+  color: #8fb0e8;
 }
 
 .linkColumn {

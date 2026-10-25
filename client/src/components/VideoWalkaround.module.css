@@ -20,7 +20,7 @@
   overflow: hidden;
   aspect-ratio: 16 / 10;
   border-radius: 8px;
-  background: #17202a;
+  background: #111a2e;
 }
 
 .preview img {
@@ -43,7 +43,7 @@
   height: 74px;
   place-items: center;
   border-radius: 50%;
-  color: #b4232c;
+  color: #172f6e;
   background: #ffffff;
   box-shadow: 0 16px 40px rgb(16 24 40 / 35%);
   transform: translate(-50%, -50%);

@@ -22,7 +22,7 @@
   bottom: 0;
   left: 0;
   width: 3px;
-  background: #b4232c;
+  background: #1e3a8a;
   content: "";
   transform: scaleY(0);
   transform-origin: bottom;
@@ -30,7 +30,7 @@
 }
 
 .valuesPanel div:hover {
-  border-color: #d9a4a8;
+  border-color: #a9bde3;
   box-shadow: 0 22px 44px rgb(16 24 40 / 12%);
   transform: translateX(5px);
 }

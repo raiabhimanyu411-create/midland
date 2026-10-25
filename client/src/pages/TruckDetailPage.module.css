@@ -42,11 +42,11 @@
 
 .thumbnailRow button:hover,
 .thumbnailRow button:focus-visible {
-  border-color: #2f6f9f;
+  border-color: #24324f;
 }
 
 .thumbnailRow button.thumbnailActive {
-  border-color: #b4232c;
+  border-color: #1e40af;
 }
 
 .thumbnailRow img {
@@ -79,7 +79,7 @@
 }
 
 .detailPanel > strong {
-  color: #b4232c;
+  color: #172f6e;
   font-size: clamp(1.7rem, 3vw, 2rem);
   line-height: 1.05;
 }

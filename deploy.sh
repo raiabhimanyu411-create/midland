@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MidLand Trucks - server deploy script
+# Midland Commercials - server deploy script
 # Location on server: ~/midland/deploy.sh
 set -euo pipefail
 

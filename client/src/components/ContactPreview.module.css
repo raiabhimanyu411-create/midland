@@ -6,7 +6,7 @@
   grid-template-columns: minmax(0, .88fr) minmax(440px, .82fr);
   align-items: stretch;
   border-radius: 16px;
-  background: #101923;
+  background: #0c1426;
   box-shadow: 0 32px 80px rgb(16 24 40 / 16%);
   opacity: 0;
   overflow: hidden;
@@ -24,7 +24,7 @@
   padding: clamp(34px, 5vw, 68px);
   color: #fff;
   background:
-    radial-gradient(circle at 8% 5%, rgb(180 35 44 / 50%), transparent 36%),
+    radial-gradient(circle at 8% 5%, rgb(30 58 138 / 50%), transparent 36%),
     linear-gradient(145deg, transparent 45%, rgb(255 255 255 / 4%));
 }
 
@@ -42,7 +42,7 @@
 }
 
 .salesPanel :global(.eyebrow) {
-  color: #ffb4bb;
+  color: #8fb0e8;
 }
 
 .salesPanel h2 {
@@ -168,7 +168,7 @@
 }
 
 .formTop span {
-  color: #b4232c;
+  color: #172f6e;
   font-size: .68rem;
   font-weight: 900;
   letter-spacing: .06em;
@@ -183,7 +183,7 @@
   flex: none;
   border-radius: 999px;
   padding: 7px 10px;
-  background: #fff1f2;
+  background: #e6ecf7;
 }
 
 .privacyNote {
@@ -199,7 +199,7 @@
 .privacyNote svg {
   width: 15px;
   height: 15px;
-  color: #2f6f9f;
+  color: #24324f;
 }
 
 @keyframes onlinePulse {

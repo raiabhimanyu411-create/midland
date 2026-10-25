@@ -26,8 +26,7 @@ export function CookieConsent() {
     <div className={styles.banner} role="dialog" aria-live="polite" aria-label={t('cookie.ariaLabel')}>
       <p>
         <Trans i18nKey="cookie.message">
-          We use cookies to run this site and understand how it is used. Read our{' '}
-          <a href="/privacy" className="text-link">Privacy Policy</a> for details.
+          We use cookies to run this site and understand how it is used. Read our <a href="/privacy" className="text-link">Privacy Policy</a> for details.
         </Trans>
       </p>
       <div className={styles.actions}>

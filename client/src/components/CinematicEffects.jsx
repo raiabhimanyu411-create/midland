@@ -135,7 +135,8 @@ export function CinematicEffects({ routeKey }) {
         if (!isRevealCandidate(node) || observed.has(node)) return;
         observed.add(node);
         node.classList.add('cinematic-reveal');
-        node.classList.add('cinematic-depth');
+        // Tall sections with sticky content (e.g. the stock list sidebar) skew badly when tilted in 3D.
+        node.classList.add(node.hasAttribute('data-no-tilt') ? 'cinematic-flat' : 'cinematic-depth');
         node.style.setProperty('--cinematic-index', `${index % 4}`);
         observer.observe(node);
       });

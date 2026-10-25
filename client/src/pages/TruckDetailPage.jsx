@@ -58,8 +58,8 @@ export function TruckDetailPage({ truckId }) {
     setPageMeta({ ...truckSeo(truck), jsonLd: [truckJsonLd(truck, siteUrl())] });
   }, [truck, loading]);
 
-  if (loading && !truck) return <section className="section"><p>{t('common.loading', { defaultValue: 'Loading vehicle…' })}</p></section>;
-  if (!truck) return <section className="section"><h1>{t('common.notFound', { defaultValue: 'Vehicle unavailable' })}</h1><p>{error}</p><a className="button primary" href="/trucks">{t('nav.trucks')}</a></section>;
+  if (loading && !truck) return <section className="section"><p>{t('common.loading')}</p></section>;
+  if (!truck) return <section className="section"><h1>{t('common.notFound')}</h1><p>{error}</p><a className="button primary" href="/trucks">{t('nav.trucks')}</a></section>;
 
   const gallery = [...new Set([truck.image, ...(Array.isArray(truck.images) ? truck.images : [])]
     .filter((image) => typeof image === 'string' && image.trim()))];
@@ -76,11 +76,11 @@ export function TruckDetailPage({ truckId }) {
         copy={t('pages.truckDetail.hero.copy')}
         image={activeImage}
       />
-      <section className={styles.detailLayout}>
+      <section className={styles.detailLayout} data-no-tilt>
         <div>
           {activeImage
             ? <img className={styles.detailImage} src={activeImage} alt={displayTitle} decoding="async" />
-            : <div className={`${styles.detailImage} ${styles.detailImagePlaceholder}`}>Truck photos coming soon</div>}
+            : <div className={`${styles.detailImage} ${styles.detailImagePlaceholder}`}>{t('pages.truckDetail.photosComingSoon')}</div>}
           {gallery.length > 1 && (
             <div className={styles.thumbnailRow} aria-label={t('pages.truckDetail.galleryAria')}>
               {gallery.map((image, index) => (
@@ -117,9 +117,9 @@ export function TruckDetailPage({ truckId }) {
             <Spec label={t('pages.truckDetail.specs.body')} value={truck.type || confirm} />
             <Spec label={t('pages.truckDetail.specs.year')} value={truck.year || confirm} />
             <Spec label={t('pages.truckDetail.specs.registration')} value={truck.registration || confirm} />
-            <Spec label="VIN" value={truck.vin || confirm} />
-            <Spec label="Fuel" value={truck.fuelType || confirm} />
-            <Spec label="Colour" value={truck.colour || confirm} />
+            <Spec label={t('pages.truckDetail.specs.vin')} value={truck.vin || confirm} />
+            <Spec label={t('pages.truckDetail.specs.fuel')} value={truck.fuelType || confirm} />
+            <Spec label={t('pages.truckDetail.specs.colour')} value={truck.colour || confirm} />
             <Spec label={t('pages.truckDetail.specs.mileage')} value={truck.mileage || confirm} />
             <Spec label={t('pages.truckDetail.specs.gearbox')} value={truck.gearbox || confirm} />
             <Spec label={t('pages.truckDetail.specs.location')} value={truck.location || confirm} />
@@ -131,22 +131,20 @@ export function TruckDetailPage({ truckId }) {
             <Spec label={t('pages.truckDetail.specs.euroCaz')} value={truck.cleanAir || truck.euroRating || confirm} />
             <Spec label={t('pages.truckDetail.specs.mot')} value={truck.motExpiry || truck.mot || confirm} />
             <Spec label={t('pages.truckDetail.specs.service')} value={truck.serviceHistory || confirm} />
-            <Spec label="Previous owners" value={truck.owners || confirm} />
-            <Spec label="Tacho" value={truck.tacho || confirm} />
+            <Spec label={t('pages.truckDetail.specs.previousOwners')} value={truck.owners || confirm} />
+            <Spec label={t('pages.truckDetail.specs.tacho')} value={truck.tacho || confirm} />
             <Spec label={t('pages.truckDetail.specs.warranty')} value={truck.warranty || confirm} />
           </dl>
           <a className="button primary" href={`/contact?truck=${truck.id}`}>{t('pages.truckDetail.reserveEnquire')}</a>
-          <a className="button outline" href="/finance">{t('pages.truckDetail.financeOptions')}</a>
-          <a className="button outline" href="/delivery">{t('pages.truckDetail.deliveryQuote')}</a>
         </aside>
       </section>
       {truck.videoUrl && (
         <section className={`${styles.copyBlock} section`}>
-          <p className="eyebrow">Truck walkaround</p>
-          <h2>See this truck in action</h2>
+          <p className="eyebrow">{t('pages.truckDetail.walkaround.eyebrow')}</p>
+          <h2>{t('pages.truckDetail.walkaround.heading')}</h2>
           {videoEmbedUrl
             ? <div className={styles.videoFrame}><iframe src={videoEmbedUrl} title={`${displayTitle} walkaround video`} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div>
-            : <a className="button secondary" href={truck.videoUrl} target="_blank" rel="noopener noreferrer">Watch walkaround video</a>}
+            : <a className="button secondary" href={truck.videoUrl} target="_blank" rel="noopener noreferrer">{t('pages.truckDetail.walkaround.watch')}</a>}
         </section>
       )}
     </>

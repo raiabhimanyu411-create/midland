@@ -1,0 +1,120 @@
+.brandStrip {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 4vw, 56px);
+  width: min(1180px, calc(100% - 36px));
+  margin: 42px auto 0;
+  padding: 22px 0;
+}
+
+.label {
+  flex: 0 0 auto;
+  margin: 0;
+  color: #475467;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: brandScroll 32s linear infinite;
+}
+
+.viewport:hover .track,
+.viewport:focus-within .track {
+  animation-play-state: paused;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: clamp(40px, 6vw, 84px);
+  margin: 0;
+  padding: 0 clamp(20px, 3vw, 42px);
+  list-style: none;
+}
+
+.list a {
+  display: grid;
+  height: 56px;
+  place-items: center;
+  border-radius: 8px;
+  opacity: 0.92;
+  transition: opacity 200ms ease, transform 260ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.list a:hover,
+.list a:focus-visible {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.list a:focus-visible {
+  outline: 2px solid #1e40af;
+  outline-offset: 6px;
+}
+
+.list img {
+  display: block;
+  width: auto;
+  height: 40px;
+  max-width: 130px;
+  object-fit: contain;
+}
+
+/* Round badge logos need more height to read at the same visual weight as wordmarks. */
+.list img.emblem {
+  height: 54px;
+}
+
+@keyframes brandScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .viewport {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .brandStrip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    width: calc(100% - 24px);
+    margin-top: 28px;
+  }
+
+  .viewport {
+    width: 100%;
+  }
+
+  .list img {
+    height: 32px;
+    max-width: 104px;
+  }
+
+  .list img.emblem {
+    height: 44px;
+  }
+}

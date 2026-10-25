@@ -26,7 +26,7 @@
 }
 
 .card:hover {
-  border-color: #d9a4a8;
+  border-color: #a9bde3;
   box-shadow: 0 26px 58px rgb(16 24 40 / 14%);
   transform: perspective(1000px) translateY(-6px) rotateX(1.1deg) rotateY(-1deg);
 }
@@ -38,14 +38,14 @@
   place-items: center;
   margin-bottom: 8px;
   border-radius: 8px;
-  color: #b4232c;
-  background: #fff1f2;
+  color: #172f6e;
+  background: #e6ecf7;
   transition: color 280ms ease, background 280ms ease, transform 480ms cubic-bezier(.16, 1, .3, 1);
 }
 
 .card:hover .iconWrap {
   color: #ffffff;
-  background: #b4232c;
+  background: #1e3a8a;
   transform: rotate(-6deg) scale(1.06);
 }
 
@@ -73,13 +73,13 @@
 
 .directions {
   margin-top: 8px;
-  color: #2f6f9f;
+  color: #24324f;
   font-size: 0.86rem;
   font-weight: 900;
 }
 
 .directions:hover {
-  color: #b4232c;
+  color: #172f6e;
 }
 
 @media (max-width: 900px) {

@@ -5,9 +5,7 @@ export const routeNames = [
   'blogPost',
   'blog',
   'notFound',
-  'finance',
   'partExchange',
-  'delivery',
   'faq',
   'privacy',
   'about',
@@ -17,23 +15,23 @@ export const routeNames = [
 
 export function getRouteTitle(t, name) {
   const key = `nav.${name}`;
-  const fallbacks = { blogPost: 'News', blog: 'News', notFound: 'Page not found' };
+  const fallbacks = { blogPost: 'News', blog: 'News', notFound: 'Page Not Found' };
   return t(key, { defaultValue: fallbacks[name] || name });
 }
 
 export function getRouteDescription(t, name) {
   const key = `routeDescriptions.${name}`;
-  const fallbacks = { blogPost: 'News and buying guides from MidLand Trucks.', blog: 'News and buying guides from MidLand Trucks.' };
+  const fallbacks = { blogPost: 'News And Buying Guides From Midland Commercials.', blog: 'News And Buying Guides From Midland Commercials.' };
   return t(key, { defaultValue: fallbacks[name] || '' });
 }
 
-export const primaryRoutes = ['home', 'trucks', 'finance', 'partExchange', 'delivery', 'about', 'contact'];
+export const primaryRoutes = ['home', 'trucks', 'partExchange', 'about', 'contact'];
 
 export function truckUrl(truck) {
   return `/truck/${truck.id}${truck.slug ? `-${encodeURIComponent(truck.slug)}` : ''}`;
 }
 
-export const routePaths = { home: '/', trucks: '/trucks', finance: '/finance', partExchange: '/part-exchange', delivery: '/delivery', faq: '/faq', privacy: '/privacy', about: '/about', contact: '/contact', blog: '/blog', admin: '/admin' };
+export const routePaths = { home: '/', trucks: '/trucks', partExchange: '/part-exchange', faq: '/faq', privacy: '/privacy', about: '/about', contact: '/contact', blog: '/blog', admin: '/admin' };
 
 export function getRoute() {
   const route = window.location.pathname.replace(/^\/+|\/+$/g, '');

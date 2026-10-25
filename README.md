@@ -1,4 +1,4 @@
-# MidLand Trucks
+# Midland Commercials
 
 React/Vite frontend with a Node/Express API, MySQL storage, and an authenticated admin panel.
 
@@ -77,7 +77,6 @@ GET  /api/trucks
 GET  /api/trucks/filters
 GET  /api/trucks/:id
 POST /api/enquiries
-POST /api/finance-quotes
 POST /api/part-exchange
 POST /api/chat-leads
 POST /api/auth/login

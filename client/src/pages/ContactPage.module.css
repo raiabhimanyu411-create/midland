@@ -23,11 +23,11 @@
 }
 
 .contactDetails a {
-  color: #2f6f9f;
+  color: #24324f;
 }
 
 .contactDetails a:hover {
-  color: #b4232c;
+  color: #172f6e;
 }
 
 .responseNote {
@@ -42,12 +42,12 @@
   align-items: center;
   gap: 6px;
   margin-top: 14px;
-  color: #2f6f9f;
+  color: #24324f;
   font-weight: 900;
 }
 
 .faqTeaser:hover {
-  color: #b4232c;
+  color: #172f6e;
 }
 
 .faqTeaser span {

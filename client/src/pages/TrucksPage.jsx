@@ -4,7 +4,6 @@ import { Breadcrumb } from '../components/Breadcrumb.jsx';
 import { CompareBar } from '../components/CompareBar.jsx';
 import { CompareModal } from '../components/CompareModal.jsx';
 import { PageHero } from '../components/PageHero.jsx';
-import { SearchBand } from '../components/SearchBand.jsx';
 import { TruckGrid, TruckGridSkeleton } from '../components/TruckGrid.jsx';
 import { TruckStructuredData } from '../components/TruckStructuredData.jsx';
 import { trucks as fallbackTrucks } from '../data/siteData.js';
@@ -129,13 +128,7 @@ export function TrucksPage() {
         copy={t('pages.trucks.hero.copy')}
         image="https://images.unsplash.com/photo-1506306460327-3164753b74c7?auto=format&fit=crop&w=1800&q=85"
       />
-      <SearchBand
-        value={{ make: filters.make, body: filters.body, maxPrice: filters.maxPrice }}
-        options={filterOptions}
-        onChange={updateFilter}
-        onSubmit={() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-      />
-      <section className="section">
+      <section className={`section ${styles.listingSection}`} data-no-tilt>
         <div className={styles.listingLayout}>
           <aside className={styles.filterSidebar} aria-label={t('pages.trucks.sidebar.eyebrow')}>
             <div className={styles.sidebarHeading}>

@@ -7,10 +7,12 @@ import { createId } from '../utils/id.js';
 import { formatTruckStatus } from '../utils/truckStatus.js';
 import { truckUrl } from '../utils/routes.js';
 import { truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
+import { SITE_EMAIL } from '../../../shared/seo.js';
 import { IconClose, IconDelivery, IconMail, IconPin } from './icons.jsx';
 import styles from './ChatAssistant.module.css';
 
-const salesPhone = locations[0]?.phone || '0121 496 0000';
+const salesPhone = locations[0]?.phone || '0121 663 1118';
+const salesAddress = locations[0]?.address || 'Little Wigston, Swadlincote, DE12 7BJ';
 
 const quickPromptDefs = [
   { key: 'bestUnder55k' },
@@ -30,16 +32,6 @@ const intentTerms = {
     'phone', 'number', 'contact', 'team', 'call', 'sales', 'opening hours', 'hours',
     'telefon', 'numer', 'kontakt', 'zadzwonic', 'sprzedaz', 'godziny pracy', 'zespol',
     'هاتف', 'رقم', 'تليفون', 'تلفون', 'اتصال', 'فريق', 'مبيعات', 'ساعات العمل', 'مواعيد العمل'
-  ],
-  finance: [
-    'finance', 'financing', 'deposit', 'monthly', 'lease', 'leasing', 'hire purchase', 'repayment', 'instalment',
-    'finans', 'zaliczk', 'wplata', 'miesiecz', 'leasing', 'raty', 'rata', 'kredyt',
-    'تمويل', 'عربون', 'مقدم', 'شهري', 'قسط', 'اقساط', 'تقسيط', 'ايجار', 'دفعات'
-  ],
-  delivery: [
-    'deliver', 'delivery', 'dilvery', 'transport', 'collection', 'export', 'shipping', 'ship', 'worldwide', 'international', 'overseas', 'abroad', 'freight',
-    'dostaw', 'transport', 'odbior', 'eksport', 'wysylk', 'za granic', 'miedzynarod', 'fracht',
-    'توصيل', 'تسليم', 'نقل', 'شحن', 'استلام', 'تصدير', 'دولي', 'بحري', 'للخارج'
   ],
   partExchange: [
     'part exchange', 'trade in', 'trade-in', 'exchange my truck', 'swap my truck', 'px',
@@ -123,8 +115,7 @@ export function ChatAssistant() {
     [teamContent]
   );
   const supportPerson = team.find((member) => member.key === 'support') || team[0];
-  const financePerson = team.find((member) => member.key === 'finance') || team[0];
-  const ctx = { t, language: i18n.language, team, supportPerson, financePerson, locationsContent };
+  const ctx = { t, language: i18n.language, team, supportPerson, locationsContent };
 
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -301,7 +292,6 @@ export function ChatAssistant() {
                 <label>{t('chat.form.timelineLabel')}<select value={enquiry.purchaseTimeline} onChange={(event) => setEnquiry((c) => ({ ...c, purchaseTimeline: event.target.value }))}><option value="">{t('chat.form.timelineSelect')}</option><option value="This week">{t('chat.form.timelineThisWeek')}</option><option value="Within 7 days">{t('chat.form.timelineWithin7')}</option><option value="This month">{t('chat.form.timelineThisMonth')}</option><option value="Within 3 months">{t('chat.form.timelineWithin3Months')}</option><option value="Just researching">{t('chat.form.timelineResearching')}</option></select></label>
                 <label>{t('chat.form.callbackLabel')}<input value={enquiry.preferredCallback} onChange={(event) => setEnquiry((c) => ({ ...c, preferredCallback: event.target.value }))} placeholder={t('chat.form.callbackPlaceholder')} /></label>
                 <div className={styles.checks}>
-                  <label><input type="checkbox" checked={enquiry.financeRequired} onChange={(event) => setEnquiry((c) => ({ ...c, financeRequired: event.target.checked }))} /> {t('chat.form.financeRequired')}</label>
                   <label><input type="checkbox" checked={enquiry.partExchange} onChange={(event) => setEnquiry((c) => ({ ...c, partExchange: event.target.checked }))} /> {t('chat.form.partExchange')}</label>
                 </div>
                 <label>
@@ -315,7 +305,7 @@ export function ChatAssistant() {
                 <label className={styles.consent}>
                   <input type="checkbox" required checked={enquiry.consent} onChange={(event) => setEnquiry((c) => ({ ...c, consent: event.target.checked }))} />{' '}
                   <Trans t={t} i18nKey="chat.form.consentText">
-                    I agree that MidLand Trucks may contact me about this enquiry. See the <a href="/privacy">Privacy Policy</a>.
+                    I agree that Midland Commercials may contact me about this enquiry. See the <a href="/privacy">Privacy Policy</a>.
                   </Trans>
                 </label>
                 <button type="submit" disabled={submitting}>{submitting ? t('chat.form.submitSending') : t('chat.form.submitCallback')}</button>
@@ -424,34 +414,12 @@ function buildReply(ctx, message, trucks, loadingStock, contextTruck = null) {
     return {
       sender: 'bot',
       text: t('chat.replies.phoneInfo', {
-        name: ctx.supportPerson.role,
-        birminghamPhone: locations[0].phone,
-        leedsPhone: locations[1].phone,
+        phone: salesPhone,
+        email: SITE_EMAIL,
+        address: salesAddress,
         hours: ctx.locationsContent[0].hours
       }),
       actions: contactActions(t)
-    };
-  }
-
-  if (containsAny(query, intentTerms.finance)) {
-    const options = bestMatches(query, trucks).slice(0, 2);
-    return {
-      sender: 'bot',
-      text: t('chat.replies.finance', { financePerson: ctx.financePerson.role }),
-      trucks: options,
-      showEnquiry: true,
-      requirement: `Finance request: ${message}`,
-      actions: [{ label: t('chat.actions.financePage'), href: '/finance', icon: 'delivery' }]
-    };
-  }
-
-  if (containsAny(query, intentTerms.delivery)) {
-    return {
-      sender: 'bot',
-      text: t('chat.replies.delivery'),
-      showEnquiry: true,
-      requirement: `Delivery quote: ${message}`,
-      actions: [{ label: t('chat.actions.deliveryPage'), href: '/delivery', icon: 'delivery' }]
     };
   }
 

@@ -10,7 +10,6 @@ import { clientDistDir, uploadDir } from './config/paths.js';
 import { isProduction, validateRuntimeConfig } from './config/runtime.js';
 import { initializeDatabase, pool } from './db/mysql.js';
 import { enquiriesRouter } from './routes/enquiries.js';
-import { financeRouter } from './routes/finance.js';
 import { partExchangeRouter } from './routes/partExchange.js';
 import { trucksRouter } from './routes/trucks.js';
 import { chatLeadsRouter } from './routes/chatLeads.js';
@@ -68,7 +67,6 @@ app.patch('/api/auth/credentials', authLimiter);
 app.use('/api/auth/forgot-password', authLimiter);
 app.use('/api/auth/reset-password', authLimiter);
 app.post('/api/enquiries', submissionLimiter);
-app.post('/api/finance-quotes', submissionLimiter);
 app.post('/api/part-exchange', submissionLimiter);
 app.post('/api/chat-leads', submissionLimiter);
 
@@ -90,7 +88,6 @@ app.get('/api/ready', async (_req, res) => {
 
 app.use('/api/trucks', trucksRouter);
 app.use('/api/enquiries', enquiriesRouter);
-app.use('/api/finance-quotes', financeRouter);
 app.use('/api/part-exchange', partExchangeRouter);
 app.use('/api/chat-leads', chatLeadsRouter);
 app.use('/api/auth', authRouter);

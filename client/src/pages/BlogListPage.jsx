@@ -22,17 +22,17 @@ export function BlogListPage() {
 
   return (
     <>
-      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.blog', { defaultValue: 'News' }) }]} />
+      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.blog') }]} />
       <PageHero
-        eyebrow={t('pages.blog.eyebrow', { defaultValue: 'MidLand journal' })}
-        title={t('pages.blog.title', { defaultValue: 'Truck buying guides & news' })}
-        copy={t('pages.blog.copy', { defaultValue: 'Practical advice on buying, financing and running used trucks.' })}
+        eyebrow={t('pages.blog.eyebrow')}
+        title={t('pages.blog.title')}
+        copy={t('pages.blog.copy')}
         image="https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1800&q=85"
       />
       <section className="section">
-        {loading && <p>{t('pages.blog.loading', { defaultValue: 'Loading articles…' })}</p>}
+        {loading && <p>{t('pages.blog.loading')}</p>}
         {!loading && error && <p>{error}</p>}
-        {!loading && !error && posts.length === 0 && <p>{t('pages.blog.empty', { defaultValue: 'New articles are coming soon.' })}</p>}
+        {!loading && !error && posts.length === 0 && <p>{t('pages.blog.empty')}</p>}
         <div className={styles.grid}>
           {posts.map((post) => (
             <article className={styles.card} key={post.id}>

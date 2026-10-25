@@ -21,8 +21,8 @@
   padding: clamp(28px, 5vw, 62px);
   color: #fff;
   background:
-    radial-gradient(circle at 8% 0%, rgb(180 35 44 / 48%), transparent 35%),
-    linear-gradient(135deg, #101923 0%, #172533 100%);
+    radial-gradient(circle at 8% 0%, rgb(30 58 138 / 48%), transparent 35%),
+    linear-gradient(135deg, #0c1426 0%, #1b2742 100%);
   box-shadow: 0 28px 70px rgb(16 24 40 / 17%);
 }
 
@@ -36,8 +36,8 @@
   height: 34px;
   place-items: center;
   border-radius: 50%;
-  color: #fff;
-  background: #b4232c;
+  color: #ffffff;
+  background: #1e3a8a;
 }
 
 .iconWrap svg {
@@ -59,7 +59,7 @@
 }
 
 .copy :global(.eyebrow) {
-  color: #ffb4bb;
+  color: #8fb0e8;
 }
 
 .copy h2 {
@@ -94,7 +94,7 @@
   height: 44px;
   place-items: center;
   border-radius: 10px;
-  color: #b4232c;
+  color: #172f6e;
   background: #fff;
 }
 
@@ -104,7 +104,7 @@
   top: -3px;
   width: 11px;
   height: 11px;
-  border: 2px solid #172533;
+  border: 2px solid #1b2742;
   border-radius: 50%;
   background: #61d58b;
   animation: alertPulse 2s infinite;
@@ -179,7 +179,7 @@
 }
 
 .formHeading span {
-  color: #b4232c;
+  color: #172f6e;
   font-size: .68rem;
   font-weight: 900;
   letter-spacing: .06em;
@@ -229,9 +229,9 @@
 }
 
 .quickChoices button:hover {
-  border-color: #b4232c;
-  color: #b4232c;
-  background: #fff1f2;
+  border-color: #1e40af;
+  color: #172f6e;
+  background: #e6ecf7;
 }
 
 .submitButton {
@@ -241,9 +241,9 @@
   justify-content: center;
   border: 0;
   border-radius: 8px;
-  color: #fff;
-  background: #b4232c;
-  box-shadow: 0 10px 22px rgb(180 35 44 / 24%);
+  color: #ffffff;
+  background: #1e3a8a;
+  box-shadow: 0 10px 22px rgb(30 58 138 / 24%);
   font-weight: 900;
   transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
@@ -254,8 +254,8 @@
 }
 
 .submitButton:hover {
-  background: #8f1c24;
-  box-shadow: 0 14px 28px rgb(180 35 44 / 30%);
+  background: #172f6e;
+  box-shadow: 0 14px 28px rgb(30 58 138 / 30%);
   transform: translateY(-2px);
 }
 
@@ -279,8 +279,8 @@
 }
 
 .formError {
-  color: #8f1c24;
-  background: #fff1f2;
+  color: #172f6e;
+  background: #e6ecf7;
 }
 
 @keyframes alertPulse {

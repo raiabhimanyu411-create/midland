@@ -49,7 +49,7 @@ function AboutCta() {
       </div>
       <div className={styles.ctaActions}>
         <a className="button primary" href="/contact">{t('pages.about.cta.getInTouch')}</a>
-        <a className="button outline" href="tel:+441214960000">{t('pages.about.cta.call')}</a>
+        <a className="button outline" href="tel:+441216631118">{t('pages.about.cta.call')}</a>
       </div>
     </section>
   );

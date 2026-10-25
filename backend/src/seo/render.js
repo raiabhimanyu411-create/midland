@@ -85,12 +85,10 @@ function renderBody(meta) {
 }
 
 const primaryLinks = [
-  { label: 'Used trucks for sale', href: '/trucks' },
-  { label: 'Truck finance', href: '/finance' },
-  { label: 'Part exchange', href: '/part-exchange' },
-  { label: 'Delivery', href: '/delivery' },
-  { label: 'Guides & news', href: '/blog' },
-  { label: 'About us', href: '/about' },
+  { label: 'Used Trucks For Sale', href: '/trucks' },
+  { label: 'Part Exchange', href: '/part-exchange' },
+  { label: 'Guides & News', href: '/blog' },
+  { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' }
 ];
 

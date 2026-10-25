@@ -15,7 +15,7 @@
   border-radius: 8px;
   padding: 18px 20px;
   color: #d0d5dd;
-  background: #17202a;
+  background: #111a2e;
   box-shadow: 0 24px 60px rgb(16 24 40 / 30%);
 }
 
@@ -28,7 +28,7 @@
 }
 
 .banner :global(.text-link) {
-  color: #ffccd1;
+  color: #8fb0e8;
 }
 
 .actions {

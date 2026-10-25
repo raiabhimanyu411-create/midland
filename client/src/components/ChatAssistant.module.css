@@ -33,7 +33,7 @@
   align-items: center;
   padding: 14px;
   color: #ffffff;
-  background: linear-gradient(135deg, #18212f, #2f6f9f);
+  background: linear-gradient(135deg, #18212f, #24324f);
 }
 
 .avatar {
@@ -106,7 +106,7 @@
 .userBubble {
   justify-self: end;
   color: #ffffff;
-  background: #b4232c;
+  background: #1e3a8a;
 }
 
 .botBubble p,
@@ -183,7 +183,7 @@
   border: 1px solid #d0d5dd;
   border-radius: 8px;
   padding: 7px 9px;
-  color: #2f6f9f;
+  color: #24324f;
   background: #ffffff;
   font-size: 0.76rem;
   font-weight: 950;
@@ -217,7 +217,7 @@
 
 .quickPrompts button:hover,
 .actions a:hover {
-  border-color: #2f6f9f;
+  border-color: #24324f;
 }
 
 .composer {
@@ -240,7 +240,7 @@
   border-radius: 8px;
   padding: 0 14px;
   color: #ffffff;
-  background: #b4232c;
+  background: #1e3a8a;
   font-weight: 950;
 }
 
@@ -257,7 +257,7 @@
 .checks { display: flex; flex-wrap: wrap; gap: 12px; }
 .checks label, .consent { display: flex; grid-template-columns: none; flex-direction: row; align-items: flex-start; gap: 8px; font-size: .78rem; line-height: 1.4; }
 .checks input, .consent input { width: 16px; height: 16px; min-height: 0; flex: 0 0 auto; margin-top: 2px; }
-.consent a { color: #2f6f9f; text-decoration: underline; }
+.consent a { color: #24324f; text-decoration: underline; }
 .enquiryForm button:disabled { opacity: .65; cursor: wait; }
 
 .enquiryForm textarea {
@@ -273,8 +273,8 @@
   border-radius: 8px;
   padding: 9px 15px 9px 9px;
   color: #ffffff;
-  background: #b4232c;
-  box-shadow: 0 16px 36px rgb(180 35 44 / 28%);
+  background: #1e3a8a;
+  box-shadow: 0 16px 36px rgb(30 58 138 / 28%);
   font-weight: 950;
 }
 
@@ -334,7 +334,7 @@
     border-radius: 999px;
     padding: 6px 14px 6px 6px;
     font-size: .78rem;
-    box-shadow: 0 12px 28px rgb(180 35 44 / 26%);
+    box-shadow: 0 12px 28px rgb(30 58 138 / 26%);
     white-space: nowrap;
   }
 

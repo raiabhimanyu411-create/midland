@@ -6,9 +6,9 @@ export function NotFoundPage() {
   return (
     <section className="section">
       <p className="eyebrow">404</p>
-      <h1>{t('notFound.heading', { defaultValue: 'Page not found' })}</h1>
-      <p>{t('notFound.copy', { defaultValue: 'The page you were looking for has moved or no longer exists.' })}</p>
-      <a className="button primary" href="/trucks">{t('notFound.cta', { defaultValue: 'Browse used trucks' })}</a>
+      <h1>{t('notFound.heading')}</h1>
+      <p>{t('notFound.copy')}</p>
+      <a className="button primary" href="/trucks">{t('notFound.cta')}</a>
     </section>
   );
 }

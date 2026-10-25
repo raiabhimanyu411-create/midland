@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { serviceCardHrefs, trucks } from '../data/siteData.js';
+import { BrandStrip } from '../components/BrandStrip.jsx';
 import { ContactPreview } from '../components/ContactPreview.jsx';
-import { FinanceDisclosure } from '../components/FinanceDisclosure.jsx';
 import {
   IconCheckBadge,
-  IconDelivery,
-  IconExchange,
-  IconFinance,
-  IconShield
+  IconPin,
+  IconExchange
 } from '../components/icons.jsx';
 import { InfoCard } from '../components/InfoList.jsx';
 import { SearchBand } from '../components/SearchBand.jsx';
@@ -20,7 +18,7 @@ import { demoDataEnabled } from '../utils/runtime.js';
 import { useInView } from '../utils/useInView.js';
 import styles from './HomePage.module.css';
 
-const serviceIcons = [IconFinance, IconExchange, IconDelivery];
+const serviceIcons = [IconCheckBadge, IconExchange, IconPin];
 
 export function HomePage() {
   const { t } = useTranslation();
@@ -30,6 +28,7 @@ export function HomePage() {
     <div className={styles.homePage}>
       <Hero />
       <SearchBand />
+      <BrandStrip />
       <RevealSection className={`section ${styles.introSection}`}>
         <div className={styles.introHeading}>
           <p className="eyebrow">{t('pages.home.intro.eyebrow')}</p>
@@ -45,7 +44,6 @@ export function HomePage() {
           </div>
         </div>
       </RevealSection>
-      <StatsGrid />
       <FeaturedStock />
       <BuyerJourney />
       <VideoWalkaround />
@@ -105,33 +103,6 @@ function Hero() {
         <span />
         {t('pages.home.hero.scrollCue')}
       </div>
-    </section>
-  );
-}
-
-function StatsGrid() {
-  const { t } = useTranslation();
-  const stats = t('content.stats', { returnObjects: true });
-  const icons = [IconShield, IconCheckBadge, IconDelivery];
-
-  return (
-    <section className={styles.statsGrid} aria-label={t('pages.home.statsAria')}>
-      {stats.map(({ value, label }, index) => {
-        const Icon = icons[index];
-        return (
-        <div className={styles.stat} key={label} style={{ '--delay': `${index * 100}ms` }}>
-          <div className={styles.statTop}>
-            <Icon />
-            <small>0{index + 1}</small>
-          </div>
-          <div>
-            <strong>{value}</strong>
-            <span>{label}</span>
-          </div>
-          <span className={styles.statLine} aria-hidden="true" />
-        </div>
-        );
-      })}
     </section>
   );
 }
@@ -264,7 +235,6 @@ export function FeatureBand() {
         {items.map((item) => (
           <InfoCard title={item.title} copy={item.copy} key={item.title} />
         ))}
-        <FinanceDisclosure />
       </div>
     </section>
   );

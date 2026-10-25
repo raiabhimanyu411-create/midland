@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage, supportedLanguages } from '../i18n/index.js';
 import { primaryRoutes, routePaths } from '../utils/routes.js';
+import { BrandMark } from './BrandLogo.jsx';
 import styles from './Header.module.css';
 
 export function Header({ route }) {
@@ -26,10 +27,10 @@ export function Header({ route }) {
   return (
     <header className={`${styles.topbar} ${menuOpen ? styles.menuOpen : ''}`}>
       <a className={styles.brand} href="/" aria-label={t('header.brandAria')}>
-        <span className={styles.brandMark}>M</span>
+        <span className={styles.brandMark}><BrandMark /></span>
         <span>
-          <strong>MidLand Trucks</strong>
-          <small>{t('header.tagline')}</small>
+          <strong>Midland</strong>
+          <small>Commercials</small>
         </span>
       </a>
       <nav className={styles.navLinks} aria-label={t('header.navAria')}>
@@ -67,7 +68,7 @@ export function Header({ route }) {
         <span />
         <span />
       </button>
-      <a className={styles.phoneLink} href="tel:+441214960000">{t('common.phone')}</a>
+      <a className={styles.phoneLink} href="tel:+441216631118">{t('common.phone')}</a>
     </header>
   );
 }

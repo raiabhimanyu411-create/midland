@@ -44,15 +44,15 @@
   border-radius: 8px;
   padding: 13px 18px;
   color: #ffffff;
-  background: #b4232c;
+  background: #1e3a8a;
   font-weight: 900;
-  box-shadow: 0 10px 22px rgb(180 35 44 / 22%);
+  box-shadow: 0 10px 22px rgb(30 58 138 / 22%);
   transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
 .contactForm button:hover {
-  background: #8f1c24;
-  box-shadow: 0 14px 28px rgb(180 35 44 / 30%);
+  background: #172f6e;
+  box-shadow: 0 14px 28px rgb(30 58 138 / 30%);
   transform: translateY(-2px);
 }
 
@@ -79,8 +79,8 @@
   margin: 0;
   border-radius: 8px;
   padding: 12px;
-  color: #8f1c24;
-  background: #fff1f2;
+  color: #172f6e;
+  background: #e6ecf7;
   font-size: 0.9rem;
   font-weight: 850;
 }

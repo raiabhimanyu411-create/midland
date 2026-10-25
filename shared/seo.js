@@ -2,10 +2,10 @@
 // so crawlers and browsers always see the same title, description, canonical URL and JSON-LD.
 import { truckDisplayTitle } from './truck.js';
 
-export const SITE_NAME = 'MidLand Trucks';
+export const SITE_NAME = 'Midland Commercials';
+export const SITE_EMAIL = 'sales@midlandcommercials.com';
 export const businessLocations = [
-  { address: '14 Fleet Way, Birmingham, B12 0JR', phone: '0121 496 0000' },
-  { address: 'Unit 6, Aire Valley Trading Estate, Leeds, LS10 1AB', phone: '0113 496 0000' }
+  { address: 'Little Wigston, Swadlincote, DE12 7BJ', phone: '0121 663 1118' }
 ];
 
 export const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80';
@@ -13,85 +13,71 @@ export const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1601584115197-04
 export const staticPages = {
   home: {
     path: '/',
-    title: 'MidLand Trucks | Used HGV, Tractor Units & Trailers for Sale UK',
-    description: 'Buy inspected used trucks, tractor units, rigids and trailers from MidLand Trucks. Clear VAT and MOT status, UK finance guidance and nationwide delivery.',
+    title: 'Midland Commercials | Used Trucks, Tractor Units & Trailers For Sale UK',
+    description: 'Quality used trucks, tractor units, rigids and trailers for sale from Midland Commercials in Swadlincote. Clear VAT and MOT details and part exchange welcome.',
     changefreq: 'daily',
     priority: '1.0'
   },
   trucks: {
     path: '/trucks',
-    title: 'Used Trucks for Sale | Tractor Units, Rigids & Tippers | MidLand Trucks',
-    description: 'Browse used trucks for sale with filters for make, body type and price. VAT, MOT and Euro rating shown on every MidLand Trucks listing.',
+    title: 'Used Trucks For Sale | Tractor Units, Rigids & Tippers | Midland Commercials',
+    description: 'Browse used trucks for sale with filters for make, body type and price. VAT, MOT and Euro rating shown on every Midland Commercials listing.',
     changefreq: 'daily',
     priority: '0.9'
   },
-  finance: {
-    path: '/finance',
-    title: 'Used Truck Finance | Hire Purchase & Lease | MidLand Trucks',
-    description: 'Compare hire purchase, lease purchase and seasonal payment options for your next used truck, with an instant monthly estimate.',
-    changefreq: 'monthly',
-    priority: '0.7'
-  },
   partExchange: {
     path: '/part-exchange',
-    title: 'Part Exchange Your Truck | MidLand Trucks',
-    description: 'Part exchange your current commercial vehicle against your next truck. Send registration, mileage and notes for a trade valuation.',
-    changefreq: 'monthly',
-    priority: '0.6'
-  },
-  delivery: {
-    path: '/delivery',
-    title: 'UK & Worldwide Truck Delivery and Export | MidLand Trucks',
-    description: 'UK and worldwide truck delivery, export and collection support from MidLand Trucks, with quotes available before you reserve.',
+    title: 'Part Exchange Your Truck | Midland Commercials',
+    description: 'Part exchange your current truck, van or trailer against your next vehicle. Send the registration, mileage and photos for a valuation.',
     changefreq: 'monthly',
     priority: '0.6'
   },
   faq: {
     path: '/faq',
-    title: 'Used Truck Buying FAQ | MidLand Trucks',
-    description: 'Answers to common questions about buying, financing, part exchanging and arranging delivery for a used truck.',
+    title: 'Used Truck Buying FAQ | Midland Commercials',
+    description: 'Answers to common questions about buying, viewing and part exchanging a used truck.',
     changefreq: 'monthly',
     priority: '0.5'
   },
   about: {
     path: '/about',
-    title: 'About MidLand Trucks | Used Commercial Vehicle Specialists',
-    description: 'MidLand Trucks is a UK used commercial vehicle sales partner focused on clear, transparent adverts and practical buyer support.',
+    title: 'About Midland Commercials | Used Commercial Vehicle Specialists',
+    description: 'Midland Commercials is a used commercial vehicle dealer in Swadlincote supplying inspected trucks, tractor units, rigids and trailers to UK operators.',
     changefreq: 'yearly',
     priority: '0.5'
   },
   contact: {
     path: '/contact',
-    title: 'Contact MidLand Trucks | Birmingham & Leeds Sales',
-    description: 'Get in touch with MidLand Trucks for stock enquiries, finance guidance or delivery quotes. Sales teams in Birmingham and Leeds.',
+    title: 'Contact Midland Commercials | Swadlincote Truck Sales',
+    description: 'Contact Midland Commercials about stock, viewings or part exchange. Call 0121 663 1118 or email sales@midlandcommercials.com.',
     changefreq: 'yearly',
     priority: '0.6'
   },
   blog: {
     path: '/blog',
-    title: 'Truck Buying Guides & News | MidLand Trucks',
-    description: 'News, buying guides and practical advice for buying, financing and running used trucks from the MidLand Trucks team.',
+    title: 'Truck Buying Guides & News | Midland Commercials',
+    description: 'News, buying guides and practical advice for buying and running used trucks from the Midland Commercials team.',
     changefreq: 'weekly',
     priority: '0.6'
   },
   privacy: {
     path: '/privacy',
-    title: 'Privacy Policy | MidLand Trucks',
-    description: 'How MidLand Trucks collects, uses and protects your personal data.',
+    title: 'Privacy Policy | Midland Commercials',
+    description: 'How Midland Commercials collects, uses and protects your personal data.',
     changefreq: 'yearly',
     priority: '0.2'
   }
 };
 
 export const notFoundPage = {
-  title: 'Page Not Found | MidLand Trucks',
+  title: 'Page Not Found | Midland Commercials',
   description: 'The page you were looking for could not be found. Browse our current used truck stock instead.',
   robots: 'noindex, follow'
 };
 
 export const adminPage = {
-  title: 'Admin | MidLand Trucks',
-  description: 'MidLand Trucks administration.',
+  title: 'Admin | Midland Commercials',
+  description: 'Midland Commercials administration.',
   robots: 'noindex, nofollow'
 };
 
@@ -237,10 +223,10 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
     '@type': 'AutoDealer',
     name: SITE_NAME,
     url: absoluteUrl(siteUrl, '/'),
-    logo: absoluteUrl(siteUrl, '/favicon.svg'),
+    logo: absoluteUrl(siteUrl, '/logo.svg'),
     image: DEFAULT_IMAGE,
     telephone: locations[0]?.phone,
-    email: 'sales@midlandtrucks.co.uk',
+    email: SITE_EMAIL,
     address: locations[0]?.address,
     department: locations.slice(1).map((location) => ({
       '@type': 'AutoDealer',

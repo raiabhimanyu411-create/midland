@@ -1,6 +1,6 @@
 .searchBand {
   padding: 0 clamp(18px, 4vw, 56px);
-  background: linear-gradient(180deg, #17202a 0 50%, #f5f7fa 50% 100%);
+  background: linear-gradient(180deg, #111a2e 0 50%, #f5f7fa 50% 100%);
 }
 
 .searchPanel {
@@ -25,12 +25,12 @@
   border-radius: 8px;
   padding: 13px 18px;
   color: #ffffff;
-  background: #b4232c;
+  background: #1e3a8a;
   font-weight: 900;
 }
 
 .searchPanel button:hover {
-  background: #8f1c24;
+  background: #172f6e;
 }
 
 @media (max-width: 900px) {

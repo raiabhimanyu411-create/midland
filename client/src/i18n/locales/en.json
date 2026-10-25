@@ -1,112 +1,110 @@
 {
   "common": {
     "confirm": "Confirm",
-    "phone": "0121 496 0000"
+    "phone": "0121 663 1118",
+    "loading": "Loading Vehicle…",
+    "notFound": "Vehicle Unavailable"
   },
   "nav": {
     "home": "Home",
     "trucks": "Trucks",
     "truckDetail": "Truck Detail",
-    "finance": "Finance",
     "partExchange": "Part Exchange",
-    "delivery": "Delivery",
     "faq": "FAQ",
     "privacy": "Privacy",
     "about": "About Us",
     "contact": "Contact Us",
-    "admin": "Admin"
+    "admin": "Admin",
+    "blog": "News"
   },
   "routeDescriptions": {
-    "home": "Buy inspected used trucks, tractor units, rigids and trailers from MidLand Trucks. Clear VAT and MOT status, UK finance guidance and worldwide delivery.",
-    "trucks": "Browse the full MidLand Trucks stock list with filters for make, body type and price. VAT, MOT and Euro rating shown on every listing.",
-    "truckDetail": "Full specification, condition notes and pricing for this used truck listed by MidLand Trucks.",
-    "finance": "Compare hire purchase, lease purchase and seasonal payment options for your next used truck with MidLand Trucks finance guidance.",
-    "partExchange": "Part exchange your current commercial vehicle against your next truck. Send registration, mileage and photos for a trade guide.",
-    "delivery": "Worldwide truck delivery, export and collection support from MidLand Trucks, with quotes available before you reserve.",
-    "faq": "Answers to common questions about buying, financing, part exchanging and arranging delivery for a used truck.",
-    "privacy": "How MidLand Trucks collects, uses and protects your personal data.",
-    "about": "MidLand Trucks is a UK used commercial vehicle sales partner focused on clear, transparent adverts and practical buyer support.",
-    "contact": "Get in touch with MidLand Trucks for stock enquiries, finance guidance or delivery quotes.",
-    "admin": "MidLand Trucks admin panel."
+    "home": "Quality used trucks, tractor units, rigids and trailers for sale from Midland Commercials in Swadlincote. Clear VAT and MOT details and part exchange welcome.",
+    "trucks": "Browse used commercial vehicles for sale at Midland Commercials with filters for make, body type and price. VAT, MOT and Euro rating shown on every listing.",
+    "truckDetail": "Full specification, condition notes and pricing for this used truck from Midland Commercials.",
+    "partExchange": "Part exchange your current truck, van or trailer against your next vehicle. Send the registration, mileage and photos for a valuation.",
+    "faq": "Answers to common questions about buying, viewing and part exchanging a used truck.",
+    "privacy": "How Midland Commercials collects, uses and protects your personal data.",
+    "about": "Midland Commercials is a used commercial vehicle dealer in Swadlincote supplying inspected trucks, tractor units, rigids and trailers to UK operators.",
+    "contact": "Contact Midland Commercials in Swadlincote about stock, viewings or part exchange. Call 0121 663 1118.",
+    "admin": "Midland Commercials admin panel."
   },
   "header": {
-    "brandAria": "MidLand Trucks home",
-    "tagline": "Commercial vehicle sales",
-    "navAria": "Primary navigation",
-    "languageAria": "Select language"
+    "brandAria": "Midland Commercials Home",
+    "tagline": "Used Trucks & Trailers",
+    "navAria": "Primary Navigation",
+    "languageAria": "Select Language"
   },
   "footer": {
-    "brandAria": "MidLand Trucks home",
-    "intro": "Used commercial vehicle sales across the UK, with worldwide delivery and clear VAT, MOT and finance details on every listing.",
+    "brandAria": "Midland Commercials Home",
+    "intro": "Quality Used Trucks, Tractor Units, Rigids And Trailers From Our Yard In Swadlincote. Clear VAT And MOT Details On Every Listing And Part Exchange Welcome.",
     "stockHeading": "Stock",
     "companyHeading": "Company",
-    "navAria": "Footer {{heading}} links",
+    "navAria": "Footer {{heading}} Links",
     "links": {
-      "allTrucks": "All trucks",
-      "finance": "Finance",
-      "partExchange": "Part exchange",
-      "delivery": "Delivery",
-      "aboutUs": "About us",
+      "allTrucks": "All Stock",
+      "partExchange": "Part Exchange",
+      "aboutUs": "About Us",
       "faq": "FAQ",
-      "contactUs": "Contact us",
-      "privacyPolicy": "Privacy policy"
+      "contactUs": "Contact Us",
+      "privacyPolicy": "Privacy Policy",
+      "news": "Guides & News"
     },
-    "legalLine": "Company no. 12345678 | VAT no. GB 123 4567 89 | Finance introductions subject to status",
-    "credit": "© {{year}} MidLand Trucks. Designed and developed by Devmora Technology."
+    "legalLine": "Midland Commercials · Little Wigston, Swadlincote, DE12 7BJ · Open Monday To Sunday, 8:00am – 6:00pm",
+    "credit": "© {{year}} Midland Commercials. Designed And Developed By Devmora Technology."
   },
   "cookie": {
-    "ariaLabel": "Cookie consent",
-    "message": "We use cookies to run this site and understand how it is used. Read our <1>Privacy Policy</1> for details.",
-    "necessaryOnly": "Necessary only",
-    "acceptAll": "Accept all"
+    "ariaLabel": "Cookie Consent",
+    "message": "We Use Cookies To Run This Site And Understand How It Is Used. Read Our <1>Privacy Policy</1> For Details.",
+    "necessaryOnly": "Necessary Only",
+    "acceptAll": "Accept All"
   },
   "trustBar": {
-    "ariaLabel": "Why buy from MidLand Trucks",
+    "ariaLabel": "Why Buy From Midland Commercials",
     "badges": [
       {
-        "title": "4.8 / 5 average rating",
-        "copy": "From 240+ verified buyers since 2019."
+        "title": "Trusted By UK Operators",
+        "copy": "Hauliers, Builders And Owner-drivers Who Come Back For Their Next Truck."
       },
       {
-        "title": "FCA-regulated finance introducer",
-        "copy": "Finance introductions handled through authorised UK lenders."
+        "title": "Part Exchange Welcome",
+        "copy": "Trucks, Vans And Trailers Considered Against Your Next Vehicle."
       },
       {
-        "title": "Every truck inspected",
-        "copy": "Mileage, MOT, tyres and service history checked before listing."
+        "title": "Every Truck Inspected",
+        "copy": "Mileage, MOT, Tyres And Service History Checked Before Listing."
       }
     ]
   },
   "compareBar": {
-    "ariaLabel": "Truck comparison tray",
-    "removeAria": "Remove {{title}} from comparison",
+    "ariaLabel": "Truck Comparison Tray",
+    "removeAria": "Remove {{title}} From Comparison",
     "clear": "Clear",
     "compare": "Compare ({{count}})"
   },
   "compareModal": {
-    "ariaLabel": "Compare trucks",
-    "title": "Compare {{count}} trucks",
-    "closeAria": "Close comparison",
+    "ariaLabel": "Compare Trucks",
+    "title": "Compare {{count}} Trucks",
+    "closeAria": "Close Comparison",
     "remove": "Remove",
-    "viewDetails": "View details",
+    "viewDetails": "View Details",
     "rows": {
       "price": "Price",
       "year": "Year",
       "mileage": "Mileage",
       "gearbox": "Gearbox",
-      "bodyType": "Body type",
-      "euroRating": "Euro rating",
+      "bodyType": "Body Type",
+      "euroRating": "Euro Rating",
       "mot": "MOT",
       "location": "Location"
     }
   },
   "stockAlert": {
     "badge": "Free Priority Stock Alert",
-    "eyebrow": "Don't see the right truck yet",
+    "eyebrow": "Don't See The Right Truck Yet",
     "heading": "Let The Right Truck Find You.",
     "copy": "Tell Us What You Need Once. We Will Watch New And Incoming Stock, Then Contact You When A Genuine Match Arrives.",
     "previewLabel": "Example Match Alert",
-    "previewDefault": "Euro 6 Tractor Unit Under GBP 55K",
+    "previewDefault": "Euro 6 Tractor Unit Under £55k",
     "previewMeta": "New Stock Match · Just Now",
     "assurances": [
       "No Spam",
@@ -121,9 +119,9 @@
     "phoneLabel": "Phone *",
     "phonePlaceholder": "07...",
     "emailLabel": "Email *",
-    "emailPlaceholder": "You@Example.com",
+    "emailPlaceholder": "you@example.co.uk",
     "criteriaLabel": "What Are You Looking For?",
-    "criteriaPlaceholder": "Example: Euro 6 Tipper Under GBP 40K",
+    "criteriaPlaceholder": "Example: Euro 6 Tipper Under £40k",
     "popular": "Popular:",
     "quickChoices": [
       "Tractor Unit",
@@ -131,33 +129,33 @@
       "Rigid"
     ],
     "submit": "Create My Free Alert",
-    "success": "You are on the stock alert list."
+    "success": "You Are On The Stock Alert List."
   },
   "contactForm": {
     "nameLabel": "Name",
     "namePlaceholder": "Your Name",
     "reasonLabel": "Reason For Contact",
     "reasons": [
-      "General enquiry",
-      "Buying a truck",
-      "Finance",
-      "Part exchange",
-      "Delivery"
+      "General Enquiry",
+      "Buying A Truck",
+      "Part Exchange",
+      "Viewing Appointment"
     ],
     "phoneLabel": "Phone",
-    "phonePlaceholder": "07...",
+    "phonePlaceholder": "Your Phone Number",
     "emailLabel": "Email",
-    "emailPlaceholder": "You@Example.com",
-    "requirementLabel": "Requirement",
-    "requirementPlaceholder": "Example: Euro 6 6x2 tractor unit under GBP 55k",
-    "success": "Enquiry saved in database.",
-    "submit": "Send My Enquiry"
+    "emailPlaceholder": "you@example.co.uk",
+    "requirementLabel": "Your Message",
+    "requirementPlaceholder": "Tell Us What You’re Looking For, E.g. Euro 6 Tractor Unit Under £55k",
+    "success": "Thank You. Your Enquiry Has Been Sent To Our Sales Team.",
+    "submit": "Send Enquiry",
+    "truckReference": "Enquiry About Vehicle #{{id}}"
   },
   "contactPreview": {
     "badge": "Sales Team Online",
-    "eyebrow": "Speak to sales",
-    "heading": "Tell us what truck you need.",
-    "intro": "Share the job, budget and timeline. A MidLand specialist will return with suitable stock or incoming vehicles.",
+    "eyebrow": "Speak To Sales",
+    "heading": "Tell Us What Truck You Need.",
+    "intro": "Share The Job, Budget And Timescale. A Member Of The Midland Commercials Sales Team Will Come Back With Suitable Stock Or Vehicles Arriving Soon.",
     "benefits": [
       {
         "title": "Matched Stock",
@@ -165,68 +163,73 @@
       },
       {
         "title": "No Pressure",
-        "copy": "Clear Advice From A Truck Specialist"
+        "copy": "Straight Answers From A Truck Specialist"
       },
       {
         "title": "One Simple Quote",
-        "copy": "Truck, Finance And Delivery Options"
+        "copy": "Truck, Part Exchange And Viewing"
       }
     ],
     "preferTalk": "Prefer To Talk?",
-    "hoursNote": "Monday To Saturday · 8:00 AM–6:00 PM",
+    "hoursNote": "Monday To Sunday · 8:00am – 6:00pm",
     "quickEnquiry": "Quick Enquiry",
     "quickEnquirySub": "Takes Less Than 60 Seconds",
     "stepBadge": "Step 1 Of 1",
     "privacyNote": "Your Details Stay Private And Are Only Used To Answer Your Enquiry."
   },
   "locationsSection": {
-    "ariaLabel": "MidLand Trucks locations",
-    "eyebrow": "Visit us",
-    "heading": "Come and see the stock in person.",
-    "getDirections": "Get directions"
+    "ariaLabel": "Midland Commercials Location",
+    "eyebrow": "Visit Our Yard",
+    "heading": "Come And See The Stock In Person.",
+    "getDirections": "Get Directions"
   },
   "teamSection": {
-    "ariaLabel": "MidLand Trucks team",
-    "eyebrow": "Meet the team",
-    "heading": "The people behind every enquiry."
+    "ariaLabel": "Midland Commercials Team",
+    "eyebrow": "Meet The Team",
+    "heading": "The People Behind Every Enquiry."
   },
   "testimonials": {
-    "ariaLabel": "Buyer testimonials",
-    "eyebrow": "What UK hauliers say",
-    "heading": "Trusted by operators across Britain.",
-    "starsAria": "{{rating}} out of 5 stars"
+    "ariaLabel": "Buyer Testimonials",
+    "eyebrow": "What Our Customers Say",
+    "heading": "Trusted By Operators Across Britain.",
+    "starsAria": "{{rating}} Out Of 5 Stars"
   },
   "timeline": {
-    "ariaLabel": "Company milestones",
-    "eyebrow": "Our story",
-    "heading": "How MidLand Trucks got here."
+    "ariaLabel": "Company Milestones",
+    "eyebrow": "Our Story",
+    "heading": "How Midland Commercials Got Here."
   },
   "videoWalkaround": {
-    "ariaLabel": "Truck walkaround videos",
-    "eyebrow": "See before you travel",
-    "heading": "Every reserved truck can get a full walkaround video.",
-    "copy": "Engine start-up, tyre condition, cab interior and known marks filmed on request, so you can make a decision before booking a viewing or arranging delivery.",
-    "cta": "Request a walkaround video",
-    "imageAlt": "Tractor unit ready for a walkaround video"
+    "ariaLabel": "Truck Walkaround Videos",
+    "eyebrow": "See Before You Travel",
+    "heading": "Every Reserved Truck Can Get A Full Walkaround Video.",
+    "copy": "Engine Start-up, Tyre Condition, Cab Interior And Known Marks Filmed On Request, So You Can Decide Before Booking A Viewing.",
+    "cta": "Request A Walkaround Video",
+    "imageAlt": "Tractor Unit Ready For A Walkaround Video"
   },
   "searchBand": {
-    "ariaLabel": "Truck search",
+    "ariaLabel": "Truck Search",
     "make": "Make",
-    "anyMake": "Any make",
-    "bodyType": "Body type",
-    "anyType": "Any type",
-    "maxPrice": "Max price",
-    "noLimit": "No limit",
-    "priceUnder": "GBP {{amount}}",
-    "priceUnderPlus": "GBP {{amount}}+",
-    "search": "Search trucks"
+    "anyMake": "Any Make",
+    "bodyType": "Body Type",
+    "anyType": "Any Type",
+    "maxPrice": "Max Price",
+    "noLimit": "No Limit",
+    "priceUnder": "£{{amount}}",
+    "priceUnderPlus": "£{{amount}}+",
+    "search": "Search Trucks"
+  },
+  "brandStrip": {
+    "ariaLabel": "Browse Stock By Make",
+    "heading": "Find Your Preferred Make",
+    "viewMake": "View {{make}} Stock"
   },
   "truckGrid": {
-    "compareRemoveHint": "Remove a truck from comparison to add this one",
-    "compareAddHint": "Add to comparison",
+    "compareRemoveHint": "Remove A Truck From Comparison To Add This One",
+    "compareAddHint": "Add To Comparison",
     "compareLabel": "Compare",
     "available": "Available",
-    "vatConfirm": "VAT status confirm",
+    "vatConfirm": "VAT Status To Confirm",
     "specs": {
       "year": "Year",
       "mileage": "Mileage",
@@ -235,26 +238,24 @@
       "euro": "Euro",
       "mot": "MOT"
     },
-    "viewDetails": "View details"
-  },
-  "financeDisclosure": {
-    "label": "Representative example:",
-    "body": "Cash price GBP 54,950, deposit GBP 5,495 (10%), 48 monthly payments, representative 10.9% APR. Finance is subject to status and affordability checks, available to UK businesses and owner-drivers aged 18+. MidLand Trucks is a credit broker, not a lender, and may receive commission from the finance provider."
+    "viewDetails": "View Details",
+    "photoComingSoon": "Photo Coming Soon",
+    "hotDeal": "Hot Deal"
   },
   "pages": {
     "home": {
       "hero": {
-        "kicker": "Fresh Stock Available Now",
-        "eyebrow": "Used trucks for sale across the UK",
-        "title": "Buy inspected tractor units, rigids and trailers with confidence.",
-        "copy": "Browse clean stock from trusted UK operators, check VAT and MOT notes, request finance guidance and get delivery arranged anywhere in the world.",
-        "viewStock": "View available stock",
-        "requestCallback": "Request a callback",
-        "proofAria": "Buyer reassurance",
+        "kicker": "Fresh Stock Arriving Weekly",
+        "eyebrow": "Used Trucks For Sale In The Midlands",
+        "title": "Quality Used Trucks, Tractor Units, Rigids And Trailers.",
+        "copy": "Hand-picked Stock From UK Fleets, Prepared At Our Swadlincote Yard With Clear VAT And MOT Details. Part Exchange Welcome And Viewings Available Seven Days A Week.",
+        "viewStock": "View Available Stock",
+        "requestCallback": "Request A Callback",
+        "proofAria": "Buyer Reassurance",
         "proof": [
           "Inspected Stock",
           "Clear VAT Status",
-          "Worldwide Delivery"
+          "Part Exchange Welcome"
         ],
         "cardLabel": "Latest Arrival",
         "cardTitle": "2022 Mercedes-Benz Actros",
@@ -263,16 +264,15 @@
         "scrollCue": "Scroll To Explore"
       },
       "intro": {
-        "eyebrow": "Built for operators",
-        "heading": "Stock that is ready for work, not just ready for photos.",
-        "copy": "Every listing is prepared with clear mileage, VAT status, MOT notes, Euro rating and finance guidance so hauliers can compare options quickly.",
+        "eyebrow": "Welcome To Midland Commercials",
+        "heading": "Quality Used Trucks & Trailers From The Heart Of The Midlands.",
+        "copy": "Based In Swadlincote, We Supply Used Tractor Units, Rigids, Tippers And Trailers Sourced Direct From UK Fleets. Every Vehicle Is Checked Over Before Sale And Comes With An Honest Description, A Clear Price And Straightforward, No-Pressure Service. Part Exchange Welcome — Open 7 Days A Week.",
         "points": [
-          "Inspected",
-          "Documented",
-          "Ready To Work"
+          "Sourced From UK Fleets",
+          "Checked Before Sale",
+          "Part Exchange Welcome"
         ]
       },
-      "statsAria": "MidLand Trucks statistics",
       "journey": {
         "eyebrow": "A Simpler Way To Buy",
         "heading": "From Search To Handover, Without The Guesswork.",
@@ -282,352 +282,187 @@
           {
             "number": "01",
             "title": "Find Your Truck",
-            "copy": "Filter prepared stock by make, body type and working budget."
+            "copy": "Filter Prepared Stock By Make, Body Type And Working Budget."
           },
           {
             "number": "02",
             "title": "Check Every Detail",
-            "copy": "Review mileage, VAT, MOT, inspection notes and a video walkaround."
+            "copy": "Review Mileage, VAT, MOT, Inspection Notes And A Video Walkaround."
           },
           {
             "number": "03",
             "title": "Reserve With Confidence",
-            "copy": "Confirm finance, part exchange and delivery before paying a deposit."
+            "copy": "Agree Part Exchange, Viewing And Handover Before Paying A Deposit."
           }
         ]
       },
       "featuredStock": {
-        "eyebrow": "Featured stock",
-        "heading": "Recently prepared trucks",
-        "viewAll": "View full listing"
+        "eyebrow": "Featured Stock",
+        "heading": "Recently Prepared Trucks",
+        "viewAll": "View Full Listing"
       },
       "serviceCard": {
-        "openPage": "Open page"
+        "openPage": "Open Page"
       },
       "featureBand": {
-        "eyebrow": "Finance and delivery",
-        "heading": "Keep cash flow moving while the truck gets moving.",
-        "copy": "We can introduce finance options, help arrange part exchange, prepare walkaround videos and quote worldwide delivery before you travel or reserve.",
+        "eyebrow": "Part Exchange And Viewings",
+        "heading": "Trade In, Drive Away And Get Back To Work.",
+        "copy": "We Can Take Your Current Vehicle In Part Exchange, Film A Walkaround Video And Book You A Viewing At Our Swadlincote Yard Before You Reserve.",
         "items": [
           {
-            "title": "Inspection pack",
-            "copy": "Photos, video, tyre condition, MOT status and known service history."
+            "title": "Inspection Pack",
+            "copy": "Photos, Video, Tyre Condition, MOT Status And Known Service History."
           },
           {
-            "title": "Part exchange",
-            "copy": "Send your registration, mileage and photos for a trade guide."
+            "title": "Part Exchange",
+            "copy": "Send Your Registration, Mileage And Photos For A Valuation."
           },
           {
-            "title": "Reserve route",
-            "copy": "Availability, VAT status, deposit terms and delivery costs confirmed before payment."
+            "title": "Reserve With Confidence",
+            "copy": "Availability, VAT Status And Deposit Terms Confirmed Before Payment."
           }
         ]
       }
     },
     "about": {
       "hero": {
-        "eyebrow": "About MidLand Trucks",
-        "title": "A UK truck sales partner built around clear adverts.",
-        "copy": "We help hauliers, builders, owner-drivers and fleet managers compare used commercial vehicles with the key details visible before they travel."
+        "eyebrow": "About Us",
+        "title": "Quality Used Commercial Vehicles From The Heart Of The Midlands.",
+        "copy": "Midland Commercials Is An Independent Used Truck And Trailer Dealer Based In Swadlincote, Supplying Hauliers, Builders, Owner-Drivers And Fleet Operators Across The UK."
       },
       "approach": {
-        "eyebrow": "Our approach",
-        "heading": "We keep the buying process practical and transparent.",
-        "p1": "MidLand Trucks is focused on used commercial vehicle sales across the UK, with delivery arranged worldwide. Our role is simple: prepare useful information, match buyers with the right truck and make reservation, finance, part exchange and delivery easier to arrange.",
-        "p2": "Every buyer gets the details they need to compare stock properly: mileage, year, gearbox, cab type, VAT status, MOT notes, Euro rating, condition notes and location. For serious enquiries we can provide extra photos, walkaround videos and inspection support."
+        "eyebrow": "Who We Are",
+        "heading": "Honest Trucks, Fair Prices And A Friendly Service.",
+        "p1": "We Buy Quality Used Tractor Units, Rigids, Tippers And Trailers Direct From UK Fleets And Operators, Then Check Them Over Before They Go On Sale. Whether You Run One Truck Or A Whole Fleet, We’ll Help You Find The Right Vehicle For The Job — Without The Hard Sell.",
+        "p2": "Every Advert Shows The Details That Matter: Year, Mileage, Gearbox, Cab, VAT Status, MOT And Euro Rating. Need More? We’re Happy To Send Extra Photos Or A Walkaround Video, And You’re Always Welcome To Come And See The Truck In Person At Our Yard."
       },
       "values": [
         {
-          "title": "Clear listings",
-          "copy": "VAT, MOT, Euro rating and work-ready spec are visible first."
+          "title": "Checked Before Sale",
+          "copy": "Every Vehicle Is Inspected And Described Honestly, So There Are No Surprises When You Arrive."
         },
         {
-          "title": "Worldwide delivery",
-          "copy": "Delivery quotes and remote buying help, from UK depots to overseas ports."
+          "title": "Part Exchange Welcome",
+          "copy": "Got A Truck, Van Or Trailer To Move On? We’ll Give You A Fair Price Against Your Next Vehicle."
         },
         {
-          "title": "Operator-first advice",
-          "copy": "We talk through payload, route, CAZ use and running costs."
+          "title": "Open 7 Days A Week",
+          "copy": "Viewings At Our Swadlincote Yard, Monday To Sunday, 8:00am – 6:00pm."
         }
       ],
-      "statsAria": "MidLand Trucks milestones",
+      "statsAria": "Midland Commercials Milestones",
       "cta": {
-        "eyebrow": "Talk to the team",
-        "heading": "Come and see the stock, or start with a call.",
-        "copy": "Book a yard visit, ask about a specific truck or get finance guidance before you travel.",
-        "getInTouch": "Get in touch",
-        "call": "Call 0121 496 0000"
+        "eyebrow": "Speak To The Team",
+        "heading": "Come And See Us, Or Give Us A Call.",
+        "copy": "Looking For Something Specific? Tell Us What You Need And We’ll Let You Know What’s In Stock Or Arriving Soon.",
+        "getInTouch": "Get In Touch",
+        "call": "Call 0121 663 1118"
       }
     },
     "contact": {
       "hero": {
         "eyebrow": "Contact Us",
-        "title": "Talk to a truck sales specialist.",
-        "copy": "Tell us what you need, ask about a listing, arrange a viewing or send details for part exchange. We will get back with practical next steps."
+        "title": "Get In Touch With Our Sales Team.",
+        "copy": "Whether You’re Looking For Your Next Truck, Want To Book A Viewing Or Have A Vehicle To Part Exchange, We’re Here To Help — 7 Days A Week."
       },
       "salesDesk": {
-        "eyebrow": "Sales desk",
-        "heading": "Get a quick answer before you travel.",
-        "copy": "Call the team, request a walkaround video or send your buying requirement. We can also help with part exchange and delivery quotes."
+        "eyebrow": "Speak To Us",
+        "heading": "Call, Email Or Pop Into The Yard.",
+        "copy": "Give Us A Call For A Quick Answer, Or Send Us A Message With The Truck You’re Interested In. We Can Send Extra Photos And Walkaround Videos, And Value Your Part Exchange."
       },
       "details": {
-        "location": "Birmingham, West Midlands, United Kingdom",
-        "hours": "Monday to Saturday, 8:30am to 6:00pm"
+        "location": "Little Wigston, Swadlincote, DE12 7BJ",
+        "hours": "Monday To Sunday, 8:00am – 6:00pm"
       },
-      "responseNote": "We usually reply within 2 working hours during business hours.",
-      "faqTeaser": "Looking for a quick answer? Check our FAQ"
-    },
-    "delivery": {
-      "hero": {
-        "eyebrow": "Worldwide delivery",
-        "title": "From our yard to any yard, anywhere in the world.",
-        "copy": "UK and European road transport, worldwide sea freight export, and full handover documentation — planned and quoted before a deposit is taken."
-      },
-      "reach": {
-        "ariaLabel": "MidLand Trucks delivery reach",
-        "stats": [
-          {
-            "value": "60+",
-            "label": "Countries reached through our export network"
-          },
-          {
-            "value": "UK & EU",
-            "label": "Road transport with tracked collection slots"
-          },
-          {
-            "value": "RoRo & container",
-            "label": "Sea freight booked for worldwide export"
-          },
-          {
-            "value": "Full paperwork",
-            "label": "Invoices, customs and shipping documents handled"
-          }
-        ]
-      },
-      "items": [
-        {
-          "title": "Mainland UK delivery",
-          "copy": "Tracked road transport from our Midlands yard to depots, sites and ports across Britain, usually quoted within 48 hours."
-        },
-        {
-          "title": "European road freight",
-          "copy": "Trailer and low-loader transport booked to depots across mainland Europe, with border paperwork prepared in advance."
-        },
-        {
-          "title": "Worldwide sea freight & export",
-          "copy": "Container and RoRo shipping arranged from UK ports to over 60 countries, with export invoices and bills of lading handled for you."
-        },
-        {
-          "title": "Collection appointments",
-          "copy": "Prefer to collect? Book a viewing, final checks and a handover slot that fits your driver's schedule."
-        }
-      ],
-      "support": {
-        "eyebrow": "Movement support",
-        "heading": "Clear timing before money, travel or freight is committed.",
-        "copy": "Whichever route your truck takes — UK road, European trailer or ocean freight — the delivery page gives quotes, shipping status, handover documents and customer notifications a single home."
-      },
-      "process": {
-        "eyebrow": "How it works",
-        "heading": "The same clear process, whether it's next door or overseas.",
-        "copy": "Every delivery, local or international, follows the same checked route from quote to handover.",
-        "steps": [
-          {
-            "number": "01",
-            "title": "Quote & route plan",
-            "copy": "Tell us the destination — UK site, EU depot or overseas port — and we quote the fastest, most cost-effective route."
-          },
-          {
-            "number": "02",
-            "title": "Export documentation",
-            "copy": "We prepare the invoice, certificate of conformity and any customs paperwork your destination country requires."
-          },
-          {
-            "number": "03",
-            "title": "Transport to port or depot",
-            "copy": "The truck moves by trailer or low-loader to the collection point, sea port or your delivery address."
-          },
-          {
-            "number": "04",
-            "title": "Shipping & customs clearance",
-            "copy": "For overseas orders, we book RoRo or container space and track the vehicle through export and customs clearance."
-          },
-          {
-            "number": "05",
-            "title": "Handover confirmation",
-            "copy": "You get sign-off documents and photos the moment the truck lands with the buyer, wherever in the world that is."
-          }
-        ]
-      },
-      "regions": {
-        "eyebrow": "Global reach",
-        "heading": "Wherever the truck is going, we've likely shipped one there.",
-        "copy": "MidLand arranges delivery and export well beyond the UK. Tell us the destination and we'll confirm route, cost and lead time.",
-        "list": [
-          {
-            "title": "United Kingdom & Ireland",
-            "copy": "Next-day and scheduled road delivery from our Midlands yard."
-          },
-          {
-            "title": "Continental Europe",
-            "copy": "Trailer and low-loader transport to depots across the EU and beyond."
-          },
-          {
-            "title": "Middle East",
-            "copy": "RoRo and container shipping via UK ports, with export paperwork handled."
-          },
-          {
-            "title": "Africa",
-            "copy": "Established export routes for buyers importing used trucks and trailers."
-          },
-          {
-            "title": "Asia-Pacific",
-            "copy": "Container shipping arranged with tracked transit to major ports."
-          },
-          {
-            "title": "Americas",
-            "copy": "Sea freight quoted for both North and South American ports."
-          },
-          {
-            "title": "Australia & New Zealand",
-            "copy": "Long-haul container export with full customs documentation."
-          }
-        ]
-      }
+      "responseNote": "We Aim To Reply To Every Enquiry The Same Day.",
+      "faqTeaser": "Got A Question? Have A Look At Our FAQs"
     },
     "faq": {
       "hero": {
         "eyebrow": "Questions",
-        "title": "Answers before you call or travel.",
-        "copy": "Common buying, finance, reservation, delivery and part exchange questions in one place."
-      }
-    },
-    "finance": {
-      "hero": {
-        "eyebrow": "Commercial finance",
-        "title": "Finance options for working vehicles.",
-        "copy": "Get clear next steps for deposits, monthly payments and business vehicle finance before you commit to a viewing."
-      },
-      "how": {
-        "eyebrow": "How it works",
-        "heading": "Keep the truck earning while payments stay predictable.",
-        "p1": "MidLand Trucks can help prepare finance enquiries for hire purchase, lease purchase and structured deposits. Buyers receive practical guidance on documents, affordability and vehicle suitability.",
-        "p2": "Finance is subject to status, lender approval and final vehicle checks. Commission, broker status and representative examples should be confirmed before an application is submitted."
-      },
-      "items": [
-        {
-          "title": "Quick quote pack",
-          "copy": "Vehicle price, deposit target, business details and mileage expectations."
-        },
-        {
-          "title": "Business-friendly terms",
-          "copy": "Options can be matched to cash flow, usage and replacement plans."
-        },
-        {
-          "title": "Part exchange support",
-          "copy": "Trade value can be considered alongside the finance deposit."
-        },
-        {
-          "title": "Disclosure first",
-          "copy": "Representative APR, commission status and lender details are shared before proceeding."
-        }
-      ],
-      "calculator": {
-        "ariaLabel": "Finance calculator",
-        "eyebrow": "Estimate",
-        "heading": "Quick monthly guide.",
-        "copy": "Indicative only. Final figures depend on lender approval, VAT status, APR, fees and business profile.",
-        "priceLabel": "Vehicle price",
-        "depositLabel": "Deposit",
-        "termLabel": "Term",
-        "termOptions": [
-          "36 months",
-          "48 months",
-          "60 months"
-        ],
-        "resultLabel": "Estimated monthly",
-        "resultNote": "Excludes VAT treatment, fees and final lender APR."
+        "title": "Answers Before You Call Or Travel.",
+        "copy": "Common Buying, Viewing, Reservation And Part Exchange Questions In One Place."
       }
     },
     "partExchange": {
       "hero": {
-        "eyebrow": "Part exchange",
-        "title": "Trade your current truck into the next one.",
-        "copy": "Send vehicle details, condition notes and images so the sales team can prepare a practical part exchange estimate."
+        "eyebrow": "Part Exchange",
+        "title": "Trade Your Current Truck Into The Next One.",
+        "copy": "Send Your Vehicle Details, Condition Notes And Photos So The Sales Team Can Prepare A Fair Part Exchange Valuation."
       },
       "details": {
-        "eyebrow": "Valuation details",
-        "heading": "Fast trade guide with the details buyers actually need.",
-        "copy": "Registration, mileage, MOT status, service history, tyre condition and cab/body photos help the team estimate value and move the deal forward without repeated calls."
+        "eyebrow": "Valuation Details",
+        "heading": "A Quick Valuation With The Details That Matter.",
+        "copy": "Registration, Mileage, MOT Status, Service History, Tyre Condition And Cab/body Photos Help The Team Estimate Value And Move The Deal Forward Without Repeated Calls."
       },
       "form": {
-        "nameLabel": "Your name",
-        "namePlaceholder": "Business or contact name",
-        "phoneLabel": "Phone number",
-        "phonePlaceholder": "Best number for valuation questions",
+        "nameLabel": "Your Name",
+        "namePlaceholder": "Business Or Contact Name",
+        "phoneLabel": "Phone Number",
+        "phonePlaceholder": "Best Number For Valuation Questions",
         "emailLabel": "Email",
         "emailPlaceholder": "you@example.co.uk",
-        "registrationLabel": "Vehicle registration",
+        "registrationLabel": "Vehicle Registration",
         "registrationPlaceholder": "AB12 CDE",
-        "mileageLabel": "Current mileage",
-        "mileagePlaceholder": "Example: 340,000 miles",
-        "notesLabel": "Vehicle notes",
-        "notesPlaceholder": "Condition, MOT, service history, tyre condition, body photos available and target replacement truck",
-        "success": "Valuation request saved in database.",
-        "submit": "Request valuation"
+        "mileageLabel": "Current Mileage",
+        "mileagePlaceholder": "Example: 340,000 Miles",
+        "notesLabel": "Vehicle Notes",
+        "notesPlaceholder": "Condition, MOT, Service History, Tyre Condition, Body Photos Available And Target Replacement Truck",
+        "success": "Valuation Request Saved In Database.",
+        "submit": "Request Valuation"
       }
     },
     "privacy": {
       "hero": {
-        "eyebrow": "Privacy and terms",
-        "title": "Clear rules for UK truck enquiries and reservations.",
-        "copy": "How enquiry data, vehicle information, deposits, finance introductions and delivery arrangements are handled before a sale completes."
+        "eyebrow": "Privacy And Terms",
+        "title": "Clear Rules For UK Truck Enquiries And Reservations.",
+        "copy": "How Enquiry Data, Vehicle Information And Deposits Are Handled Before A Sale Completes."
       },
       "sections": [
         {
-          "heading": "Customer data",
-          "copy": "Enquiry details are stored in the website database and are available only to authorised administration users responding to vehicle, finance, delivery and part exchange requests. Contact the sales team to request access, correction or deletion."
+          "heading": "Customer Data",
+          "copy": "Enquiry Details Are Stored Securely And Are Only Available To Authorised Midland Commercials Staff Responding To Vehicle, Viewing And Part Exchange Requests. Contact Our Sales Team To Request Access, Correction Or Deletion."
         },
         {
-          "heading": "Vehicle information",
-          "copy": "Listings are prepared in good faith from available stock information. Buyers should confirm final specification, VAT status, MOT, condition, mileage, Clean Air Zone suitability and availability before purchase."
+          "heading": "Vehicle Information",
+          "copy": "Listings Are Prepared In Good Faith From Available Stock Information. Buyers Should Confirm Final Specification, VAT Status, MOT, Condition, Mileage, Clean Air Zone Suitability And Availability Before Purchase."
         },
         {
-          "heading": "Reservation and payment terms",
-          "copy": "This website does not take online payments. Deposits, reservations, finance introductions, delivery, part exchange values, the full price, taxes and cancellation terms are confirmed directly with the sales team before a sale is completed."
+          "heading": "Reservation And Payment Terms",
+          "copy": "This Website Does Not Take Online Payments. Deposits, Reservations, Part Exchange Values, The Full Price, Taxes And Cancellation Terms Are Confirmed Directly With The Sales Team Before A Sale Is Completed."
         },
         {
-          "heading": "Finance and cookies",
-          "copy": "The finance calculator is indicative and does not submit an application to a lender. The cookie preference is stored in your browser; this website does not currently activate analytics or marketing cookies."
+          "heading": "Cookies",
+          "copy": "Your Cookie Preference Is Stored In Your Browser. This Website Does Not Currently Activate Analytics Or Marketing Cookies."
         }
       ]
     },
     "truckDetail": {
       "hero": {
-        "eyebrow": "Vehicle detail",
-        "copy": "Review the key specification, preparation notes and next steps before arranging a viewing or finance quote."
+        "eyebrow": "Vehicle Detail",
+        "copy": "Review The Key Specification, Preparation Notes And Next Steps Before Arranging A Viewing."
       },
       "prepNotes": {
-        "eyebrow": "Preparation notes",
-        "heading": "Ready for inspection and buyer checks."
+        "eyebrow": "Preparation Notes",
+        "heading": "Ready For Inspection And Buyer Checks."
       },
       "items": [
         {
-          "title": "Inspection pack",
-          "copy": "Photo set, tyre notes, cab condition, service information and known preparation work."
+          "title": "Inspection Pack",
+          "copy": "Photo Set, Tyre Notes, Cab Condition, Service Information And Known Preparation Work."
         },
         {
-          "title": "Reservation route",
-          "copy": "Reserve after final availability checks, finance quote or viewing appointment confirmation."
+          "title": "Reservation Route",
+          "copy": "Reserve After Final Availability Checks, A Viewing Or Confirmation Of Your Part Exchange."
         },
         {
-          "title": "VAT and invoice check",
-          "copy": "VAT status, deposit terms, warranty cover and delivery costs are confirmed before payment."
+          "title": "VAT And Invoice Check",
+          "copy": "VAT Status, Deposit Terms And Warranty Cover Are Confirmed Before Payment."
         }
       ],
-      "galleryAria": "Vehicle gallery",
-      "priceNoteVat": "Commercial price shown {{vatStatus}}.",
-      "priceNoteConfirm": "Confirm VAT status before invoice.",
+      "galleryAria": "Vehicle Gallery",
+      "priceNoteVat": "Commercial Price Shown {{vatStatus}}.",
+      "priceNoteConfirm": "Confirm VAT Status Before Invoice.",
       "specs": {
         "make": "Make",
         "body": "Body",
@@ -645,17 +480,26 @@
         "mot": "MOT",
         "service": "Service",
         "owners": "Owners",
-        "warranty": "Warranty"
+        "warranty": "Warranty",
+        "vin": "VIN",
+        "fuel": "Fuel",
+        "colour": "Colour",
+        "previousOwners": "Previous Owners",
+        "tacho": "Tacho"
       },
-      "reserveEnquire": "Reserve or enquire",
-      "financeOptions": "Finance options",
-      "deliveryQuote": "Delivery quote"
+      "reserveEnquire": "Reserve Or Enquire",
+      "photosComingSoon": "Truck Photos Coming Soon",
+      "walkaround": {
+        "eyebrow": "Truck Walkaround",
+        "heading": "See This Truck In Action",
+        "watch": "Watch Walkaround Video"
+      }
     },
     "trucks": {
       "hero": {
-        "eyebrow": "Truck listings",
-        "title": "Commercial vehicles available now.",
-        "copy": "Browse tractor units, rigids and specialist stock from trusted UK sources. Use the filters to narrow down the right vehicle for your work."
+        "eyebrow": "Used Trucks For Sale",
+        "title": "Quality Used Trucks & Trailers In Stock Now.",
+        "copy": "Browse Our Current Stock Of Used Tractor Units, Rigids, Tippers And Trailers, All Sourced From UK Fleets And Ready To View At Our Swadlincote Yard. Can’t See What You Need? Call 0121 663 1118 — New Stock Arrives Every Week."
       },
       "filters": {
         "make": "Make",
@@ -667,18 +511,18 @@
       },
       "sidebar": {
         "eyebrow": "Refine",
-        "activeCount": "{{count}} active"
+        "activeCount": "{{count}} Active"
       },
       "filterSelect": {
-        "anyMake": "Any make",
-        "anyBody": "Any body",
-        "anyYear": "Any year",
-        "anyMileage": "Any mileage",
-        "anyGearbox": "Any gearbox",
-        "noLimit": "No limit",
-        "underMiles": "Under {{amount}} miles",
-        "under": "GBP {{amount}}",
-        "underPlus": "GBP {{amount}}+",
+        "anyMake": "Any Make",
+        "anyBody": "Any Body",
+        "anyYear": "Any Year",
+        "anyMileage": "Any Mileage",
+        "anyGearbox": "Any Gearbox",
+        "noLimit": "No Limit",
+        "underMiles": "Under {{amount}} Miles",
+        "under": "£{{amount}}",
+        "underPlus": "£{{amount}}+",
         "yearPlus": "{{year}}+"
       },
       "mileageOptions": [
@@ -686,273 +530,260 @@
         "Under 350k",
         "Under 500k"
       ],
-      "clearFilters": "Clear filters",
-      "clearFiltersCount": "Clear filters ({{count}})",
+      "clearFilters": "Clear Filters",
+      "clearFiltersCount": "Clear Filters ({{count}})",
       "toolbar": {
-        "eyebrow": "Available stock",
-        "heading": "{{count}} trucks ready to enquire"
+        "eyebrow": "Available Stock",
+        "heading": "{{count}} Trucks Ready To Enquire"
       },
-      "sortAria": "Sort trucks",
+      "sortAria": "Sort Trucks",
       "sortOptions": {
-        "newest": "Newest stock first",
-        "yearOld": "Year: oldest first",
-        "priceLow": "Price: low to high",
-        "priceHigh": "Price: high to low",
-        "mileageLow": "Mileage: low to high"
+        "newest": "Newest Stock First",
+        "yearOld": "Year: Oldest First",
+        "priceLow": "Price: Low To High",
+        "priceHigh": "Price: High To Low",
+        "mileageLow": "Mileage: Low To High"
       },
-      "activeFiltersAria": "Active filters",
-      "clearAll": "Clear all",
-      "loadMore": "Load more trucks ({{count}} remaining)",
+      "activeFiltersAria": "Active Filters",
+      "clearAll": "Clear All",
+      "loadMore": "Load More Trucks ({{count}} Remaining)",
       "emptyState": {
-        "heading": "No trucks match those filters.",
-        "copy": "Clear the filters or send the team your requirement for incoming stock.",
-        "cta": "Send requirement"
+        "heading": "No Trucks Match Those Filters.",
+        "copy": "Clear The Filters Or Send The Team Your Requirement For Incoming Stock.",
+        "cta": "Send Requirement"
       }
+    },
+    "blog": {
+      "eyebrow": "Midland Commercials News",
+      "title": "Truck Buying Guides & News",
+      "copy": "Practical Advice On Buying And Running Used Trucks.",
+      "loading": "Loading Articles…",
+      "empty": "New Articles Are Coming Soon.",
+      "unavailable": "Article Unavailable",
+      "backHome": "Back To Home"
     }
   },
   "content": {
-    "stats": [
-      {
-        "value": "VAT clear",
-        "label": "Commercial pricing shown before enquiry"
-      },
-      {
-        "value": "MOT noted",
-        "label": "Expiry or preparation status on each advert"
-      },
-      {
-        "value": "48 hrs",
-        "label": "Worldwide delivery quotes"
-      }
-    ],
     "serviceCards": [
       {
-        "title": "Finance",
-        "copy": "Compare hire purchase, lease purchase and seasonal payment options before you reserve.",
-        "href": "/finance"
+        "title": "Browse Stock",
+        "copy": "Tractor Units, Rigids, Tippers And Trailers, Inspected And Ready To View.",
+        "href": "/trucks"
       },
       {
-        "title": "Part exchange",
-        "copy": "Send current vehicle details and get a trade guide against your next truck.",
+        "title": "Part Exchange",
+        "copy": "Send Your Current Vehicle Details And Get A Valuation Against Your Next Truck.",
         "href": "/part-exchange"
       },
       {
-        "title": "Delivery",
-        "copy": "Plan UK, European and worldwide export delivery, plus collection appointments.",
-        "href": "/delivery"
+        "title": "Book A Viewing",
+        "copy": "Come And See The Stock At Our Swadlincote Yard, Open Monday To Sunday.",
+        "href": "/contact"
       }
     ],
     "aboutStats": [
       {
-        "value": "2018",
-        "label": "Year MidLand Trucks was founded"
+        "value": "Swadlincote",
+        "label": "Our Sales Yard, In The Heart Of The Midlands"
       },
       {
-        "value": "500+",
-        "label": "Trucks sold to UK operators"
+        "value": "7 Days",
+        "label": "Open Monday To Sunday, 8:00am – 6:00pm"
       },
       {
-        "value": "2",
-        "label": "Inspection yards, Birmingham and Leeds"
+        "value": "Every Truck",
+        "label": "Inspected Before It Is Listed"
       }
     ],
     "companyMilestones": [
       {
         "year": "2018",
-        "title": "MidLand Trucks founded",
-        "copy": "Started in Birmingham by two ex-fleet engineers who wanted clearer, more honest used truck adverts for UK hauliers."
+        "title": "Midland Commercials Founded",
+        "copy": "Started In The Midlands To Give UK Hauliers Clearer, More Honest Used Truck Adverts."
       },
       {
         "year": "2020",
-        "title": "Second inspection bay opened",
-        "copy": "Added a Leeds inspection point so stock and buyers across the north of England could be covered directly."
+        "title": "Swadlincote Yard Opened",
+        "copy": "Moved Into A Dedicated Sales And Preparation Yard In Swadlincote."
       },
       {
         "year": "2022",
-        "title": "Walkaround videos introduced",
-        "copy": "Every reserved truck could get a full video walkaround, so buyers could decide before travelling to view it."
+        "title": "Walkaround Videos Introduced",
+        "copy": "Every Reserved Truck Could Get A Full Video Walkaround, So Buyers Could Decide Before Travelling."
       },
       {
         "year": "2024",
-        "title": "500th truck sold",
-        "copy": "Reached 500 trucks sold through the platform, mostly to repeat UK haulage and construction fleets."
+        "title": "Part Exchange Expanded",
+        "copy": "Started Taking More Trucks, Vans And Trailers In Part Exchange From Repeat Customers."
       },
       {
         "year": "2026",
-        "title": "Finance panel expanded",
-        "copy": "Added seasonal and lease purchase options alongside standard hire purchase finance for eligible buyers."
+        "title": "Open Seven Days",
+        "copy": "Yard Opening Extended To Monday To Sunday So Buyers Can View At A Time That Suits Them."
       }
     ],
     "teamMembers": [
       {
         "name": "Dave Whitfield",
         "role": "Founder & Sales Director",
-        "bio": "20 years in UK fleet sales before starting MidLand Trucks in 2018."
+        "bio": "20 Years In UK Fleet Sales Before Starting Midland Commercials."
       },
       {
         "name": "Sarah Ellison",
         "role": "Operations Manager",
-        "bio": "Runs vehicle inspections and coordinates delivery bookings across Britain."
+        "bio": "Runs Vehicle Inspections And Prepares Every Truck For Handover."
       },
       {
         "name": "Ryan Coburn",
-        "role": "Finance & Part Exchange",
-        "bio": "Handles finance introductions and prepares part exchange trade guides."
+        "role": "Part Exchange & Buying",
+        "bio": "Values Part Exchange Vehicles And Sources New Stock From UK Fleets."
       },
       {
         "name": "Priya Anand",
         "role": "Customer Support",
-        "bio": "First point of contact for enquiries, viewings and stock questions."
+        "bio": "First Point Of Contact For Enquiries, Viewings And Stock Questions."
       }
     ],
     "locations": [
       {
-        "name": "Birmingham HQ & Sales",
-        "hours": "Mon-Fri 8:30am-6pm, Sat 9am-2pm"
-      },
-      {
-        "name": "Leeds Inspection Bay",
-        "hours": "Mon-Fri 9am-5pm, by appointment"
+        "name": "Midland Commercials Sales Yard",
+        "hours": "Mon – Sun 8:00am – 6:00pm"
       }
     ],
     "testimonials": [
       {
         "name": "Callum Reid",
         "role": "Owner-driver, Reid Haulage, Glasgow",
-        "quote": "Bought a Scania tractor unit sight unseen after a walkaround video. Mileage, MOT and gearbox were exactly as listed, and delivery to Glasgow took two days."
+        "quote": "Bought A Scania Tractor Unit After A Walkaround Video. Mileage, MOT And Gearbox Were Exactly As Listed, And The Handover Was Quick And Easy."
       },
       {
         "name": "Priya Shah",
-        "role": "Fleet manager, Shah Distribution, Leicester",
-        "quote": "We have bought three rigids from MidLand over two years. Clear VAT status and finance guidance make it easy to get sign-off from our accounts team quickly."
+        "role": "Fleet Manager, Shah Distribution, Leicester",
+        "quote": "We Have Bought Three Rigids From Midland Commercials Over Two Years. Clear VAT Status And Honest Descriptions Make It Easy To Get Sign-off From Our Accounts Team."
       },
       {
         "name": "Tomasz Nowak",
         "role": "Director, Nowak Groundworks, Derby",
-        "quote": "Part exchanged an older tipper against a MAN 8x4. Trade guide was fair and the whole handover, including delivery, was sorted within a week."
+        "quote": "Part Exchanged An Older Tipper Against A MAN 8x4. Trade Guide Was Fair And The Whole Handover Was Sorted Within A Week."
       }
     ],
     "faqs": [
       {
-        "question": "Can I reserve a truck remotely?",
-        "answer": "Yes. We can share extra photos, arrange a video walkaround and hold stock after final availability checks and agreed deposit terms."
+        "question": "Can I Reserve A Truck Remotely?",
+        "answer": "Yes. We Can Share Extra Photos, Arrange A Video Walkaround And Hold The Truck After Final Availability Checks And An Agreed Deposit."
       },
       {
-        "question": "Do you arrange finance?",
-        "answer": "We can introduce commercial finance options for eligible UK businesses and owner-drivers."
+        "question": "Can I View A Truck Before I Buy?",
+        "answer": "Yes. Viewings Are By Appointment At Our Yard In Little Wigston, Swadlincote, DE12 7BJ, So The Truck And Its Paperwork Are Ready When You Arrive."
       },
       {
-        "question": "Can I part exchange my vehicle?",
-        "answer": "Yes. Send registration, mileage, condition notes and photos so the team can prepare a trade estimate."
+        "question": "Can I Part Exchange My Vehicle?",
+        "answer": "Yes. Send The Registration, Mileage, Condition Notes And Photos So The Team Can Prepare A Valuation."
       },
       {
-        "question": "Do prices include VAT?",
-        "answer": "Each listing should show whether the price is plus VAT, VAT included or no VAT. Final VAT status is confirmed on the invoice before payment."
+        "question": "Do Prices Include VAT?",
+        "answer": "Each Listing Shows Whether The Price Is Plus VAT, VAT Included Or No VAT. Final VAT Status Is Confirmed On The Invoice Before Payment."
       },
       {
-        "question": "Can trucks be delivered?",
-        "answer": "Yes. We arrange UK and European road delivery plus worldwide sea freight export, or you're welcome to collect from the sales location."
-      },
-      {
-        "question": "Do you show MOT and Clean Air Zone information?",
-        "answer": "Listings include MOT status and Euro/CAZ notes where available. Buyers should still verify registration-specific details before use."
+        "question": "Do You Show MOT And Clean Air Zone Information?",
+        "answer": "Listings Include MOT Status And Euro/CAZ Notes Where Available. Buyers Should Still Check Registration-specific Details Before Use."
       }
     ]
   },
   "chat": {
-    "launcher": "Ask about trucks",
-    "headerTitle": "MidLand assistant",
-    "checkingStock": "Checking live stock...",
-    "stockSummary": "{{count}} active trucks from {{range}}.",
-    "closeAria": "Close chat",
-    "welcome": "Hi, I'm MidLand's virtual sales assistant. I can help you find a truck, check specifications, request finance or part exchange, and arrange a viewing or callback. What type of vehicle are you looking for?",
+    "launcher": "Ask About Trucks",
+    "headerTitle": "Midland Commercials Assistant",
+    "checkingStock": "Checking Live Stock...",
+    "stockSummary": "{{count}} Active Trucks From {{range}}.",
+    "closeAria": "Close Chat",
+    "welcome": "Hi, I'm The Midland Commercials Virtual Sales Assistant. I Can Help You Find A Truck, Check Specifications, Value A Part Exchange And Arrange A Viewing Or Callback. What Type Of Vehicle Are You Looking For?",
     "quickPrompts": {
-      "bestUnder55k": "Best truck under GBP 55k",
-      "scaniaMileage": "Scania mileage?",
-      "automaticEuro6": "Automatic Euro 6 trucks",
-      "teamPhone": "Team phone number",
-      "bookEnquiry": "Book enquiry"
+      "bestUnder55k": "Best Truck Under £55k",
+      "scaniaMileage": "Scania Mileage?",
+      "automaticEuro6": "Automatic Euro 6 Trucks",
+      "teamPhone": "Team Phone Number",
+      "bookEnquiry": "Book Enquiry"
     },
     "form": {
       "nameLabel": "Name",
-      "namePlaceholder": "Your name",
+      "namePlaceholder": "Your Name",
       "phoneLabel": "Phone",
       "phonePlaceholder": "07...",
       "emailLabel": "Email",
-      "emailPlaceholder": "you@example.com",
+      "emailPlaceholder": "you@example.co.uk",
       "companyLabel": "Company",
-      "postcodeLabel": "UK postcode",
+      "postcodeLabel": "UK Postcode",
       "postcodePlaceholder": "B1 1AA",
-      "vehicleTypeLabel": "Vehicle type",
-      "vehicleTypePlaceholder": "Tractor unit, tipper...",
+      "vehicleTypeLabel": "Vehicle Type",
+      "vehicleTypePlaceholder": "Tractor Unit, Tipper...",
       "budgetLabel": "Budget (£)",
-      "budgetBasisLabel": "Budget basis",
-      "budgetBasisExcl": "excluding VAT",
-      "budgetBasisIncl": "including VAT",
-      "timelineLabel": "When are you looking to purchase?",
-      "timelineSelect": "Please select",
-      "timelineThisWeek": "This week",
-      "timelineWithin7": "Within 7 days",
-      "timelineThisMonth": "This month",
-      "timelineWithin3Months": "Within 3 months",
-      "timelineResearching": "Just researching",
-      "callbackLabel": "Preferred callback time",
-      "callbackPlaceholder": "Weekdays, 2–4 pm",
-      "financeRequired": "Finance required",
-      "partExchange": "Part exchange",
+      "budgetBasisLabel": "Budget Basis",
+      "budgetBasisExcl": "Excluding VAT",
+      "budgetBasisIncl": "Including VAT",
+      "timelineLabel": "When Are You Looking To Purchase?",
+      "timelineSelect": "Please Select",
+      "timelineThisWeek": "This Week",
+      "timelineWithin7": "Within 7 Days",
+      "timelineThisMonth": "This Month",
+      "timelineWithin3Months": "Within 3 Months",
+      "timelineResearching": "Just Researching",
+      "callbackLabel": "Preferred Callback Time",
+      "callbackPlaceholder": "Weekdays, 2–4 Pm",
+      "partExchange": "Part Exchange",
       "requirementLabel": "Requirement",
-      "consentText": "I agree that MidLand Trucks may contact me about this enquiry. See the <1>Privacy Policy</1>.",
-      "submitSending": "Sending securely…",
-      "submitCallback": "Request a sales callback"
+      "consentText": "I Agree That Midland Commercials May Contact Me About This Enquiry. See The <1>Privacy Policy</1>.",
+      "submitSending": "Sending Securely…",
+      "submitCallback": "Request A Sales Callback"
     },
-    "suggestedAria": "Suggested questions",
-    "composerPlaceholder": "Ask mileage, price, MOT, finance...",
-    "composerAria": "Ask the chat assistant",
-    "sendAria": "Send chat message",
+    "suggestedAria": "Suggested Questions",
+    "composerPlaceholder": "Ask About Mileage, Price, MOT, Gearbox...",
+    "composerAria": "Ask The Chat Assistant",
+    "sendAria": "Send Chat Message",
     "send": "Send",
     "actions": {
-      "contactPage": "Contact page",
-      "allTrucks": "All trucks",
-      "financePage": "Finance page",
-      "deliveryPage": "Delivery page",
-      "partExchangePage": "Part-exchange page"
+      "contactPage": "Contact Page",
+      "allTrucks": "All Trucks",
+      "partExchangePage": "Part-exchange Page"
     },
     "replies": {
-      "enquiry": "Certainly. Share your details and the team will follow up with price, availability, viewing, finance or delivery next steps.",
-      "partExchange": "We can value your current commercial vehicle against a MidLand truck. Share its registration, mileage, condition, service history and a few clear photos; the team can then prepare an indicative valuation.",
-      "phoneInfo": "{{name}} handles first enquiries. Birmingham sales: {{birminghamPhone}}. Leeds inspection bay: {{leedsPhone}}. Hours: {{hours}}.",
-      "finance": "Finance can be introduced for eligible UK businesses and owner-drivers. Tell me the truck, deposit and preferred term, or send an enquiry and {{financePerson}} can prepare options.",
-      "delivery": "We deliver UK-wide, across Europe by road and worldwide by sea freight, plus collection from our Midlands yard. Share the destination and target truck for a proper quote.",
-      "budgetWithAmount": "These are the strongest matches under GBP {{amount}}.",
-      "budgetGeneric": "Here are the best-priced trucks in stock right now.",
-      "specMatch": "These listings match that requirement. Open one for full photos and inspection notes.",
-      "specNoMatch": "I could not find an exact stock match. Send an enquiry and the team can suggest alternatives.",
-      "viewing": "Viewings are available by appointment so the team can have the truck and inspection information ready. Share the truck, preferred day and contact number, and we will arrange it.",
-      "availability": "Stock status can change quickly. These are the closest active listings; open a truck for its latest status or send an enquiry for confirmation before travelling.",
-      "stockOptions": "There are currently {{count}} trucks in the stock feed. Here are the strongest available options; use All trucks for the complete range.",
-      "thanks": "You're welcome. If you share a make, body type, gearbox, budget or preferred year, I can narrow the stock down further.",
-      "greeting": "Haan bhai, ask me anything. I can answer mileage, price, MOT, gearbox, Euro/CAZ, warranty, location, finance, delivery and save enquiries. {{stockNote}}",
-      "greetingStockChecking": "I am still checking live stock, but fallback stock is ready.",
-      "greetingStockReady": "Current stock: {{count}} trucks.",
-      "fallback": "I found the closest stock options below. For exact availability, final VAT, viewing and inspection sheet, send an enquiry or call the team.",
-      "thankYou": "Thank you, {{name}}. Your enquiry has been sent to our sales team. They'll contact you at your preferred time. If it's urgent, call {{phone}}.",
-      "sendError": "I couldn't send that enquiry just now. Please try again or call our sales team on {{phone}}.",
-      "mileageLine": "{{title}} has {{mileage}} showing.",
-      "priceLine": "Price is {{price}}.",
+      "enquiry": "Certainly. Share Your Details And The Team Will Come Back To You About Price, Availability, Viewing Or Part Exchange.",
+      "partExchange": "We Can Value Your Current Vehicle Against A Truck From Midland Commercials. Share Its Registration, Mileage, Condition, Service History And A Few Clear Photos, And The Team Will Prepare A Valuation.",
+      "phoneInfo": "Call Our Sales Team On {{phone}} Or Send Us A Message Through The Contact Page. Our Yard Is At {{address}}. Hours: {{hours}}.",
+      "budgetWithAmount": "These Are The Strongest Matches Under £{{amount}}.",
+      "budgetGeneric": "Here Are The Best-priced Trucks In Stock Right Now.",
+      "specMatch": "These Listings Match That Requirement. Open One For Full Photos And Inspection Notes.",
+      "specNoMatch": "I Could Not Find An Exact Stock Match. Send An Enquiry And The Team Can Suggest Alternatives.",
+      "viewing": "Viewings Are Available By Appointment So The Team Can Have The Truck And Inspection Information Ready. Share The Truck, Preferred Day And Contact Number, And We Will Arrange It.",
+      "availability": "Stock Status Can Change Quickly. These Are The Closest Active Listings; Open A Truck For Its Latest Status Or Send An Enquiry For Confirmation Before Travelling.",
+      "stockOptions": "There Are Currently {{count}} Trucks In The Stock Feed. Here Are The Strongest Available Options; Use All Trucks For The Complete Range.",
+      "thanks": "You're Welcome. If You Share A Make, Body Type, Gearbox, Budget Or Preferred Year, I Can Narrow The Stock Down Further.",
+      "greeting": "Hello! Ask Me About Mileage, Price, MOT, Gearbox, Euro/CAZ, Warranty, Location Or Part Exchange. {{stockNote}}",
+      "greetingStockChecking": "I Am Still Checking Live Stock, But Fallback Stock Is Ready.",
+      "greetingStockReady": "Current Stock: {{count}} Trucks.",
+      "fallback": "I Found The Closest Stock Options Below. For Exact Availability, Final VAT, Viewing And Inspection Sheet, Send An Enquiry Or Call The Team.",
+      "thankYou": "Thank You, {{name}}. Your Enquiry Has Been Sent To Our Sales Team. They'll Contact You At Your Preferred Time. If It's Urgent, Call {{phone}}.",
+      "sendError": "I Couldn't Send That Enquiry Just Now. Please Try Again Or Call Our Sales Team On {{phone}}.",
+      "mileageLine": "{{title}} Has {{mileage}} Showing.",
+      "priceLine": "Price Is {{price}}.",
       "motLine": "MOT/prep: {{mot}}. Service: {{service}}.",
-      "gearboxLine": "Gearbox is {{gearbox}}.",
-      "locationLine": "Location is {{location}}.",
+      "gearboxLine": "Gearbox Is {{gearbox}}.",
+      "locationLine": "Location Is {{location}}.",
       "warrantyLine": "Owners: {{owners}}. Warranty: {{warranty}}.",
-      "cleanAirLine": "Clean air: {{cleanAir}}.",
-      "availabilityLine": "Current listing status: {{status}}.",
-      "vatLine": "VAT basis: {{vat}}.",
-      "axleLine": "Axle configuration: {{axle}}.",
+      "cleanAirLine": "Clean Air: {{cleanAir}}.",
+      "availabilityLine": "Current Listing Status: {{status}}.",
+      "vatLine": "VAT Basis: {{vat}}.",
+      "axleLine": "Axle Configuration: {{axle}}.",
       "powerLine": "Power: {{power}}.",
       "cabLine": "Cab: {{cab}}.",
       "fullSummaryLine": "{{title}}: {{price}}, {{mileage}}, {{year}}, {{gearbox}}, {{location}}. {{description}}",
-      "callToAction": "For availability or viewing, call {{phone}} or send an enquiry here.",
-      "confirmWithSales": "confirm with sales",
-      "currentStockFallback": "current stock"
+      "callToAction": "For Availability Or Viewing, Call {{phone}} Or Send An Enquiry Here.",
+      "confirmWithSales": "Confirm With Sales",
+      "currentStockFallback": "Current Stock"
     }
+  },
+  "notFound": {
+    "heading": "Page Not Found",
+    "copy": "The Page You Were Looking For Has Moved Or No Longer Exists.",
+    "cta": "Browse Used Trucks"
   }
 }

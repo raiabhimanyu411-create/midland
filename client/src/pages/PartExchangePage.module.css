@@ -37,12 +37,12 @@
   border-radius: 8px;
   padding: 13px 18px;
   color: #ffffff;
-  background: #b4232c;
+  background: #1e3a8a;
   font-weight: 900;
 }
 
 .contactForm button:hover {
-  background: #8f1c24;
+  background: #172f6e;
 }
 
 .formStatus {
@@ -59,8 +59,8 @@
   margin: 0;
   border-radius: 8px;
   padding: 12px;
-  color: #8f1c24;
-  background: #fff1f2;
+  color: #172f6e;
+  background: #e6ecf7;
   font-size: 0.9rem;
   font-weight: 850;
 }
