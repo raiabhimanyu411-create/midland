@@ -7,7 +7,6 @@
   padding: 22px;
   background: #ffffff;
   box-shadow: 0 18px 42px rgb(16 24 40 / 8%);
-  text-transform: capitalize;
 }
 
 .contactForm.embedded {
@@ -103,4 +102,24 @@
     transition: none;
     transform: none;
   }
+}
+
+/* --- Premium liquid-glass finish --- */
+.contactForm {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Embedded inside another card (home page): no panel of its own, the parent card is the glass. */
+.contactForm.embedded {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
 }

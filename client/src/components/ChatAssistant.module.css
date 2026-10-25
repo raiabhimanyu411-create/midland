@@ -432,3 +432,13 @@
     max-width: calc(100vw - 16px);
   }
 }
+
+/* --- Premium liquid-glass finish --- */
+.launcher {
+  border: 1px solid rgb(255 255 255 / 22%);
+  background: linear-gradient(180deg, rgb(42 74 166 / 92%), rgb(30 58 138 / 92%));
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 24%), 0 16px 36px rgb(30 58 138 / 30%);
+  border-radius: 14px;
+}

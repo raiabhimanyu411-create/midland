@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormPrivacyNote } from './FormPrivacyNote.jsx';
+import { navigate } from '../utils/routes.js';
 import { api } from '../utils/api.js';
 import styles from './ContactForm.module.css';
 
@@ -35,6 +37,7 @@ export function ContactForm({ embedded = false }) {
           });
           formElement.reset();
           setSubmitted(true);
+          navigate('/thank-you?form=enquiry');
         } catch (requestError) {
           setError(requestError.message);
         }
@@ -42,7 +45,7 @@ export function ContactForm({ embedded = false }) {
     >
       {truckId && (
         <p className={styles.formStatus}>
-          {t('contactForm.truckReference', { id: truckId, defaultValue: 'Enquiry about vehicle #{{id}}' })}
+          {t('contactForm.truckReference', { id: truckId})}
         </p>
       )}
       <label className={styles.halfField}>
@@ -72,6 +75,7 @@ export function ContactForm({ embedded = false }) {
       {submitted && <p className={styles.formStatus}>{t('contactForm.success')}</p>}
       {error && <p className={styles.formError}>{error}</p>}
       <button type="submit">{t('contactForm.submit')} <span aria-hidden="true">→</span></button>
+      <FormPrivacyNote />
     </form>
   );
 }

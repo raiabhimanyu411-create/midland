@@ -124,7 +124,7 @@ export function TrucksPage() {
       <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.trucks') }]} />
       <PageHero
         eyebrow={t('pages.trucks.hero.eyebrow')}
-        title={t('pages.trucks.hero.title')}
+        title={!loading && trucks.length === 0 && activeChips.length === 0 ? t('pages.trucks.hero.titleEmpty') : t('pages.trucks.hero.title')}
         copy={t('pages.trucks.hero.copy')}
         image="https://images.unsplash.com/photo-1506306460327-3164753b74c7?auto=format&fit=crop&w=1800&q=85"
       />

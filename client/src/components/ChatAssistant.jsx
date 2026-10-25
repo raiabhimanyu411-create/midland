@@ -231,7 +231,7 @@ export function ChatAssistant() {
   return (
     <section className={`${styles.assistant} ${isOpen ? styles.assistantOpen : ''}`} aria-label={t('chat.headerTitle')}>
       {isOpen && (
-        <div className={styles.panel} role="dialog" aria-modal="true" aria-label={t('chat.headerTitle')}>
+        <div className={styles.panel} data-lenis-prevent role="dialog" aria-modal="true" aria-label={t('chat.headerTitle')}>
           <header className={styles.header}>
             <div className={styles.avatar} aria-hidden="true">
               MT
@@ -733,5 +733,5 @@ function formatPriceRange(ctx, trucks) {
   const prices = trucks.map((truck) => truck.priceValue).filter(Boolean);
   if (prices.length === 0) return ctx.t('chat.replies.currentStockFallback');
 
-  return `GBP ${Math.min(...prices).toLocaleString(ctx.language)}-${Math.max(...prices).toLocaleString(ctx.language)}`;
+  return `£${Math.min(...prices).toLocaleString(ctx.language)}-${Math.max(...prices).toLocaleString(ctx.language)}`;
 }

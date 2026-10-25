@@ -1,17 +1,18 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import i18n, { i18nReady } from './i18n/index.js';
-import { ChatAssistant } from './components/ChatAssistant.jsx';
 import { CookieConsent } from './components/CookieConsent.jsx';
 import { CinematicEffects } from './components/CinematicEffects.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Header } from './components/Header.jsx';
 import { HomePage } from './pages/HomePage.jsx';
-import { adminPage, notFoundPage, organizationJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
-import { getRoute, getRouteDescription, getRouteTitle } from './utils/routes.js';
+import { adminPage, notFoundPage, thankYouPage, organizationJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
+import { getRoute, getRouteDescription, getRouteTitle, onNavigate } from './utils/routes.js';
 import { setPageMeta, siteUrl } from './utils/seo.js';
+import { trackPageView } from './utils/analytics.js';
+import { scrollToTop, startSmoothScroll, stopSmoothScroll } from './utils/smoothScroll.js';
 import './styles.css';
 
 // Every page except the home page is split into its own chunk to keep the first load small.
@@ -23,10 +24,12 @@ const BlogPostPage = lazyPage(() => import('./pages/BlogPostPage.jsx'), 'BlogPos
 const ContactPage = lazyPage(() => import('./pages/ContactPage.jsx'), 'ContactPage');
 const FaqPage = lazyPage(() => import('./pages/FaqPage.jsx'), 'FaqPage');
 const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage.jsx'), 'NotFoundPage');
+const ThankYouPage = lazyPage(() => import('./pages/ThankYouPage.jsx'), 'ThankYouPage');
 const PartExchangePage = lazyPage(() => import('./pages/PartExchangePage.jsx'), 'PartExchangePage');
 const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage.jsx'), 'PrivacyPage');
 const TruckDetailPage = lazyPage(() => import('./pages/TruckDetailPage.jsx'), 'TruckDetailPage');
 const TrucksPage = lazyPage(() => import('./pages/TrucksPage.jsx'), 'TrucksPage');
+const ChatAssistant = lazyPage(() => import('./components/ChatAssistant.jsx'), 'ChatAssistant');
 
 // Truck and blog pages set their own metadata once their data has loaded.
 const pagesWithOwnMeta = new Set(['truckDetail', 'blogPost']);
@@ -34,6 +37,7 @@ const pagesWithOwnMeta = new Set(['truckDetail', 'blogPost']);
 function routeMeta(t, language, routeName) {
   if (routeName === 'admin') return { ...adminPage, path: null };
   if (routeName === 'notFound') return { ...notFoundPage, path: null };
+  if (routeName === 'thankYou') return { ...thankYouPage, path: null };
 
   const page = staticPages[routeName] || staticPages.home;
   const isEnglish = language === 'en';
@@ -50,6 +54,28 @@ function routeMeta(t, language, routeName) {
 function App() {
   const { t, i18n } = useTranslation();
   const [route, setRoute] = useState(getRoute);
+  const [chatReady, setChatReady] = useState(false);
+
+  // Inertia scrolling on the public site; the admin panel keeps native scrolling.
+  useEffect(() => {
+    if (route.name === 'admin') {
+      stopSmoothScroll();
+      return undefined;
+    }
+    startSmoothScroll();
+    return undefined;
+  }, [route.name]);
+
+  // Load the chat widget once the browser is idle so it does not slow down the first paint.
+  useEffect(() => {
+    const start = () => setChatReady(true);
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(start, { timeout: 3000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = window.setTimeout(start, 1500);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     let activeTransition = null;
@@ -60,7 +86,7 @@ function App() {
       }
 
       flushSync(() => setRoute(getRoute()));
-      window.scrollTo({ top: 0, behavior: 'auto' });
+      scrollToTop();
     };
 
     const handleRouteChange = (url = null) => {
@@ -122,14 +148,26 @@ function App() {
     };
 
     const handlePopState = () => handleRouteChange();
+    const stopNavigate = onNavigate((path) => handleRouteChange(new URL(path, window.location.href)));
 
     window.addEventListener('popstate', handlePopState);
     document.addEventListener('click', handleInternalNavigation);
     return () => {
       window.removeEventListener('popstate', handlePopState);
+      stopNavigate();
       document.removeEventListener('click', handleInternalNavigation);
     };
   }, []);
+
+  // GA/Meta record the first page view when they load; later in-app navigations are sent here.
+  const firstRouteRef = useRef(true);
+  useEffect(() => {
+    if (firstRouteRef.current) {
+      firstRouteRef.current = false;
+      return;
+    }
+    trackPageView(`${window.location.pathname}${window.location.search}`);
+  }, [route.name, route.hash]);
 
   useEffect(() => {
     if (pagesWithOwnMeta.has(route.name)) return;
@@ -139,9 +177,9 @@ function App() {
   return (
     <>
       <main className="site-shell">
-        <Header route={route} />
+        {route.name !== 'admin' && <Header route={route} />}
         <div className="page-stage" key={`${route.name}-${route.hash}`}>
-          <Suspense fallback={<section className="section" aria-busy="true" />}>
+          <Suspense fallback={<section className="section page-loading" aria-busy="true" />}>
             {route.name === 'home' && <HomePage />}
             {route.name === 'trucks' && <TrucksPage />}
             {route.name === 'truckDetail' && <TruckDetailPage truckId={route.truckId} />}
@@ -153,14 +191,17 @@ function App() {
             {route.name === 'contact' && <ContactPage />}
             {route.name === 'blog' && <BlogListPage />}
             {route.name === 'notFound' && <NotFoundPage />}
+            {route.name === 'thankYou' && <ThankYouPage />}
             {route.name === 'admin' && <AdminPage />}
           </Suspense>
         </div>
-        <Footer />
+        {route.name !== 'admin' && <Footer />}
       </main>
-      <CinematicEffects routeKey={`${route.name}-${route.hash}`} />
-      <ChatAssistant />
-      <CookieConsent />
+      {/* Scroll/3D effects are for the public site; in the admin panel they shift fixed dialogs and toasts. */}
+      {route.name !== 'admin' && <CinematicEffects routeKey={`${route.name}-${route.hash}`} />}
+      {/* The sales chat and cookie banner are for visitors, not the admin panel. */}
+      {chatReady && route.name !== 'admin' && <Suspense fallback={null}><ChatAssistant /></Suspense>}
+      {route.name !== 'admin' && <CookieConsent />}
     </>
   );
 }

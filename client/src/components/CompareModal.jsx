@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { IconClose } from './icons.jsx';
 import styles from './CompareModal.module.css';
 import { truckUrl } from '../utils/routes.js';
-import { truckDisplayTitle } from '../../../shared/truck.js';
+import { truckDisplayTitle, truckDisplayPrice } from '../../../shared/truck.js';
 
 export function CompareModal({ trucks, onClose, onRemove }) {
   const { t } = useTranslation();
   const confirm = t('common.confirm');
 
   const rows = [
-    [t('compareModal.rows.price'), (truck) => truck.price],
+    [t('compareModal.rows.price'), (truck) => truckDisplayPrice(truck)],
     [t('compareModal.rows.year'), (truck) => truck.year],
     [t('compareModal.rows.mileage'), (truck) => truck.mileage],
     [t('compareModal.rows.gearbox'), (truck) => truck.gearbox],
@@ -36,7 +36,7 @@ export function CompareModal({ trucks, onClose, onRemove }) {
   if (trucks.length === 0) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose} role="presentation">
+    <div className={styles.overlay} onClick={onClose} role="presentation" data-lenis-prevent>
       <div
         className={styles.modal}
         role="dialog"

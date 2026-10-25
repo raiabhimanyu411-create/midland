@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { IconPlay } from './icons.jsx';
+import { responsiveImage } from '../utils/images.js';
 import styles from './VideoWalkaround.module.css';
 
 export function VideoWalkaround() {
@@ -15,7 +16,9 @@ export function VideoWalkaround() {
       </div>
       <a className={styles.preview} href="/contact" aria-label={t('videoWalkaround.cta')}>
         <img
-          src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy"
+          decoding="async"
+          {...responsiveImage('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80', '(max-width: 900px) 100vw, 50vw')}
           alt={t('videoWalkaround.imageAlt')}
         />
         <span className={styles.playButton}>

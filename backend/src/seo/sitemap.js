@@ -61,6 +61,6 @@ export async function sitemapXml(req, res, next) {
 export function robotsTxt(req, res) {
   const siteUrl = getSiteUrl(req);
   res.type('text/plain').set('Cache-Control', 'public, max-age=86400').send(
-    ['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /api/', '', `Sitemap: ${absoluteUrl(siteUrl, '/sitemap.xml')}`, ''].join('\n')
+    ['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /thank-you', '', `Sitemap: ${absoluteUrl(siteUrl, '/sitemap.xml')}`, ''].join('\n')
   );
 }

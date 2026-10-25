@@ -225,7 +225,7 @@ async function ensureDefaultAdmin() {
 
   const hash = await bcrypt.hash(password, 12);
   await pool.query('INSERT INTO admin_users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
-    ['MidLand Administrator', email.toLowerCase(), hash, 'admin']);
+    ['Midland Administrator', email.toLowerCase(), hash, 'admin']);
   console.warn(`Initial admin created: ${email}.`);
 }
 

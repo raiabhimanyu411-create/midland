@@ -1,8 +1,9 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { clientDistDir } from '../config/paths.js';
+import { clientDistDir, projectRoot } from '../config/paths.js';
 import { mapBlog, mapTruck, pool } from '../db/mysql.js';
 import { positiveInt } from '../utils/validation.js';
+import { truckDisplayPrice } from '../../../shared/truck.js';
 import {
   absoluteUrl,
   adminPage,
@@ -11,6 +12,7 @@ import {
   blogSeo,
   DEFAULT_IMAGE,
   notFoundPage,
+  thankYouPage,
   organizationJsonLd,
   pageForPath,
   serializeJsonLd,
@@ -18,13 +20,78 @@ import {
   staticPages,
   truckJsonLd,
   truckPath,
-  truckSeo
+  truckSeo,
+  businessLocations,
+  SITE_EMAIL,
+  truckListJsonLd
 } from '../../../shared/seo.js';
 
 const SEO_BLOCK = /<!-- seo:start[\s\S]*?<!-- seo:end -->/;
 const BODY_MARKER = '<!-- seo:body -->';
 
 let template = null;
+let siteCopy = null;
+
+// English page copy, so crawlers get the real page text (not just links) before JavaScript runs.
+function getCopy() {
+  if (siteCopy) return siteCopy;
+  try {
+    siteCopy = JSON.parse(readFileSync(path.join(projectRoot, 'client', 'src', 'i18n', 'locales', 'en.json'), 'utf8'));
+  } catch {
+    siteCopy = {};
+  }
+  return siteCopy;
+}
+
+const stripTags = (text) => String(text || '').replace(/<\/?\d+>/g, '');
+const paragraphs = (...texts) => texts.filter(Boolean).map((text) => `<p>${escapeHtml(stripTags(text))}</p>`).join('');
+
+function staticPageBody(pageName) {
+  const pages = getCopy().pages || {};
+  const content = getCopy().content || {};
+  const location = businessLocations[0] || {};
+  switch (pageName) {
+    case 'home':
+      return { heading: pages.home?.hero?.title, bodyHtml: paragraphs(pages.home?.hero?.copy, pages.home?.intro?.heading, pages.home?.intro?.copy) };
+    case 'trucks':
+      return { heading: pages.trucks?.hero?.title, bodyHtml: paragraphs(pages.trucks?.hero?.copy) };
+    case 'about':
+      return { heading: pages.about?.hero?.title, bodyHtml: paragraphs(pages.about?.hero?.copy, pages.about?.approach?.p1, pages.about?.approach?.p2) };
+    case 'partExchange':
+      return { heading: pages.partExchange?.hero?.title, bodyHtml: paragraphs(pages.partExchange?.hero?.copy, pages.partExchange?.details?.copy) };
+    case 'contact':
+      return {
+        heading: pages.contact?.hero?.title,
+        bodyHtml: paragraphs(pages.contact?.hero?.copy)
+          + `<address>${escapeHtml(location.address || '')}<br>${escapeHtml(location.phone || '')}<br>${escapeHtml(SITE_EMAIL)}</address>`
+          + paragraphs(pages.contact?.details?.hours)
+      };
+    case 'faq': {
+      const faqs = Array.isArray(content.faqs) ? content.faqs : [];
+      return {
+        heading: pages.faq?.hero?.title,
+        bodyHtml: paragraphs(pages.faq?.hero?.copy)
+          + `<dl>${faqs.map((faq) => `<dt>${escapeHtml(faq.question)}</dt><dd>${escapeHtml(faq.answer)}</dd>`).join('')}</dl>`,
+        jsonLd: faqs.length ? [{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } }))
+        }] : []
+      };
+    }
+    default:
+      return {};
+  }
+}
+
+function truckListHtml(trucks) {
+  if (!trucks.length) return '';
+  const items = trucks.map((truck) => {
+    const facts = [truck.price ? truckDisplayPrice(truck) : '', truck.year, truck.mileage, truck.gearbox, truck.location].filter(Boolean).map(escapeHtml).join(' · ');
+    return `<li><a href="${escapeHtml(truckPath(truck))}">${escapeHtml(truck.title)}</a>${facts ? ` – ${facts}` : ''}</li>`;
+  });
+  return `<ul>${items.join('')}</ul>`;
+}
 
 function getTemplate() {
   if (!template) template = readFileSync(path.join(clientDistDir, 'index.html'), 'utf8');
@@ -102,6 +169,10 @@ async function resolvePage(pathname, siteUrl) {
     return { status: 200, meta: { ...adminPage, path: null } };
   }
 
+  if (pathname === '/thank-you') {
+    return { status: 200, meta: { ...thankYouPage, path: null, links: primaryLinks } };
+  }
+
   const truckMatch = pathname.match(/^\/truck\/(\d+)(?:-[^/]+)?$/);
   if (truckMatch) {
     const id = positiveInt(truckMatch[1]);
@@ -112,7 +183,7 @@ async function resolvePage(pathname, siteUrl) {
     const truck = mapTruck(rows[0]);
     const seo = truckSeo(truck);
     const specs = [
-      ['Price', truck.price], ['Year', truck.year], ['Mileage', truck.mileage], ['Gearbox', truck.gearbox],
+      ['Price', truck.price ? truckDisplayPrice(truck) : ''], ['Year', truck.year], ['Mileage', truck.mileage], ['Gearbox', truck.gearbox],
       ['Body', truck.type], ['Location', truck.location], ['Status', truck.status]
     ].filter(([, value]) => value);
     return {
@@ -154,7 +225,10 @@ async function resolvePage(pathname, siteUrl) {
   const pageName = pageForPath(pathname);
   if (!pageName) return notFound();
   const page = staticPages[pageName];
-  const meta = { ...page, links: primaryLinks, jsonLd: [] };
+  const body = staticPageBody(pageName);
+  const meta = { ...page, links: primaryLinks, jsonLd: [...(body.jsonLd || [])] };
+  if (body.heading) meta.heading = stripTags(body.heading);
+  if (body.bodyHtml) meta.bodyHtml = body.bodyHtml;
 
   if (pageName === 'home') {
     meta.jsonLd.push(organizationJsonLd(siteUrl), {
@@ -168,7 +242,8 @@ async function resolvePage(pathname, siteUrl) {
   if (pageName === 'trucks' || pageName === 'home') {
     const trucks = await listVisibleTrucks();
     const shown = pageName === 'home' ? trucks.slice(0, 6) : trucks;
-    meta.links = [...shown.map((truck) => ({ label: `${truck.title} – ${truck.price}`, href: truckPath(truck) })), ...primaryLinks];
+    meta.bodyHtml = `${meta.bodyHtml || ''}${truckListHtml(shown)}`;
+    if (pageName === 'trucks' && shown.length) meta.jsonLd.push(truckListJsonLd(shown, siteUrl));
   }
 
   if (pageName === 'blog') {

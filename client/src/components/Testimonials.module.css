@@ -41,7 +41,7 @@
 }
 
 .card:hover {
-  border-color: #e6b8bb;
+  border-color: #a9bde3;
   box-shadow: 0 26px 58px rgb(16 24 40 / 14%);
   transform: perspective(1000px) translateY(-7px) rotateX(1.1deg) rotateY(-1deg);
 }

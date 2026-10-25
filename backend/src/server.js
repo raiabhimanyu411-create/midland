@@ -49,7 +49,8 @@ if (allowedOrigins.length) {
   }));
 }
 
-app.use(express.json({ limit: '100kb' }));
+// Long truck descriptions and blog posts can pass 100 KB; 1 MB still blocks abusive bodies.
+app.use(express.json({ limit: '1mb' }));
 // Express 5 leaves req.body undefined when no body was sent; routes expect an object.
 app.use((req, _res, next) => {
   if (req.body === undefined || req.body === null || typeof req.body !== 'object') req.body = {};
@@ -130,6 +131,12 @@ app.use((error, _req, res, _next) => {
   }
   if (error.code === 'LIMIT_FILE_SIZE') {
     return res.status(413).json({ message: 'Image must be 8 MB or smaller' });
+  }
+  if (error.type === 'entity.too.large') {
+    return res.status(413).json({ message: 'This form is too large to save. Shorten the description or other long text and try again.' });
+  }
+  if (error.type === 'entity.parse.failed') {
+    return res.status(400).json({ message: 'The request could not be read. Please refresh the page and try again.' });
   }
   res.status(500).json({ message: 'Internal server error' });
 });

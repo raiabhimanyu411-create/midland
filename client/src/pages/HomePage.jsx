@@ -11,22 +11,48 @@ import {
 import { InfoCard } from '../components/InfoList.jsx';
 import { SearchBand } from '../components/SearchBand.jsx';
 import { StockAlert } from '../components/StockAlert.jsx';
-import { TruckGrid } from '../components/TruckGrid.jsx';
+import { TruckGrid, TruckGridSkeleton } from '../components/TruckGrid.jsx';
 import { VideoWalkaround } from '../components/VideoWalkaround.jsx';
 import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
 import { useInView } from '../utils/useInView.js';
+import { truckUrl } from '../utils/routes.js';
+import { responsiveImage } from '../utils/images.js';
+import { truckDisplayTitle } from '../../../shared/truck.js';
 import styles from './HomePage.module.css';
 
 const serviceIcons = [IconCheckBadge, IconExchange, IconPin];
 
+// Home page stock is loaded once and shared by the hero "Latest arrival" card and the featured grid.
+function useHomeStock() {
+  const [stock, setStock] = useState(() => ({ loaded: demoDataEnabled, trucks: demoDataEnabled ? trucks : [] }));
+
+  useEffect(() => {
+    let active = true;
+    api.listTrucks({ sort: 'home' })
+      .then((response) => { if (active) setStock({ loaded: true, trucks: response.data || [] }); })
+      .catch(() => { if (active) setStock({ loaded: true, trucks: demoDataEnabled ? trucks : [] }); });
+    return () => { active = false; };
+  }, []);
+
+  return stock;
+}
+
+// Most recently added listing that can still be bought.
+function latestArrival(list) {
+  return list
+    .filter((truck) => String(truck.status || 'available').toLowerCase() === 'available')
+    .reduce((latest, truck) => (!latest || Number(truck.id) > Number(latest.id) ? truck : latest), null);
+}
+
 export function HomePage() {
   const { t } = useTranslation();
   const introPoints = t('pages.home.intro.points', { returnObjects: true });
+  const stock = useHomeStock();
 
   return (
     <div className={styles.homePage}>
-      <Hero />
+      <Hero latest={latestArrival(stock.trucks)} />
       <SearchBand />
       <BrandStrip />
       <RevealSection className={`section ${styles.introSection}`}>
@@ -44,7 +70,7 @@ export function HomePage() {
           </div>
         </div>
       </RevealSection>
-      <FeaturedStock />
+      <FeaturedStock stock={stock} />
       <BuyerJourney />
       <VideoWalkaround />
       <ServiceCards />
@@ -55,7 +81,7 @@ export function HomePage() {
   );
 }
 
-function Hero() {
+function Hero({ latest }) {
   const { t } = useTranslation();
   const proof = t('pages.home.hero.proof', { returnObjects: true });
 
@@ -69,7 +95,7 @@ function Hero() {
       </div>
       <div className={styles.heroMedia} aria-hidden="true">
         <img
-          src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85"
+          {...responsiveImage('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85')}
           alt=""
           fetchPriority="high"
           decoding="async"
@@ -93,12 +119,14 @@ function Hero() {
           ))}
         </div>
       </div>
-      <aside className={styles.heroCard} aria-label={t('pages.home.hero.cardLabel')}>
-        <span className={styles.heroCardLabel}>{t('pages.home.hero.cardLabel')}</span>
-        <strong>{t('pages.home.hero.cardTitle')}</strong>
-        <span>{t('pages.home.hero.cardMeta')}</span>
-        <a href="/trucks">{t('pages.home.hero.cardCta')} <span aria-hidden="true">→</span></a>
-      </aside>
+      {latest && (
+        <aside className={styles.heroCard} aria-label={t('pages.home.hero.cardLabel')}>
+          <span className={styles.heroCardLabel}>{t('pages.home.hero.cardLabel')}</span>
+          <strong>{truckDisplayTitle(latest)}</strong>
+          <span>{[latest.mileage, latest.gearbox, latest.euroRating].filter(Boolean).join(' · ')}</span>
+          <a href={truckUrl(latest)}>{t('pages.home.hero.cardCta')} <span aria-hidden="true">→</span></a>
+        </aside>
+      )}
       <div className={styles.scrollCue} aria-hidden="true">
         <span />
         {t('pages.home.hero.scrollCue')}
@@ -147,24 +175,11 @@ function BuyerJourney() {
   );
 }
 
-function FeaturedStock() {
+function FeaturedStock({ stock }) {
   const { t } = useTranslation();
-  const [featuredTrucks, setFeaturedTrucks] = useState(() => demoDataEnabled ? trucks.slice(0, 3) : []);
-
-  useEffect(() => {
-    async function loadFeatured() {
-      try {
-        const response = await api.listTrucks({ sort: 'home' });
-        setFeaturedTrucks((response.data || []).slice(0, 3));
-      } catch {
-        setFeaturedTrucks(demoDataEnabled ? trucks.slice(0, 3) : []);
-      }
-    }
-
-    loadFeatured();
-  }, []);
-
   const [headingRef, headingInView] = useInView();
+  const featuredTrucks = stock.trucks.slice(0, 3);
+  const empty = stock.loaded && featuredTrucks.length === 0;
 
   return (
     <section className="section">
@@ -174,11 +189,18 @@ function FeaturedStock() {
       >
         <div>
           <p className="eyebrow">{t('pages.home.featuredStock.eyebrow')}</p>
-          <h2>{t('pages.home.featuredStock.heading')}</h2>
+          <h2>{empty ? t('pages.home.featuredStock.emptyHeading') : t('pages.home.featuredStock.heading')}</h2>
         </div>
-        <a className="text-link" href="/trucks">{t('pages.home.featuredStock.viewAll')}</a>
+        {!empty && <a className="text-link" href="/trucks">{t('pages.home.featuredStock.viewAll')}</a>}
       </div>
-      <TruckGrid trucks={featuredTrucks} />
+      {!stock.loaded && <TruckGridSkeleton count={3} />}
+      {stock.loaded && !empty && <TruckGrid trucks={featuredTrucks} />}
+      {empty && (
+        <div className={styles.stockEmpty}>
+          <p>{t('pages.home.featuredStock.emptyCopy')}</p>
+          <a className="button primary" href="#stock-alert">{t('pages.home.featuredStock.emptyCta')}</a>
+        </div>
+      )}
     </section>
   );
 }

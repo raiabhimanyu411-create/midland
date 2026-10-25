@@ -2,7 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { locations } from '../data/siteData.js';
 import { SITE_EMAIL } from '../../../shared/seo.js';
 import { BrandMark } from './BrandLogo.jsx';
+import { OPEN_COOKIE_SETTINGS } from '../utils/analytics.js';
 import styles from './Footer.module.css';
+
+function openCookieSettings(event) {
+  event.preventDefault();
+  window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS));
+}
 
 export function Footer() {
   const { t } = useTranslation();
@@ -23,7 +29,8 @@ export function Footer() {
         { label: t('footer.links.faq'), href: '/faq' },
         { label: t('footer.links.news'), href: '/blog' },
         { label: t('footer.links.contactUs'), href: '/contact' },
-        { label: t('footer.links.privacyPolicy'), href: '/privacy' }
+        { label: t('footer.links.privacyPolicy'), href: '/privacy' },
+        { label: t('footer.links.cookieSettings'), href: '#cookie-settings', onClick: openCookieSettings }
       ]
     }
   ];
@@ -32,7 +39,7 @@ export function Footer() {
     <footer className={styles.siteFooter}>
       <div className={styles.footerTop}>
         <div className={styles.brandColumn}>
-          <a className={styles.brand} href="/" aria-label={t('footer.brandAria')}>
+          <a className={styles.brand} href="/">
             <span className={styles.brandMark}><BrandMark /></span>
             <span><strong>Midland</strong><small>Commercials</small></span>
           </a>
@@ -46,7 +53,7 @@ export function Footer() {
             <strong>{column.heading}</strong>
             <nav aria-label={t('footer.navAria', { heading: column.heading })}>
               {column.links.map((link) => (
-                <a href={link.href} key={link.label}>{link.label}</a>
+                <a href={link.href} key={link.label} onClick={link.onClick}>{link.label}</a>
               ))}
             </nav>
           </div>

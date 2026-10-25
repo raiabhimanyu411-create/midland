@@ -174,3 +174,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* --- Premium liquid-glass finish --- */
+.detailPanel {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}

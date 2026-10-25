@@ -26,14 +26,14 @@ export function Header({ route }) {
 
   return (
     <header className={`${styles.topbar} ${menuOpen ? styles.menuOpen : ''}`}>
-      <a className={styles.brand} href="/" aria-label={t('header.brandAria')}>
+      <a className={styles.brand} href="/">
         <span className={styles.brandMark}><BrandMark /></span>
         <span>
           <strong>Midland</strong>
           <small>Commercials</small>
         </span>
       </a>
-      <nav className={styles.navLinks} aria-label={t('header.navAria')}>
+      <nav className={styles.navLinks} aria-label={t('header.navAria')} data-lenis-prevent>
         {primaryRoutes.map((key) => (
           <a
             className={route.name === key ? styles.active : ''}

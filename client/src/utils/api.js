@@ -16,6 +16,16 @@ function handleUnauthorized(response, token) {
   }
 }
 
+// Readable messages when the server (or a proxy in front of it) answers without JSON.
+function statusMessage(status, fallback) {
+  if (status === 413) return 'This file or form is too large for the server. Use a smaller photo or shorter text.';
+  if (status === 401) return 'Your session has expired. Please log in again.';
+  if (status === 403) return 'You do not have permission to do that.';
+  if (status === 429) return 'Too many requests. Please wait a minute and try again.';
+  if (status >= 500) return 'The server had a problem. Please try again in a moment.';
+  return fallback;
+}
+
 const configuredApiUrl = String(import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const API_BASE_URL = configuredApiUrl || '/api';
 
@@ -41,7 +51,7 @@ export async function apiRequest(path, options = {}) {
 
   if (!response.ok) {
     handleUnauthorized(response, token);
-    throw new Error(data.message || 'API request failed');
+    throw new Error(data.message || statusMessage(response.status, 'The request could not be completed. Please try again.'));
   }
 
   return data;
@@ -107,7 +117,7 @@ export const api = {
     const form = new FormData(); form.append('image', file);
     const response = await fetch(`${API_BASE_URL}/admin/upload`, { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body: form });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) { handleUnauthorized(response, token); throw new Error(data.message || 'Upload failed'); }
+    if (!response.ok) { handleUnauthorized(response, token); throw new Error(data.message || statusMessage(response.status, 'Upload failed. Please try again.')); }
     return data;
   }
 };

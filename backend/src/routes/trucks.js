@@ -217,6 +217,20 @@ async function uniqueSlug(source, excludeId = 0) {
   }
 }
 
+// Accept "youtu.be/abc" or "http://…" as typed; anything that still is not a valid link is left out
+// so the rest of the truck saves instead of failing.
+function normalizeVideoUrl(value) {
+  const text = cleanText(value, 500);
+  if (!text) return '';
+  const withProtocol = /^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text.replace(/^http:\/\//i, 'https://') : `https://${text}`;
+  try {
+    const url = new URL(withProtocol);
+    return url.protocol === 'https:' && url.hostname.includes('.') ? url.toString() : '';
+  } catch {
+    return '';
+  }
+}
+
 function normalizeTruckPayload(body = {}) {
   let providedImages = Array.isArray(body.images) ? body.images.map((image) => cleanText(image, 2000)).filter(Boolean) : [];
   if (typeof body.images === 'string') {
@@ -237,12 +251,12 @@ function normalizeTruckPayload(body = {}) {
     payload: cleanText(body.payload, 100), euroRating: cleanText(body.euroRating, 50), cleanAir: cleanText(body.cleanAir, 120),
     motExpiry: cleanText(body.motExpiry, 160), serviceHistory: cleanText(body.serviceHistory, 5000),
     owners: cleanText(body.owners, 100), warranty: cleanText(body.warranty, 160), fuelType: cleanText(body.fuelType, 80),
-    colour: cleanText(body.colour, 80), tacho: cleanText(body.tacho, 160), videoUrl: cleanText(body.videoUrl, 500),
+    colour: cleanText(body.colour, 80), tacho: cleanText(body.tacho, 160), videoUrl: normalizeVideoUrl(body.videoUrl),
     slug: slugify(cleanText(body.slug, 220)), metaTitle: cleanText(body.metaTitle, 70),
     metaDescription: cleanText(body.metaDescription, 160), featured: body.featured === true || body.featured === 1 || body.featured === '1' || body.featured === 'true',
     sortOrder: Math.max(0, Math.min(100000, Math.round(cleanNumber(body.sortOrder, 0)))),
     soldAt: soldAt && !Number.isNaN(soldAt.getTime()) ? soldAt : null,
-    soldPrice: body.soldPrice === '' || body.soldPrice === null || body.soldPrice === undefined ? null : Math.round(cleanNumber(body.soldPrice, -1)),
+    soldPrice: body.soldPrice === '' || body.soldPrice === null || body.soldPrice === undefined || !Number.isFinite(Number(body.soldPrice)) ? null : Math.round(cleanNumber(body.soldPrice, 0)),
     badge: cleanText(body.badge, 80), cab: cleanText(body.cab, 120), power: cleanText(body.power, 80), mot: cleanText(body.mot, 160),
     description: cleanText(body.description, 20000), image: images[0] || '', images, status
   };

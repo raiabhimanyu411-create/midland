@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../utils/api.js';
+import { navigate } from '../utils/routes.js';
+import { FormPrivacyNote } from './FormPrivacyNote.jsx';
 import { IconCheckBadge, IconMail } from './icons.jsx';
 import { useInView } from '../utils/useInView.js';
 import styles from './StockAlert.module.css';
@@ -25,10 +27,12 @@ export function StockAlert() {
         phone: formData.get('phone'),
         email: formData.get('email'),
         requirement: `STOCK ALERT SIGN-UP: notify me about ${formData.get('criteria') || 'new stock matching my needs'}.`
+          + ` Marketing consent: ${formData.get('marketingConsent') ? 'YES - agreed to news and offers' : 'NO - stock alerts only'}.`
       });
       formElement.reset();
       setCriteria('');
       setSubmitted(true);
+      navigate('/thank-you?form=stock-alert');
     } catch (requestError) {
       setError(requestError.message);
     }
@@ -37,6 +41,7 @@ export function StockAlert() {
   return (
     <section
       ref={sectionRef}
+      id="stock-alert"
       className={`${styles.alertSection} ${inView ? styles.inView : ''}`}
       aria-label={t('stockAlert.badge')}
     >
@@ -102,9 +107,15 @@ export function StockAlert() {
               <button type="button" onClick={() => setCriteria(choice)} key={choice}>{choice}</button>
             ))}
           </div>
+          {/* Separate, unticked opt-in: the alert itself is not marketing, but news and offers are. */}
+          <label className={`${styles.fullField} ${styles.consentField}`}>
+            <input name="marketingConsent" type="checkbox" value="yes" />
+            <span>{t('stockAlert.marketingConsent')}</span>
+          </label>
           <button type="submit" className={styles.submitButton}>
             {t('stockAlert.submit')} <span aria-hidden="true">→</span>
           </button>
+          <FormPrivacyNote className={styles.fullField} />
           {submitted && <p className={styles.formStatus}>{t('stockAlert.success')}</p>}
           {error && <p className={styles.formError}>{error}</p>}
         </form>

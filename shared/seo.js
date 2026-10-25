@@ -1,14 +1,23 @@
 // SEO metadata shared by the server (initial HTML, sitemap) and the client (route changes),
 // so crawlers and browsers always see the same title, description, canonical URL and JSON-LD.
-import { truckDisplayTitle } from './truck.js';
+import { truckDisplayPrice, truckDisplayTitle } from './truck.js';
 
 export const SITE_NAME = 'Midland Commercials';
 export const SITE_EMAIL = 'sales@midlandcommercials.com';
 export const businessLocations = [
   { address: 'Little Wigston, Swadlincote, DE12 7BJ', phone: '0121 663 1118' }
 ];
+export const businessAddress = {
+  '@type': 'PostalAddress',
+  streetAddress: 'Little Wigston',
+  addressLocality: 'Swadlincote',
+  postalCode: 'DE12 7BJ',
+  addressCountry: 'GB'
+};
+export const openingHours = { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '08:00', closes: '18:00' };
 
-export const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80';
+// Branded 1200x630 share banner (client/public/og-image.jpg).
+export const DEFAULT_IMAGE = '/og-image.jpg';
 
 export const staticPages = {
   home: {
@@ -75,6 +84,12 @@ export const notFoundPage = {
   robots: 'noindex, follow'
 };
 
+export const thankYouPage = {
+  title: 'Thank You | Midland Commercials',
+  description: 'Thank you for your enquiry. The Midland Commercials sales team will be in touch shortly.',
+  robots: 'noindex, nofollow'
+};
+
 export const adminPage = {
   title: 'Admin | Midland Commercials',
   description: 'Midland Commercials administration.',
@@ -105,7 +120,7 @@ export function truckPath(truck) {
 
 export function truckSeo(truck) {
   const title = truckDisplayTitle(truck);
-  const price = truck.price ? ` – ${truck.price}` : '';
+  const price = truck.price ? ` – ${truckDisplayPrice(truck)}` : '';
   const facts = [truck.year, truck.mileage, truck.gearbox, truck.badge, truck.location].filter(Boolean).join(', ');
   const images = Array.isArray(truck.images) && truck.images.length ? truck.images : [truck.image];
   return {
@@ -224,16 +239,21 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
     name: SITE_NAME,
     url: absoluteUrl(siteUrl, '/'),
     logo: absoluteUrl(siteUrl, '/logo.svg'),
-    image: DEFAULT_IMAGE,
-    telephone: locations[0]?.phone,
+    image: absoluteUrl(siteUrl, DEFAULT_IMAGE),
+    telephone: '+44 121 663 1118',
     email: SITE_EMAIL,
-    address: locations[0]?.address,
-    department: locations.slice(1).map((location) => ({
-      '@type': 'AutoDealer',
-      name: SITE_NAME,
-      telephone: location.phone,
-      address: location.address
-    }))
+    address: businessAddress,
+    areaServed: { '@type': 'Country', name: 'United Kingdom' },
+    priceRange: '££',
+    openingHoursSpecification: [{
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: openingHours.days,
+      opens: openingHours.opens,
+      closes: openingHours.closes
+    }],
+    ...(locations.length > 1 ? {
+      department: locations.slice(1).map((location) => ({ '@type': 'AutoDealer', name: SITE_NAME, telephone: location.phone, address: location.address }))
+    } : {})
   };
 }
 

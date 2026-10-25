@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { adminToken, api, apiAssetUrl, SESSION_EXPIRED_EVENT } from '../utils/api.js';
 import styles from './AdminPage.module.css';
+import { BrandMark } from '../components/BrandLogo.jsx';
 import { truckDisplayTitle, truckDisplayPrice } from '../../../shared/truck.js';
 
 const emptyTruck = {
@@ -49,7 +50,7 @@ const emptyTruck = {
 
 const MAX_TRUCK_IMAGES = 9;
 const MAX_TRUCK_IMAGE_SIZE = 25 * 1024 * 1024;
-const MAX_TRUCK_UPLOAD_SIZE = 8 * 1024 * 1024;
+const MAX_TRUCK_UPLOAD_SIZE = 950 * 1024;
 const TRUCK_FORM_STEPS = [
   { id: 'basics', label: 'Basic details', hint: 'Price, status & registration' },
   { id: 'specs', label: 'Vehicle specs', hint: 'Technical details & history' },
@@ -99,18 +100,34 @@ async function compressTruckPhoto(file) {
   } catch {
     throw new Error('This image could not be opened. Please choose another photo.');
   }
-  const maxEdge = 1800;
-  const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
-  const canvas = document.createElement('canvas');
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-  const context = canvas.getContext('2d', { alpha: false });
-  if (!context) { bitmap.close?.(); throw new Error('Photo compression is unavailable in this browser.'); }
-  context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  bitmap.close?.();
-  const blob = await new Promise((resolve, reject) => canvas.toBlob((result) => result ? resolve(result) : reject(new Error('Could not compress this photo.')), 'image/webp', 0.82));
+  // Keep every upload under ~0.95 MB: many hosts (e.g. Nginx by default) reject bodies over 1 MB with a 413.
+  const attempts = [[1800, 0.82], [1800, 0.7], [1500, 0.7], [1280, 0.65], [1024, 0.6]];
+  let blob = null;
+  try {
+    for (const [maxEdge, quality] of attempts) {
+      const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d', { alpha: false });
+      if (!context) throw new Error('Photo compression is unavailable in this browser.');
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      blob = await new Promise((resolve, reject) => canvas.toBlob((result) => result ? resolve(result) : reject(new Error('Could not compress this photo.')), 'image/webp', quality));
+      if (blob.size <= MAX_TRUCK_UPLOAD_SIZE) break;
+    }
+  } finally {
+    bitmap.close?.();
+  }
   const baseName = file.name.replace(/\.[^.]+$/, '') || 'truck-photo';
   return new File([blob], `${baseName}.webp`, { type: 'image/webp', lastModified: Date.now() });
+}
+
+// UK adverts use miles: DVSA odometer readings can come back in km.
+function toMilesLabel(value, unit) {
+  const number = Number(String(value).replace(/[^\d.]/g, ''));
+  if (!Number.isFinite(number) || number <= 0) return String(value);
+  const miles = /^k/i.test(String(unit || '')) ? Math.round(number * 0.621371) : Math.round(number);
+  return `${miles.toLocaleString('en-GB')} miles`;
 }
 
 function getLeadIdFromUrl() {
@@ -158,6 +175,7 @@ export function AdminPage() {
   const [dashboard, setDashboard] = useState(null);
   const [stockSearch, setStockSearch] = useState('');
   const [stockSort, setStockSort] = useState({ key: 'title', dir: 'asc' });
+  const [stockStatus, setStockStatus] = useState('all');
   const [leadFilters, setLeadFilters] = useState({ search: '', status: '', temperature: '', followUp: '', page: 1, limit: 10 });
   const [leadPagination, setLeadPagination] = useState(null);
   const [selectedLead, setSelectedLead] = useState(null);
@@ -165,6 +183,8 @@ export function AdminPage() {
   const leadRequestRef = useRef(0);
   const draggedTruckImageRef = useRef(null);
   const csvInputRef = useRef(null);
+  // Snapshot of the truck form when it was opened, to warn before unsaved changes are lost.
+  const formSnapshotRef = useRef(JSON.stringify(emptyTruck));
 
   const isPrivileged = user ? ['admin', 'manager'].includes(user.role) : false;
   const canEditInventory = isPrivileged;
@@ -182,9 +202,10 @@ export function AdminPage() {
   const visibleTrucks = useMemo(() => {
     const query = stockSearch.trim().toLowerCase();
     const filtered = query
-      ? trucks.filter((truck) => [truck.title, truck.make, truck.type, truck.status].some((field) => String(field || '').toLowerCase().includes(query)))
+      ? trucks.filter((truck) => [truck.title, truck.make, truck.type, truck.status, truck.registration].some((field) => String(field || '').toLowerCase().includes(query)))
       : trucks;
-    const sorted = [...filtered].sort((a, b) => {
+    const byStatus = stockStatus === 'all' ? filtered : filtered.filter((truck) => truck.status === stockStatus);
+    const sorted = [...byStatus].sort((a, b) => {
       const dir = stockSort.dir === 'asc' ? 1 : -1;
       const key = stockSort.key;
       const av = key === 'price' ? Number(a.priceValue) : String(a[key] ?? '').toLowerCase();
@@ -194,9 +215,21 @@ export function AdminPage() {
       return 0;
     });
     return sorted;
-  }, [trucks, stockSearch, stockSort]);
+  }, [trucks, stockSearch, stockSort, stockStatus]);
+
+  const stockCounts = useMemo(() => {
+    const counts = { all: trucks.length };
+    trucks.forEach((truck) => { counts[truck.status] = (counts[truck.status] || 0) + 1; });
+    return counts;
+  }, [trucks]);
 
   const unreadCount = notifications.filter((item) => !item.is_read).length;
+
+  useEffect(() => {
+    if (!message || message.type === 'error') return undefined;
+    const timer = setTimeout(() => setMessage(null), 5000);
+    return () => clearTimeout(timer);
+  }, [message]);
 
   useEffect(() => { api.me().then((r) => setUser(r.user)).catch(() => adminToken.clear()).finally(() => setAuthLoading(false)); }, []);
   useEffect(() => {
@@ -385,22 +418,62 @@ export function AdminPage() {
   if (authLoading) return <section className={styles.loginShell}><p>Checking secure session…</p></section>;
   if (!user) return <AdminLogin onLogin={setUser} />;
 
+  // Typing a price or mileage number fills the advert label too, unless it was written by hand.
   function updateForm(field, value) {
-    setForm((current) => ({ ...current, [field]: value }));
+    setForm((current) => {
+      const next = { ...current, [field]: value };
+      if (field === 'priceValue' && (!current.price || current.price === autoPriceLabel(current.priceValue))) next.price = autoPriceLabel(value);
+      if (field === 'mileageValue' && (!current.mileage || current.mileage === autoMileageLabel(current.mileageValue))) next.mileage = autoMileageLabel(value);
+      return next;
+    });
+  }
+
+  const formIsDirty = () => JSON.stringify(form) !== formSnapshotRef.current;
+  const confirmDiscard = () => !formIsDirty() || window.confirm('Discard your unsaved changes to this truck?');
+
+  function resetTruckForm(view) {
+    setEditingId(null);
+    setForm(emptyTruck);
+    formSnapshotRef.current = JSON.stringify(emptyTruck);
+    setTruckFormStep('basics');
+    setInventoryView(view);
+  }
+
+  function startNewTruck() {
+    if (inventoryView === 'form' && !confirmDiscard()) return;
+    setActiveTab('inventory');
+    resetTruckForm('form');
+  }
+
+  function cancelTruckForm() {
+    if (!confirmDiscard()) return;
+    resetTruckForm('stock');
+  }
+
+  function goToTab(tab) {
+    setActiveTab(tab);
+    setMessage(null);
+    setNotifOpen(false);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  async function openLead(lead) {
+    try { setSelectedLead((await api.getChatLead(lead.id)).data); } catch (error) { setMessage({ type: 'error', text: error.message }); }
   }
 
   function editTruck(truck) {
+    if (inventoryView === 'form' && editingId !== truck.id && !confirmDiscard()) return;
     setActiveTab('inventory');
     setInventoryView('form');
     setEditingId(truck.id);
     setTruckFormStep('basics');
     const truckImages = uniqueTruckImages(truck.images?.length ? truck.images : [truck.image]);
-    setForm({
+    const next = {
       title: truck.title,
       make: truck.make,
       type: truck.type,
       location: truck.location,
-      price: truck.price,
+      price: String(truck.price || '').replace(/^GBP\s*/i, '£'),
       priceValue: truck.priceValue || '',
       mileage: truck.mileage,
       mileageValue: truck.mileageValue || '',
@@ -437,7 +510,9 @@ export function AdminPage() {
       image: truck.image || truckImages[0] || '',
       images: truckImages,
       status: truck.status || 'available'
-    });
+    };
+    setForm(next);
+    formSnapshotRef.current = JSON.stringify(next);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -466,10 +541,7 @@ export function AdminPage() {
         await api.createTruck(payload);
         setMessage({ type: 'success', text: payload.status === 'archived' ? 'Truck saved as archived stock.' : 'Truck added; the website listing is live.' });
       }
-      setForm(emptyTruck);
-      setEditingId(null);
-      setTruckFormStep('basics');
-      setInventoryView('stock');
+      resetTruckForm('stock');
       await loadAdminData();
     } catch (error) {
       setMessage({ type: 'error', text: error.message });
@@ -508,7 +580,7 @@ export function AdminPage() {
         setMessage({ type: 'success', text: `Uploading photo ${index + 1} of ${files.length}…` });
         try {
           const compressedFile = await compressTruckPhoto(file);
-          if (compressedFile.size > MAX_TRUCK_UPLOAD_SIZE) throw new Error('Compressed photo is still larger than 8 MB');
+          if (compressedFile.size > MAX_TRUCK_UPLOAD_SIZE) throw new Error('this photo is too detailed to shrink below 1 MB. Try a smaller or cropped version');
           const result = await api.uploadTruckImage(compressedFile);
           const imageUrl = apiAssetUrl(result.url);
           setForm((current) => {
@@ -580,7 +652,7 @@ export function AdminPage() {
         motExpiry: vehicle.motExpiry || current.motExpiry,
         mot: vehicle.motStatus || current.mot,
         serviceHistory: vehicle.motHistory?.length
-          ? vehicle.motHistory.slice(0, 12).map((item) => `${item.date || 'MOT'} · ${item.result || 'Result'}${item.expiryDate ? ` · expiry ${item.expiryDate}` : ''}${item.mileage ? ` · ${item.mileage} ${item.mileageUnit || 'miles'}` : ''}`).join('\n')
+          ? vehicle.motHistory.slice(0, 12).map((item) => `${item.date || 'MOT'} · ${item.result || 'Result'}${item.expiryDate ? ` · expiry ${item.expiryDate}` : ''}${item.mileage ? ` · ${toMilesLabel(item.mileage, item.mileageUnit)}` : ''}`).join('\n')
           : current.serviceHistory
       }));
       setMessage({
@@ -652,8 +724,8 @@ export function AdminPage() {
     <div className={styles.adminApp}>
       <nav className={styles.sidebar}>
         <div className={styles.brand}>
-          <span className={styles.brandMark} aria-hidden="true"><i /><i /><i /><i /></span>
-          <span className={styles.brandText}><strong>Midland</strong><small>COMMERCIALS · OPERATIONS</small></span>
+          <span className={styles.brandMark} aria-hidden="true"><BrandMark /></span>
+          <span className={styles.brandText}><strong>Midland</strong><small>Commercials · Admin</small></span>
         </div>
         <ul className={styles.navList}>
           {NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(user.role)).map((item) => (
@@ -662,7 +734,7 @@ export function AdminPage() {
                 type="button"
                 className={`${styles.navButton} ${activeTab === item.id ? styles.navActive : ''}`}
                 aria-current={activeTab === item.id ? 'page' : undefined}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => goToTab(item.id)}
               >
                 <AdminNavGlyph name={item.id} />
                 {item.label}
@@ -671,8 +743,8 @@ export function AdminPage() {
           ))}
         </ul>
         <div className={styles.sidebarFooter}>
-          <span className={`${styles.badge} ${styles['role-' + user.role]}`}>{user.role}</span>
-          <p>{user.name}</p>
+          <span className={styles.userAvatar}>{initialsOf(user.name)}</span>
+          <span className={styles.sidebarUser}><strong>{user.name}</strong><small>{user.role}</small></span>
         </div>
       </nav>
 
@@ -680,7 +752,7 @@ export function AdminPage() {
         <header className={styles.topbar}>
           <div>
             <p className={styles.topbarEyebrow}>Midland Commercials <span>/</span> Workspace</p>
-            <h1>{activeNavLabel}</h1>
+            <h1>{activeTab === 'inventory' && inventoryView === 'form' ? (editingId ? 'Edit truck' : 'Add truck') : activeNavLabel}</h1>
           </div>
           <div className={styles.topbarActions}>
             <NotificationBell
@@ -688,56 +760,43 @@ export function AdminPage() {
               unread={unreadCount}
               open={notifOpen}
               onToggle={() => setNotifOpen((v) => !v)}
+              onClose={() => setNotifOpen(false)}
               onMarkRead={markNotificationRead}
             />
             <div className={styles.adminIdentity}>
-              <span className={styles.userAvatar}>{user.name.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase()}</span>
-              <span className={styles.userDetails}><strong>{user.name}</strong><small>{user.role}</small></span>
-              <button type="button" className={styles.toolbarButton} onClick={refreshAll}><span aria-hidden="true">↻</span> Refresh</button>
+              <button type="button" className={styles.toolbarButton} onClick={refreshAll} disabled={loading}><AdminIcon name="refresh" /> {loading ? 'Refreshing…' : 'Refresh'}</button>
               <button type="button" className={`${styles.toolbarButton} ${styles.signOutButton}`} onClick={logout}>Sign out</button>
             </div>
           </div>
         </header>
 
         <section className={styles.adminContent}>
-          {activeTab === 'overview' && <>
-            <div className={styles.adminStats}>
-              {dashboardStats.map(([label, value]) => (
-                <div className={styles.stat} key={label}>
-                  <span>{label}</span>
-                  <strong>{value}</strong>
-                </div>
-              ))}
-            </div>
-            {dashboard && (
-              <div className={styles.priorityStrip}>
-                <strong>{dashboard.hotLeads} hot leads</strong>
-                <span>{dashboard.newLeads} new</span>
-                <span>{dashboard.followUps} follow-ups due</span>
-                <span>{dashboard.unread} unread alerts</span>
-              </div>
-            )}
-          </>}
-
-          {message && <p className={`${styles.formStatus} ${message.type === 'error' ? styles.formError : ''}`}>{message.text}</p>}
-          {loading && <p className={styles.adminNote}>Loading admin data...</p>}
+          {loading && <div className={styles.loadingBar} role="progressbar" aria-label="Loading admin data" />}
 
           {activeTab === 'overview' && (
-            <OverviewPanel enquiries={enquiries} partExchange={partExchange} chatLeads={chatLeads} trucks={trucks} />
+            <OverviewPanel
+              trucks={trucks}
+              enquiries={enquiries}
+              partExchange={partExchange}
+              chatLeads={chatLeads}
+              dashboard={dashboard}
+              totalLeads={dashboardStats[3][1]}
+              canEditInventory={canEditInventory}
+              onNavigate={goToTab}
+              onAddTruck={startNewTruck}
+              onOpenLead={openLead}
+            />
           )}
 
           {activeTab === 'inventory' && (
             <section className={styles.inventorySection}>
               <div className={styles.subTabs}>
-                <button type="button" className={`${styles.subTabButton} ${inventoryView === 'stock' ? styles.subTabActive : ''}`} onClick={() => setInventoryView('stock')}>Truck stock</button>
+                <button type="button" className={`${styles.subTabButton} ${inventoryView === 'stock' ? styles.subTabActive : ''}`} onClick={() => setInventoryView('stock')}>Truck stock <span className={styles.tabCount}>{trucks.length}</span></button>
                 {canEditInventory && (
                   <button
                     type="button"
                     className={`${styles.subTabButton} ${inventoryView === 'form' ? styles.subTabActive : ''}`}
-                    onClick={() => {
-                      if (inventoryView !== 'form') { setEditingId(null); setForm(emptyTruck); setTruckFormStep('basics'); }
-                      setInventoryView('form');
-                    }}
+                    onClick={() => { if (inventoryView !== 'form') startNewTruck(); }}
                   >
                     {editingId ? 'Edit truck' : 'Add truck'}
                   </button>
@@ -745,9 +804,15 @@ export function AdminPage() {
               </div>
 
               {inventoryView === 'form' && canEditInventory && (
+              <div className={styles.truckEditor}>
               <form className={`${styles.contactForm} ${styles.adminForm}`} onSubmit={saveTruck}>
-                <h2>{editingId ? 'Edit truck' : 'Add truck'}</h2>
-                <p className={styles.adminNote}>All truck fields are optional. Save now and add missing details later.</p>
+                <div className={styles.editorHead}>
+                  <div>
+                    <h2>{editingId ? `Edit: ${truckDisplayTitle(form)}` : 'Add a truck'}</h2>
+                    <p className={styles.panelSub}>Every field is optional — save now and add the rest later. The preview updates as you type.</p>
+                  </div>
+                  {editingId && form.status !== 'draft' && form.status !== 'archived' && <a className={styles.ghostButton} href={`/truck/${editingId}${form.slug ? `-${form.slug}` : ''}`} target="_blank" rel="noreferrer"><AdminIcon name="external" />View live</a>}
+                </div>
                 <div className={styles.formSteps} role="group" aria-label="Truck form sections">
                   {TRUCK_FORM_STEPS.map((step, index) => (
                     <button key={step.id} type="button" className={`${styles.formStepButton} ${truckFormStep === step.id ? styles.formStepActive : ''}`} aria-pressed={truckFormStep === step.id} onClick={() => setTruckFormStep(step.id)}>
@@ -759,19 +824,19 @@ export function AdminPage() {
 
                 <div className={styles.formStepPanel}>
                   {truckFormStep === 'basics' && <>
-                    <div className={styles.formWide}><AdminInput label="Title" value={form.title} onChange={(value) => updateForm('title', value)} maxLength={255} /></div>
+                    <div className={styles.formWide}><AdminInput label="Title" value={form.title} onChange={(value) => updateForm('title', value)} maxLength={255} placeholder={[form.year, form.make, form.type].filter(Boolean).join(' ') || 'e.g. 2021 Scania R450 6x2 Tractor Unit'} /></div>
                     <div className={`${styles.formRow} ${styles.formWide}`}>
                       <AdminInput label="Make" value={form.make} onChange={(value) => updateForm('make', value)} maxLength={100} />
                       <AdminInput label="Body type" value={form.type} onChange={(value) => updateForm('type', value)} maxLength={100} />
                     </div>
                     <div className={styles.formWide}><AdminInput label="Location" value={form.location} onChange={(value) => updateForm('location', value)} maxLength={180} /></div>
                     <div className={`${styles.formRow} ${styles.formWide}`}>
-                      <AdminInput label="Price label" value={form.price} onChange={(value) => updateForm('price', value)} maxLength={50} />
-                      <AdminInput label="Price number" type="number" min={0} max={2000000000} step={1} value={form.priceValue} onChange={(value) => updateForm('priceValue', value)} />
+                      <AdminInput label="Price (£, used for sorting & filters)" type="number" min={0} max={2000000000} step={1} value={form.priceValue} onChange={(value) => updateForm('priceValue', value)} placeholder="54950" />
+                      <AdminInput label="Price shown on the advert" value={form.price} onChange={(value) => updateForm('price', value)} maxLength={50} placeholder="Fills in automatically, e.g. £54,950" />
                     </div>
                     <div className={`${styles.formRow} ${styles.formWide}`}>
-                      <AdminInput label="Mileage label" value={form.mileage} onChange={(value) => updateForm('mileage', value)} maxLength={50} />
-                      <AdminInput label="Mileage number" type="number" min={0} max={2000000000} step={1} value={form.mileageValue} onChange={(value) => updateForm('mileageValue', value)} />
+                      <AdminInput label="Mileage in miles (number)" type="number" min={0} max={2000000000} step={1} value={form.mileageValue} onChange={(value) => updateForm('mileageValue', value)} placeholder="362000" />
+                      <AdminInput label="Mileage shown on the advert" value={form.mileage} onChange={(value) => updateForm('mileage', value)} maxLength={50} placeholder="Fills in automatically, e.g. 362,000 miles" />
                     </div>
                     <div className={`${styles.formRow} ${styles.formWide}`}>
                       <AdminInput label="Year" value={form.year} onChange={(value) => updateForm('year', value)} maxLength={10} />
@@ -910,64 +975,109 @@ export function AdminPage() {
                   <div>
                     <button className={styles.adminSecondary} type="button" disabled={truckFormStep === TRUCK_FORM_STEPS[0].id} onClick={() => { const index = TRUCK_FORM_STEPS.findIndex((step) => step.id === truckFormStep); setTruckFormStep(TRUCK_FORM_STEPS[Math.max(0, index - 1)].id); }}>Back</button>
                     <button className={styles.adminSecondary} type="button" disabled={truckFormStep === TRUCK_FORM_STEPS[TRUCK_FORM_STEPS.length - 1].id} onClick={() => { const index = TRUCK_FORM_STEPS.findIndex((step) => step.id === truckFormStep); setTruckFormStep(TRUCK_FORM_STEPS[Math.min(TRUCK_FORM_STEPS.length - 1, index + 1)].id); }}>Next</button>
-                    <button className={styles.adminSecondary} type="button" onClick={() => { setEditingId(null); setForm(emptyTruck); setTruckFormStep('basics'); setInventoryView('stock'); }}>Cancel</button>
-                    <button type="submit" disabled={uploadingImages}>{uploadingImages ? 'Uploading photos…' : editingId ? 'Update truck' : 'Add truck'}</button>
+                    <button className={styles.adminSecondary} type="button" onClick={cancelTruckForm}>Cancel</button>
+                    <button type="submit" disabled={uploadingImages}>{uploadingImages ? 'Uploading photos…' : editingId ? 'Save changes' : 'Add truck'}</button>
                   </div>
                 </div>
               </form>
+              <TruckPreview form={form} images={truckImages} />
+              </div>
               )}
 
               {inventoryView === 'stock' && (
               <div className={styles.adminTablePanel}>
                 <div className={styles.panelHeader}>
-                  <h2>Truck stock</h2>
+                  <div>
+                    <h2>Truck stock</h2>
+                    <p className={styles.panelSub}>{visibleTrucks.length} of {trucks.length} vehicles shown</p>
+                  </div>
                   <div className={styles.stockHeaderActions}>
-                    <input
-                      className={styles.searchInput}
-                      placeholder="Search title, make, type, status…"
-                      value={stockSearch}
-                      onChange={(event) => setStockSearch(event.target.value)}
-                    />
-                    <button type="button" onClick={exportTrucksCsv}>Export CSV</button>
-                    {canEditInventory && <><button type="button" onClick={() => csvInputRef.current?.click()}>Import CSV</button><input ref={csvInputRef} type="file" accept=".csv,text/csv" hidden onChange={importTrucksCsv} /></>}
+                    <label className={styles.searchField}>
+                      <AdminIcon name="search" />
+                      <input
+                        className={styles.searchInput}
+                        type="search"
+                        aria-label="Search stock"
+                        placeholder="Search title, make, type, registration…"
+                        value={stockSearch}
+                        onChange={(event) => setStockSearch(event.target.value)}
+                      />
+                    </label>
+                    <button type="button" className={styles.ghostButton} onClick={exportTrucksCsv}>Export CSV</button>
+                    {canEditInventory && <><button type="button" className={styles.ghostButton} onClick={() => csvInputRef.current?.click()}>Import CSV</button><input ref={csvInputRef} type="file" accept=".csv,text/csv" hidden onChange={importTrucksCsv} /></>}
+                    {canEditInventory && <button type="button" className={styles.primaryButton} onClick={startNewTruck}><AdminIcon name="plus" />Add truck</button>}
                   </div>
                 </div>
+
+                <div className={styles.filterChips} role="group" aria-label="Filter stock by status">
+                  {STOCK_FILTERS.map((key) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className={`${styles.filterChip} ${stockStatus === key ? styles.filterChipActive : ''}`}
+                      aria-pressed={stockStatus === key}
+                      onClick={() => setStockStatus(key)}
+                    >
+                      {key === 'all' ? 'All' : truckStatusLabel(key)}
+                      <span>{stockCounts[key] || 0}</span>
+                    </button>
+                  ))}
+                </div>
+
                 <div className={styles.adminTableWrap}>
-                  <table className={styles.adminTable}>
+                  <table className={`${styles.adminTable} ${styles.stockTable}`}>
                     <thead>
                       <tr>
-                        <th></th>
                         <th><button type="button" className={styles.sortButton} onClick={() => toggleSort('title')}>Truck {stockSort.key === 'title' ? (stockSort.dir === 'asc' ? '▲' : '▼') : ''}</button></th>
                         <th><button type="button" className={styles.sortButton} onClick={() => toggleSort('price')}>Price {stockSort.key === 'price' ? (stockSort.dir === 'asc' ? '▲' : '▼') : ''}</button></th>
+                        <th><button type="button" className={styles.sortButton} onClick={() => toggleSort('year')}>Year · Mileage {stockSort.key === 'year' ? (stockSort.dir === 'asc' ? '▲' : '▼') : ''}</button></th>
                         <th><button type="button" className={styles.sortButton} onClick={() => toggleSort('status')}>Status {stockSort.key === 'status' ? (stockSort.dir === 'asc' ? '▲' : '▼') : ''}</button></th>
-                        {canEditInventory && <th>Actions</th>}
+                        {canEditInventory && <th className={styles.actionsHead}>Actions</th>}
                       </tr>
                     </thead>
                     <tbody>
-                      {visibleTrucks.map((truck) => (
-                        <tr key={truck.id}>
-                          <td>
-                            {truck.image ? <img className={styles.thumb} src={truck.image} alt="" /> : <div className={styles.thumbPlaceholder} />}
-                            <span>{truck.photoCount || 0} photo{truck.photoCount === 1 ? '' : 's'}</span>
-                          </td>
-                          <td>
-                            <strong>{truckDisplayTitle(truck)}</strong>
-                            <span>{[truck.make, truck.type].filter(Boolean).join(' / ') || 'Details pending'}</span>
-                          </td>
-                          <td>{truckDisplayPrice(truck)}</td>
-                          <td><span className={`${styles.badge} ${styles['status-' + truck.status]}`}>{truck.status}</span></td>
-                          {canEditInventory && (
+                      {visibleTrucks.map((truck) => {
+                        const title = truckDisplayTitle(truck);
+                        const isLive = truck.status !== 'archived' && truck.status !== 'draft';
+                        return (
+                          <tr key={truck.id}>
                             <td>
-                              <button type="button" onClick={() => editTruck(truck)}>Edit</button>
-                              <button type="button" onClick={() => duplicateTruck(truck)}>Duplicate</button>
-                              {user.role === 'admin' && truck.status !== 'archived' && <button type="button" onClick={() => deleteTruck(truck)}>Archive</button>}
-                              {truck.status !== 'archived' && truck.status !== 'draft' && <a className={styles.truckViewLink} href={`/truck/${truck.id}${truck.slug ? `-${truck.slug}` : ''}`} target="_blank" rel="noreferrer">View live</a>}
+                              <div className={styles.truckCell}>
+                                {truck.image ? <img className={styles.thumb} src={truck.image} alt="" loading="lazy" /> : <div className={styles.thumbPlaceholder}><AdminIcon name="truck" /></div>}
+                                <div>
+                                  <strong>{title}{truck.featured && <span className={styles.featuredTag} title="Featured on the homepage">★ Featured</span>}</strong>
+                                  <span>{[truck.make, truck.type, truck.registration].filter(Boolean).join(' · ') || 'Details pending'}</span>
+                                  <small>{truck.photoCount || 0} photo{truck.photoCount === 1 ? '' : 's'}</small>
+                                </div>
+                              </div>
                             </td>
-                          )}
-                        </tr>
-                      ))}
+                            <td><strong className={styles.priceCell}>{truckDisplayPrice(truck)}</strong></td>
+                            <td className={styles.nowrapCell}><span>{[truck.year, truck.mileage].filter(Boolean).join(' · ') || '—'}</span></td>
+                            <td><span className={`${styles.badge} ${styles[`status-${truck.status}`] || ''}`}>{truckStatusLabel(truck.status)}</span></td>
+                            {canEditInventory && (
+                              <td>
+                                <div className={styles.rowActions}>
+                                  <button type="button" className={styles.rowPrimary} onClick={() => editTruck(truck)}>Edit</button>
+                                  <button type="button" className={styles.iconButton} title="Duplicate as a draft" aria-label={`Duplicate ${title}`} onClick={() => duplicateTruck(truck)}><AdminIcon name="copy" /></button>
+                                  {isLive && <a className={styles.iconButton} href={`/truck/${truck.id}${truck.slug ? `-${truck.slug}` : ''}`} target="_blank" rel="noreferrer" title="View on the website" aria-label={`View ${title} on the website`}><AdminIcon name="external" /></a>}
+                                  {user.role === 'admin' && truck.status !== 'archived' && <button type="button" className={`${styles.iconButton} ${styles.iconDanger}`} title="Archive (hide from the website)" aria-label={`Archive ${title}`} onClick={() => deleteTruck(truck)}><AdminIcon name="archive" /></button>}
+                                </div>
+                              </td>
+                            )}
+                          </tr>
+                        );
+                      })}
                       {visibleTrucks.length === 0 && (
-                        <tr><td colSpan={canEditInventory ? 5 : 4}>No trucks match this search.</td></tr>
+                        <tr className={styles.emptyRow}>
+                          <td colSpan={canEditInventory ? 5 : 4}>
+                            <EmptyState
+                              icon="truck"
+                              title={trucks.length === 0 ? 'No trucks yet' : 'No trucks match'}
+                              copy={trucks.length === 0 ? 'Add your first truck and it will appear on the website straight away.' : 'Try a different search or status filter.'}
+                              action={trucks.length > 0 && <button type="button" className={styles.ghostButton} onClick={() => { setStockSearch(''); setStockStatus('all'); }}>Clear filters</button>}
+                            />
+                          </td>
+                        </tr>
                       )}
                     </tbody>
                   </table>
@@ -978,37 +1088,67 @@ export function AdminPage() {
           )}
 
           {activeTab === 'pipeline' && (
-            <section className={styles.adminTablePanel}>
-              <h2>Chat sales pipeline</h2>
-              <p className={styles.adminNote}>Qualified website leads, ordered newest first.</p>
-              <div className={styles.leadFilters}>
-                <input placeholder="Search name, phone, email, postcode…" value={leadSearchInput} onChange={(e) => setLeadSearchInput(e.target.value)} />
-                <select value={leadFilters.status} onChange={(e) => setLeadFilters((f) => ({ ...f, status: e.target.value, page: 1 }))}>
-                  <option value="">All statuses</option>
-                  <option>new</option>
-                  <option>contacted</option>
-                  <option>qualified</option>
-                  <option value="viewing-booked">viewing booked</option>
-                  <option>won</option>
-                  <option>lost</option>
-                </select>
-                <select value={leadFilters.temperature} onChange={(e) => setLeadFilters((f) => ({ ...f, temperature: e.target.value, page: 1 }))}>
-                  <option value="">All priorities</option>
-                  <option>hot</option>
-                  <option>warm</option>
-                  <option>cold</option>
-                </select>
-                <label><input type="checkbox" checked={leadFilters.followUp === 'due'} onChange={(e) => setLeadFilters((f) => ({ ...f, followUp: e.target.checked ? 'due' : '', page: 1 }))} /> Follow-ups due</label>
+            <section className={styles.pipelineSection}>
+              <div className={styles.pipelineSummary}>
+                <div><span>All leads</span><strong>{dashboard?.leads ?? leadPagination?.total ?? chatLeads.length}</strong></div>
+                <div className={styles.summaryHot}><span>Hot</span><strong>{dashboard?.hotLeads ?? '—'}</strong></div>
+                <div><span>New</span><strong>{dashboard?.newLeads ?? '—'}</strong></div>
+                <div className={styles.summaryDue}><span>Follow-ups due</span><strong>{dashboard?.followUps ?? '—'}</strong></div>
               </div>
+
+              <div className={styles.adminTablePanel}>
+                <div className={styles.panelHeader}>
+                  <div>
+                    <h2>Chat leads</h2>
+                    <p className={styles.panelSub}>Newest first. Update the status as each lead moves forward.</p>
+                  </div>
+                </div>
+                <div className={styles.leadFilters}>
+                  <label className={styles.searchField}>
+                    <AdminIcon name="search" />
+                    <input type="search" aria-label="Search leads" placeholder="Search name, phone, email, postcode…" value={leadSearchInput} onChange={(e) => setLeadSearchInput(e.target.value)} />
+                  </label>
+                  <select aria-label="Filter by status" value={leadFilters.status} onChange={(e) => setLeadFilters((f) => ({ ...f, status: e.target.value, page: 1 }))}>
+                    <option value="">All statuses</option>
+                    {LEAD_STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                  </select>
+                  <select aria-label="Filter by priority" value={leadFilters.temperature} onChange={(e) => setLeadFilters((f) => ({ ...f, temperature: e.target.value, page: 1 }))}>
+                    <option value="">All priorities</option>
+                    <option value="hot">Hot</option>
+                    <option value="warm">Warm</option>
+                    <option value="cold">Cold</option>
+                  </select>
+                  <label className={styles.toggleField}>
+                    <input type="checkbox" checked={leadFilters.followUp === 'due'} onChange={(e) => setLeadFilters((f) => ({ ...f, followUp: e.target.checked ? 'due' : '', page: 1 }))} />
+                    Follow-ups due
+                  </label>
+                </div>
+              </div>
+
               <div className={styles.pipeline}>
-                {chatLeads.length === 0 && <p className={styles.adminNote}>No chatbot leads yet.</p>}
-                {chatLeads.map((lead) => <ChatLeadCard key={lead.id} lead={lead} onUpdated={() => Promise.all([loadChatLeads(), loadAdminData()])} onOpen={async () => { try { setSelectedLead((await api.getChatLead(lead.id)).data); } catch (error) { setMessage({ type: 'error', text: error.message }); } }} />)}
+                {chatLeads.length === 0 && (
+                  <div className={styles.adminTablePanel}>
+                    {leadSearchInput || leadFilters.status || leadFilters.temperature || leadFilters.followUp ? (
+                      <EmptyState
+                        icon="search"
+                        title="No leads match these filters"
+                        action={<button type="button" className={styles.ghostButton} onClick={() => { setLeadSearchInput(''); setLeadFilters((f) => ({ ...f, search: '', status: '', temperature: '', followUp: '', page: 1 })); }}>Clear filters</button>}
+                      />
+                    ) : (
+                      <EmptyState icon="leads" title="No chat leads yet" copy="When a visitor asks the website assistant for a callback, the lead appears here." />
+                    )}
+                  </div>
+                )}
+                {chatLeads.map((lead) => (
+                  <ChatLeadCard key={lead.id} lead={lead} onUpdated={() => Promise.all([loadChatLeads(), loadAdminData()])} onOpen={() => openLead(lead)} />
+                ))}
               </div>
-              {leadPagination && (
+
+              {leadPagination && leadPagination.pages > 1 && (
                 <div className={styles.pagination}>
-                  <button disabled={leadPagination.page <= 1} onClick={() => setLeadFilters((f) => ({ ...f, page: f.page - 1 }))}>Previous</button>
-                  <span>Page {leadPagination.page} of {leadPagination.pages || 1} · {leadPagination.total} leads</span>
-                  <button disabled={leadPagination.page >= leadPagination.pages} onClick={() => setLeadFilters((f) => ({ ...f, page: f.page + 1 }))}>Next</button>
+                  <button type="button" disabled={leadPagination.page <= 1} onClick={() => setLeadFilters((f) => ({ ...f, page: f.page - 1 }))}>Previous</button>
+                  <span>Page {leadPagination.page} of {leadPagination.pages} · {leadPagination.total} leads</span>
+                  <button type="button" disabled={leadPagination.page >= leadPagination.pages} onClick={() => setLeadFilters((f) => ({ ...f, page: f.page + 1 }))}>Next</button>
                 </div>
               )}
             </section>
@@ -1016,8 +1156,8 @@ export function AdminPage() {
 
           {activeTab === 'enquiries' && (
             <section className={styles.adminLeads}>
-              <LeadList title="Enquiries" items={enquiries} fields={['name', 'phone', 'requirement']} />
-              <LeadList title="Part exchange" items={partExchange} fields={['registration', 'mileage', 'notes']} />
+              <EnquiryList title="Website enquiries" subtitle="Contact form and stock alert sign-ups" items={enquiries} kind="enquiry" />
+              <EnquiryList title="Part exchange requests" subtitle="Vehicles customers want to trade in" items={partExchange} kind="partExchange" />
             </section>
           )}
 
@@ -1050,6 +1190,14 @@ export function AdminPage() {
           {activeTab === 'account' && <AccountSettingsPanel user={user} onUserUpdated={setUser} />}
 
           {selectedLead && <LeadDetail lead={selectedLead} onClose={() => setSelectedLead(null)} />}
+
+          {message && (
+            <div className={`${styles.toast} ${message.type === 'error' ? styles.toastError : styles.toastSuccess}`} role={message.type === 'error' ? 'alert' : 'status'}>
+              <AdminIcon name={message.type === 'error' ? 'alert' : 'check'} />
+              <span>{message.text}</span>
+              <button type="button" onClick={() => setMessage(null)} aria-label="Dismiss message"><AdminIcon name="close" /></button>
+            </div>
+          )}
         </section>
       </div>
     </div>
@@ -1163,7 +1311,7 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
                     <td><span className={`${styles.badge} ${post.status === 'published' ? styles.badgeActive : styles.badgeInactive}`}>{post.status}</span></td>
                     <td>{new Date(post.updatedAt).toLocaleString('en-GB')}</td>
                     <td>
-                      {post.status === 'published' && <a href={`/blog/${post.slug}`} target="_blank" rel="noreferrer"><button type="button">View</button></a>}
+                      {post.status === 'published' && <a className={styles.truckViewLink} href={`/blog/${post.slug}`} target="_blank" rel="noreferrer">View</a>}
                       <button type="button" onClick={() => onEdit(post)}>Edit</button>
                       <button type="button" onClick={() => onDelete(post)}>Delete</button>
                     </td>
@@ -1176,67 +1324,6 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
         </div>
       )}
     </section>
-  );
-}
-
-function OverviewPanel({ enquiries, partExchange, chatLeads, trucks }) {
-  const recentLeads = [...chatLeads].slice(0, 5);
-  return (
-    <section className={styles.adminGrid}>
-      <div className={styles.adminTablePanel}>
-        <h2>Recent chat leads</h2>
-        <p className={styles.adminNote}>Newest qualified leads from the website chatbot.</p>
-        <div className={styles.leadList}>
-          {recentLeads.length === 0 && <p className={styles.adminNote}>No chatbot leads yet.</p>}
-          {recentLeads.map((lead) => (
-            <article key={lead.id}>
-              <span><strong>Name</strong>{lead.name}</span>
-              <span><strong>Priority</strong>{lead.temperature} · {lead.leadScore}/100</span>
-              <span><strong>Requirement</strong>{lead.requirement}</span>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div className={styles.adminTablePanel}>
-        <h2>Snapshot</h2>
-        <p className={styles.adminNote}>Everything else in one place.</p>
-        <div className={styles.leadList}>
-          <article><span><strong>Live stock</strong>{trucks.filter((t) => t.status === 'available').length} available of {trucks.filter((t) => !['draft', 'archived'].includes(t.status)).length} listed</span></article>
-          <article><span><strong>Website enquiries</strong>{enquiries.length} logged</span></article>
-          <article><span><strong>Part exchange</strong>{partExchange.length} requested</span></article>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function NotificationBell({ notifications, unread, open, onToggle, onMarkRead }) {
-  return (
-    <div className={styles.notifWrap}>
-      <button type="button" className={styles.notifButton} onClick={onToggle} aria-label="Notifications">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-        {unread > 0 && <span className={styles.notifBadge}>{unread}</span>}
-      </button>
-      {open && (
-        <div className={styles.notifDropdown}>
-          <h3>Notifications</h3>
-          {notifications.length === 0 && <p className={styles.adminNote}>You&apos;re all caught up.</p>}
-          {notifications.map((item) => (
-            <article key={item.id} className={`${styles.notifItem} ${item.is_read ? '' : styles.notifUnread}`}>
-              <strong>{item.link ? <a href={item.link}>{item.title}</a> : item.title}</strong>
-              <p>{item.message}</p>
-              <div className={styles.notifMeta}>
-                <time>{new Date(item.created_at).toLocaleString('en-GB')}</time>
-                {!item.is_read && <button type="button" onClick={() => onMarkRead(item.id)}>Mark read</button>}
-              </div>
-            </article>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -1422,75 +1509,517 @@ function AuditLogPanel({ logs, page, onPageChange }) {
   );
 }
 
-function LeadList({ title, items, fields }) {
+const TRUCK_STATUS_LABELS = { draft: 'Draft', available: 'Available', reserved: 'Reserved', sold: 'Sold', 'coming-soon': 'Coming soon', archived: 'Archived' };
+const STOCK_FILTERS = ['all', 'available', 'reserved', 'coming-soon', 'sold', 'draft', 'archived'];
+const LEAD_STATUSES = [['new', 'New'], ['contacted', 'Contacted'], ['qualified', 'Qualified'], ['viewing-booked', 'Viewing booked'], ['won', 'Won'], ['lost', 'Lost']];
+const LEAD_STATUS_LABELS = Object.fromEntries(LEAD_STATUSES);
+const COMPLETENESS_FIELDS = [
+  ['title', 'Title'], ['make', 'Make'], ['type', 'Body type'], ['priceValue', 'Price'], ['year', 'Year'],
+  ['mileageValue', 'Mileage'], ['gearbox', 'Gearbox'], ['registration', 'Registration'], ['euroRating', 'Euro rating'],
+  ['motExpiry', 'MOT expiry'], ['image', 'Cover photo'], ['description', 'Description']
+];
+
+const truckStatusLabel = (status) => TRUCK_STATUS_LABELS[status] || status || 'Unknown';
+const autoPriceLabel = (value) => (Number(value) > 0 ? `£${Number(value).toLocaleString('en-GB')}` : '');
+const autoMileageLabel = (value) => (Number(value) > 0 ? `${Number(value).toLocaleString('en-GB')} miles` : '');
+const phoneHref = (phone) => String(phone || '').replace(/[^\d+]/g, '');
+const whatsappNumber = (phone) => String(phone || '').replace(/\D/g, '').replace(/^0/, '44');
+
+function initialsOf(name) {
+  return String(name || '').trim().split(/\s+/).filter(Boolean).map((part) => part[0]).join('').slice(0, 2).toUpperCase() || '?';
+}
+
+function formatDateTime(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '' : date.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function timeAgo(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const seconds = Math.round((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours} hr${hours === 1 ? '' : 's'} ago`;
+  const days = Math.round(hours / 24);
+  if (days < 7) return `${days} day${days === 1 ? '' : 's'} ago`;
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function AdminIcon({ name }) {
+  const paths = {
+    truck: <><path d="M3 6h11v10H3z" /><path d="M14 9h4l3 3v4h-7" /><circle cx="7" cy="17.5" r="1.8" /><circle cx="17" cy="17.5" r="1.8" /></>,
+    leads: <><path d="M4 5h16v11H8l-4 4Z" /><path d="M8 9h8M8 12h5" /></>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></>,
+    exchange: <><path d="M4 8h13l-3-3M20 16H7l3 3" /></>,
+    plus: <path d="M12 5v14M5 12h14" />,
+    external: <><path d="M14 4h6v6M20 4l-9 9" /><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></>,
+    phone: <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />,
+    chat: <><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6Z" /><path d="M9 10h.01M12 10h.01M15 10h.01" /></>,
+    copy: <><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" /></>,
+    archive: <><rect x="3" y="4" width="18" height="4" rx="1" /><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4" /></>,
+    close: <path d="M6 6l12 12M18 6 6 18" />,
+    alert: <><path d="M12 3 2 20h20Z" /><path d="M12 10v4M12 17h.01" /></>,
+    search: <><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></>,
+    check: <path d="m5 12 4.5 4.5L19 7" />,
+    refresh: <><path d="M20 11a8 8 0 0 0-14.5-4.5M4 4v4h4" /><path d="M4 13a8 8 0 0 0 14.5 4.5M20 20v-4h-4" /></>
+  };
+  return <svg className={styles.adminIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name] || paths.check}</svg>;
+}
+
+function EmptyState({ icon = 'check', title, copy, action }) {
   return (
-    <div className={styles.adminTablePanel}>
-      <h2>{title}</h2>
-      <div className={styles.leadList}>
-        {items.length === 0 && <p className={styles.adminNote}>No records yet.</p>}
-        {items.map((item) => (
-          <article key={`${title}-${item.id}`}>
-            {fields.map((field) => (
-              <span key={field}>
-                <strong>{field}</strong>
-                {String(item[field] || '')}
-              </span>
-            ))}
-          </article>
-        ))}
-      </div>
+    <div className={styles.emptyState}>
+      <span className={styles.emptyIcon}><AdminIcon name={icon} /></span>
+      <strong>{title}</strong>
+      {copy && <p>{copy}</p>}
+      {action}
     </div>
   );
 }
 
+function OverviewPanel({ trucks, enquiries, partExchange, chatLeads, dashboard, totalLeads, canEditInventory, onNavigate, onAddTruck, onOpenLead }) {
+  const count = (status) => trucks.filter((truck) => truck.status === status).length;
+  const listed = trucks.filter((truck) => !['draft', 'archived'].includes(truck.status)).length;
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const lastWeek = (items) => items.filter((item) => new Date(item.createdAt).getTime() >= weekAgo).length;
+  const stockMix = ['available', 'reserved', 'coming-soon', 'sold', 'draft'].map((status) => [status, count(status)]).filter(([, total]) => total > 0);
+  const stockTotal = stockMix.reduce((sum, [, total]) => sum + total, 0);
+  const latestEnquiries = [...enquiries].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+  const kpis = [
+    { icon: 'truck', label: 'Live stock', value: count('available'), sub: `${count('reserved')} reserved · ${listed} listed`, tab: 'inventory' },
+    { icon: 'leads', label: 'Chat leads', value: totalLeads, sub: dashboard ? `${dashboard.hotLeads} hot · ${dashboard.newLeads} new` : 'Loading…', tab: 'pipeline' },
+    { icon: 'mail', label: 'Enquiries', value: enquiries.length, sub: `${lastWeek(enquiries)} in the last 7 days`, tab: 'enquiries' },
+    { icon: 'exchange', label: 'Part exchange', value: partExchange.length, sub: `${lastWeek(partExchange)} in the last 7 days`, tab: 'enquiries' }
+  ];
+  const plural = (total, word) => `${total} ${word}${total === 1 ? '' : 's'}`;
+
+  return (
+    <>
+      <div className={styles.kpiGrid}>
+        {kpis.map((kpi) => (
+          <button type="button" key={kpi.label} className={styles.kpiCard} onClick={() => onNavigate(kpi.tab)}>
+            <span className={styles.kpiIcon}><AdminIcon name={kpi.icon} /></span>
+            <span className={styles.kpiLabel}>{kpi.label}</span>
+            <strong>{kpi.value}</strong>
+            <small>{kpi.sub}</small>
+          </button>
+        ))}
+      </div>
+
+      {dashboard && (dashboard.followUps > 0 || dashboard.unread > 0) && (
+        <div className={styles.attentionStrip}>
+          <AdminIcon name="alert" />
+          <span><strong>Needs attention:</strong> {plural(dashboard.followUps, 'follow-up')} due · {plural(dashboard.unread, 'unread alert')}</span>
+          <button type="button" onClick={() => onNavigate('pipeline')}>Open pipeline</button>
+        </div>
+      )}
+
+      <div className={styles.overviewGrid}>
+        <section className={styles.adminTablePanel}>
+          <div className={styles.panelHeader}>
+            <div><h2>Recent chat leads</h2><p className={styles.panelSub}>Newest leads from the website assistant</p></div>
+            <button type="button" className={styles.ghostButton} onClick={() => onNavigate('pipeline')}>View all</button>
+          </div>
+          <div className={styles.recentList}>
+            {chatLeads.length === 0 && <EmptyState icon="leads" title="No chat leads yet" copy="Leads from the website chat assistant will appear here." />}
+            {chatLeads.slice(0, 6).map((lead) => (
+              <button type="button" key={lead.id} className={styles.recentItem} onClick={() => onOpenLead(lead)}>
+                <span className={styles.leadAvatar}>{initialsOf(lead.name)}</span>
+                <span className={styles.recentText}>
+                  <strong>{lead.name || 'Unnamed lead'}</strong>
+                  <small>{lead.requirement || lead.vehicleType || 'No requirement given'}</small>
+                </span>
+                <span className={styles.recentMeta}>
+                  <span className={`${styles.temperature} ${styles[lead.temperature] || ''}`}>{lead.temperature || 'lead'}</span>
+                  <time dateTime={lead.createdAt} title={formatDateTime(lead.createdAt)}>{timeAgo(lead.createdAt)}</time>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <div className={styles.overviewSide}>
+          <section className={styles.adminTablePanel}>
+            <div className={styles.panelHeader}>
+              <div><h2>Stock mix</h2><p className={styles.panelSub}>{plural(stockTotal, 'vehicle')} in the system</p></div>
+            </div>
+            {stockTotal === 0 ? (
+              <EmptyState icon="truck" title="No stock yet" copy="Add your first truck to start selling." />
+            ) : (
+              <>
+                <div className={styles.stockBar}>
+                  {stockMix.map(([status, total]) => <span key={status} className={styles[`bar-${status}`]} style={{ flexGrow: total }} title={`${truckStatusLabel(status)}: ${total}`} />)}
+                </div>
+                <ul className={styles.stockLegend}>
+                  {stockMix.map(([status, total]) => <li key={status}><i className={styles[`bar-${status}`]} />{truckStatusLabel(status)}<strong>{total}</strong></li>)}
+                </ul>
+              </>
+            )}
+          </section>
+          <section className={styles.adminTablePanel}>
+            <div className={styles.panelHeader}><div><h2>Quick actions</h2></div></div>
+            <div className={styles.quickActions}>
+              {canEditInventory && <button type="button" onClick={onAddTruck}><AdminIcon name="plus" />Add a truck</button>}
+              <button type="button" onClick={() => onNavigate('pipeline')}><AdminIcon name="leads" />Work the pipeline</button>
+              <button type="button" onClick={() => onNavigate('enquiries')}><AdminIcon name="mail" />Read enquiries</button>
+              <a href="/" target="_blank" rel="noreferrer"><AdminIcon name="external" />Open the website</a>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <section className={styles.adminTablePanel}>
+        <div className={styles.panelHeader}>
+          <div><h2>Latest website enquiries</h2><p className={styles.panelSub}>From the contact and stock alert forms</p></div>
+          <button type="button" className={styles.ghostButton} onClick={() => onNavigate('enquiries')}>View all</button>
+        </div>
+        <div className={styles.recentList}>
+          {latestEnquiries.length === 0 && <EmptyState icon="mail" title="No enquiries yet" copy="Messages sent through the website forms will appear here." />}
+          {latestEnquiries.map((item) => (
+            <div key={item.id} className={styles.recentItem}>
+              <span className={styles.leadAvatar}>{initialsOf(item.name)}</span>
+              <span className={styles.recentText}><strong>{item.name || 'No name'}</strong><small>{item.requirement}</small></span>
+              <span className={styles.recentMeta}>
+                {item.phone && <a href={`tel:${phoneHref(item.phone)}`}>{item.phone}</a>}
+                <time dateTime={item.createdAt} title={formatDateTime(item.createdAt)}>{timeAgo(item.createdAt)}</time>
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function EnquiryList({ title, subtitle, items, kind }) {
+  const sorted = [...items].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return (
+    <section className={styles.adminTablePanel}>
+      <div className={styles.panelHeader}>
+        <div><h2>{title}</h2><p className={styles.panelSub}>{subtitle}</p></div>
+        <span className={styles.countPill}>{items.length}</span>
+      </div>
+      <div className={styles.enquiryList}>
+        {sorted.length === 0 && <EmptyState icon={kind === 'enquiry' ? 'mail' : 'exchange'} title="Nothing here yet" copy="New submissions from the website will appear here." />}
+        {sorted.map((item) => (
+          <article key={item.id} className={styles.enquiryCard}>
+            <header>
+              <span className={styles.leadAvatar}>{initialsOf(item.name)}</span>
+              <div><strong>{item.name || 'No name'}</strong><time dateTime={item.createdAt} title={formatDateTime(item.createdAt)}>{timeAgo(item.createdAt)}</time></div>
+            </header>
+            <div className={styles.contactActions}>
+              {item.phone && <a className={styles.contactButton} href={`tel:${phoneHref(item.phone)}`}><AdminIcon name="phone" />{item.phone}</a>}
+              {item.email && <a className={styles.contactButton} href={`mailto:${item.email}`}><AdminIcon name="mail" />{item.email}</a>}
+            </div>
+            {kind === 'enquiry' ? (
+              <>
+                {item.truckId && <a className={styles.truckRef} href={`/truck/${item.truckId}`} target="_blank" rel="noreferrer">About truck #{item.truckId} <AdminIcon name="external" /></a>}
+                {item.requirement && <p className={styles.enquiryText}>{item.requirement}</p>}
+              </>
+            ) : (
+              <>
+                <dl className={styles.factGrid}>
+                  <div><dt>Registration</dt><dd>{item.registration || '—'}</dd></div>
+                  <div><dt>Mileage</dt><dd>{item.mileage || '—'}</dd></div>
+                </dl>
+                {item.notes && <p className={styles.enquiryText}>{item.notes}</p>}
+              </>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TruckPreview({ form, images }) {
+  const isFilled = ([key]) => {
+    if (key === 'image') return images.length > 0;
+    const value = form[key];
+    if (key.endsWith('Value')) return Number(value) > 0;
+    return String(value ?? '').trim() !== '';
+  };
+  const filled = COMPLETENESS_FIELDS.filter(isFilled);
+  const missing = COMPLETENESS_FIELDS.filter((field) => !isFilled(field));
+  const percent = Math.round((filled.length / COMPLETENESS_FIELDS.length) * 100);
+  const cover = form.image || images[0];
+  const chips = [form.year, form.mileage, form.gearbox, form.euroRating].filter((value) => String(value || '').trim());
+
+  return (
+    <aside className={styles.truckPreview} aria-label="Listing preview">
+      <p className={styles.previewEyebrow}>Live preview</p>
+      <div className={styles.previewCard}>
+        <div className={styles.previewImage}>
+          {cover ? <img src={cover} alt="" /> : <span>No cover photo yet</span>}
+          {form.badge && <em>{form.badge}</em>}
+        </div>
+        <div className={styles.previewBody}>
+          <small>{form.location || 'Location not set'}</small>
+          <strong>{truckDisplayTitle(form)}</strong>
+          {chips.length > 0 && <div className={styles.previewChips}>{chips.map((chip) => <span key={chip}>{chip}</span>)}</div>}
+          <div className={styles.previewFooter}>
+            <b>{truckDisplayPrice(form)}</b>
+            <span className={`${styles.badge} ${styles[`status-${form.status}`] || ''}`}>{truckStatusLabel(form.status)}</span>
+          </div>
+        </div>
+      </div>
+      <div className={styles.completeness}>
+        <div className={styles.completenessHead}><span>Listing completeness</span><strong>{percent}%</strong></div>
+        <div className={styles.meter}><span style={{ width: `${percent}%` }} /></div>
+        <p>{missing.length ? `Still to add: ${missing.map(([, label]) => label).join(', ')}.` : 'Everything buyers look for is filled in.'}</p>
+      </div>
+    </aside>
+  );
+}
+
 function ChatLeadCard({ lead, onUpdated, onOpen }) {
-  const [status, setStatus] = useState(lead.status);
-  const [assignedTo, setAssignedTo] = useState(lead.assignedTo || '');
-  const [salesNotes, setSalesNotes] = useState(lead.salesNotes || '');
-  const [followUpAt, setFollowUpAt] = useState(() => toDateTimeLocal(lead.followUpAt));
+  const serverDraft = {
+    status: lead.status || 'new',
+    assignedTo: lead.assignedTo || '',
+    salesNotes: lead.salesNotes || '',
+    followUpAt: toDateTimeLocal(lead.followUpAt)
+  };
+  const serverKey = JSON.stringify(serverDraft);
+  const [draft, setDraft] = useState(serverDraft);
   const [saveState, setSaveState] = useState({ status: 'idle', text: '' });
+
+  // Pick up fresh server values (e.g. after a save) without wiping edits on other cards.
+  useEffect(() => { setDraft(JSON.parse(serverKey)); }, [serverKey]);
+  useEffect(() => {
+    if (saveState.status !== 'saved') return undefined;
+    const timer = setTimeout(() => setSaveState({ status: 'idle', text: '' }), 2500);
+    return () => clearTimeout(timer);
+  }, [saveState.status]);
+
+  const dirty = JSON.stringify(draft) !== serverKey;
+  const score = Math.max(0, Math.min(100, Number(lead.leadScore) || 0));
+  const update = (field) => (event) => setDraft((current) => ({ ...current, [field]: event.target.value }));
 
   async function save() {
     setSaveState({ status: 'saving', text: 'Saving…' });
     try {
       await api.updateChatLead(lead.id, {
-        status,
-        assignedTo,
-        salesNotes,
-        followUpAt: followUpAt ? new Date(followUpAt).toISOString() : null
+        status: draft.status,
+        assignedTo: draft.assignedTo,
+        salesNotes: draft.salesNotes,
+        followUpAt: draft.followUpAt ? new Date(draft.followUpAt).toISOString() : null
       });
-      setSaveState({ status: 'saved', text: 'Saved.' });
+      setSaveState({ status: 'saved', text: 'Saved' });
       onUpdated();
     } catch (error) {
       setSaveState({ status: 'error', text: error.message });
     }
   }
 
-  return <article className={styles.pipelineCard}>
-    <header><div><span className={`${styles.temperature} ${styles[lead.temperature]}`}>{lead.temperature} · {lead.leadScore}/100</span><h3>{lead.name}</h3><p>{lead.company || 'Private buyer'} · {lead.postcode || 'Postcode not supplied'}</p></div><time>{new Date(lead.createdAt).toLocaleString('en-GB')}</time></header>
-    <div className={styles.leadFacts}>
-      <a href={`tel:${lead.phone}`}>Call: {lead.phone}</a><a href={`mailto:${lead.email}`}>Email: {lead.email || 'No email'}</a><a target="_blank" rel="noreferrer" href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '44')}?text=${encodeURIComponent(`Hello ${lead.name}, this is Midland Commercials regarding your enquiry.`)}`}>WhatsApp</a>
-      <span>Budget: {lead.budget ? `£${Number(lead.budget).toLocaleString('en-GB')} ${lead.budgetVat}` : 'Not supplied'}</span>
-      <span>Timeline: {lead.purchaseTimeline || 'Not supplied'}</span><span>Vehicle: {lead.vehicleType || 'Open requirement'}</span>
-      <span>{lead.partExchange ? 'Part exchange' : 'No part exchange'}</span>
+  return (
+    <article className={`${styles.pipelineCard} ${styles[`lead-${lead.temperature}`] || ''}`}>
+      <header className={styles.leadHead}>
+        <span className={styles.leadAvatar}>{initialsOf(lead.name)}</span>
+        <div className={styles.leadIdentity}>
+          <h3>{lead.name || 'Unnamed lead'}</h3>
+          <p>{lead.company || 'Private buyer'}{lead.postcode ? ` · ${lead.postcode}` : ''}</p>
+        </div>
+        <div className={styles.leadMeta}>
+          <span className={`${styles.temperature} ${styles[lead.temperature] || ''}`}>{lead.temperature || 'lead'}</span>
+          <span className={styles.leadStatusPill}>{LEAD_STATUS_LABELS[lead.status] || lead.status}</span>
+          <time dateTime={lead.createdAt} title={formatDateTime(lead.createdAt)}>{timeAgo(lead.createdAt)}</time>
+        </div>
+      </header>
+
+      <div className={styles.scoreRow}>
+        <span>Lead score</span>
+        <div className={styles.meter}><span style={{ width: `${score}%` }} /></div>
+        <strong>{score}/100</strong>
+      </div>
+
+      <div className={styles.contactActions}>
+        {lead.phone && <a className={styles.contactButton} href={`tel:${phoneHref(lead.phone)}`}><AdminIcon name="phone" />{lead.phone}</a>}
+        {lead.email && <a className={styles.contactButton} href={`mailto:${lead.email}`}><AdminIcon name="mail" />{lead.email}</a>}
+        {lead.phone && (
+          <a className={styles.contactButton} target="_blank" rel="noreferrer" href={`https://wa.me/${whatsappNumber(lead.phone)}?text=${encodeURIComponent(`Hello ${lead.name || ''}, this is Midland Commercials regarding your enquiry.`)}`}>
+            <AdminIcon name="chat" />WhatsApp
+          </a>
+        )}
+      </div>
+
+      <dl className={styles.factGrid}>
+        <div><dt>Budget</dt><dd>{lead.budget ? `£${Number(lead.budget).toLocaleString('en-GB')} ${lead.budgetVat || ''}` : 'Not given'}</dd></div>
+        <div><dt>Timeline</dt><dd>{lead.purchaseTimeline || 'Not given'}</dd></div>
+        <div><dt>Vehicle</dt><dd>{lead.vehicleType || 'Open requirement'}</dd></div>
+        <div><dt>Part exchange</dt><dd>{lead.partExchange ? 'Yes' : 'No'}</dd></div>
+        {lead.preferredCallback && <div><dt>Callback</dt><dd>{lead.preferredCallback}</dd></div>}
+      </dl>
+
+      {lead.requirement && <blockquote className={styles.requirementQuote}>{lead.requirement}</blockquote>}
+
+      <div className={styles.leadControls}>
+        <label>Status
+          <select value={draft.status} onChange={update('status')}>
+            {LEAD_STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+          </select>
+        </label>
+        <label>Assigned to<input value={draft.assignedTo} onChange={update('assignedTo')} placeholder="Salesperson" maxLength={120} /></label>
+        <label>Follow-up<input type="datetime-local" value={draft.followUpAt} onChange={update('followUpAt')} /></label>
+        <label className={styles.leadNotes}>Sales notes<textarea value={draft.salesNotes} onChange={update('salesNotes')} placeholder="Calls, viewings, offers…" /></label>
+      </div>
+
+      <footer className={styles.leadFooter}>
+        <span className={`${styles.saveHint} ${saveState.status === 'error' ? styles.saveHintError : ''} ${saveState.status === 'saved' ? styles.saveHintOk : ''}`}>
+          {saveState.text || (dirty ? 'Unsaved changes' : '')}
+        </span>
+        <div>
+          <button type="button" className={styles.ghostButton} onClick={onOpen}>Details & transcript</button>
+          <button type="button" className={styles.primaryButton} onClick={save} disabled={!dirty || saveState.status === 'saving'}>
+            {saveState.status === 'saving' ? 'Saving…' : 'Save changes'}
+          </button>
+        </div>
+      </footer>
+    </article>
+  );
+}
+
+function LeadDetail({ lead, onClose }) {
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  useEffect(() => {
+    const onKey = (event) => { if (event.key === 'Escape') closeRef.current(); };
+    window.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  return (
+    <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <section className={styles.leadDetail} role="dialog" aria-modal="true" aria-labelledby="lead-detail-title">
+        <header>
+          <div>
+            <p className={styles.previewEyebrow}>Lead #{lead.id} · {formatDateTime(lead.createdAt)}</p>
+            <h2 id="lead-detail-title">{lead.name || 'Unnamed lead'}</h2>
+            <div className={styles.contactActions}>
+              {lead.phone && <a className={styles.contactButton} href={`tel:${phoneHref(lead.phone)}`}><AdminIcon name="phone" />{lead.phone}</a>}
+              {lead.email && <a className={styles.contactButton} href={`mailto:${lead.email}`}><AdminIcon name="mail" />{lead.email}</a>}
+            </div>
+          </div>
+          <button type="button" className={styles.iconButton} onClick={onClose} aria-label="Close lead details"><AdminIcon name="close" /></button>
+        </header>
+        <h3>Conversation transcript</h3>
+        <div className={styles.transcript}>
+          {lead.transcript?.length
+            ? lead.transcript.map((message, index) => (
+              <p key={index} className={message.sender === 'user' ? styles.fromUser : styles.fromBot}>
+                <strong>{message.sender === 'user' ? lead.name || 'Customer' : 'Assistant'}</strong>{message.text}
+              </p>
+            ))
+            : <EmptyState icon="chat" title="No transcript captured" />}
+        </div>
+        <h3>Status history</h3>
+        <div className={styles.history}>
+          {lead.history?.length
+            ? lead.history.map((entry) => (
+              <p key={entry.id}>
+                <strong>{LEAD_STATUS_LABELS[entry.from_status] || entry.from_status || 'New'} → {LEAD_STATUS_LABELS[entry.to_status] || entry.to_status}</strong>
+                <span>{entry.changed_by_name || 'System'} · {formatDateTime(entry.created_at)}</span>
+              </p>
+            ))
+            : <p className={styles.adminNote}>No status changes yet.</p>}
+        </div>
+      </section>
     </div>
-    <p className={styles.requirement}>{lead.requirement}</p>
-    <div className={styles.pipelineControls}>
-      <label>Status<select value={status} onChange={(e) => setStatus(e.target.value)}><option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="viewing-booked">Viewing booked</option><option value="won">Won</option><option value="lost">Lost</option></select></label>
-      <label>Assigned to<input value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} placeholder="Salesperson" /></label>
-      <label>Follow-up<input type="datetime-local" value={followUpAt} onChange={(e) => setFollowUpAt(e.target.value)} /></label>
-      <label>Sales notes<textarea value={salesNotes} onChange={(e) => setSalesNotes(e.target.value)} /></label>
-      <button type="button" onClick={onOpen}>Details & transcript</button>
-      <button type="button" onClick={save} disabled={saveState.status === 'saving'}>Save lead</button>
-      {saveState.text && <p className={`${styles.formStatus} ${saveState.status === 'error' ? styles.formError : ''}`}>{saveState.text}</p>}
+  );
+}
+
+function NotificationBell({ notifications, unread, open, onToggle, onClose, onMarkRead }) {
+  const wrapRef = useRef(null);
+  useEffect(() => {
+    if (!open) return undefined;
+    const onPointer = (event) => { if (!wrapRef.current?.contains(event.target)) onClose(); };
+    const onKey = (event) => { if (event.key === 'Escape') onClose(); };
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, onClose]);
+
+  return (
+    <div className={styles.notifWrap} ref={wrapRef}>
+      <button type="button" className={styles.notifButton} onClick={onToggle} aria-label={`Notifications${unread ? ` (${unread} unread)` : ''}`} aria-expanded={open}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        {unread > 0 && <span className={styles.notifBadge}>{unread > 99 ? '99+' : unread}</span>}
+      </button>
+      {open && (
+        <div className={styles.notifDropdown}>
+          <h3>Notifications</h3>
+          {notifications.length === 0 && <EmptyState icon="check" title="You’re all caught up" />}
+          {notifications.map((item) => (
+            <article key={item.id} className={`${styles.notifItem} ${item.is_read ? '' : styles.notifUnread}`}>
+              <strong>{item.link ? <a href={item.link}>{item.title}</a> : item.title}</strong>
+              <p>{item.message}</p>
+              <div className={styles.notifMeta}>
+                <time dateTime={item.created_at} title={formatDateTime(item.created_at)}>{timeAgo(item.created_at)}</time>
+                {!item.is_read && <button type="button" onClick={() => onMarkRead(item.id)}>Mark read</button>}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
-  </article>;
+  );
 }
 
 function AdminLogin({ onLogin }) {
-  const [form, setForm] = useState({ email: 'admin@midlandtrucks.co.uk', password: '' }); const [error, setError] = useState(''); const [forgot, setForgot] = useState(false);
-  async function submit(e) { e.preventDefault(); setError(''); try { if (forgot) { const r = await api.forgotPassword(form.email); setError(r.message); return; } const r = await api.login(form); adminToken.set(r.token); onLogin(r.user); } catch (err) { setError(err.message); } }
-  return <section className={styles.loginShell}><form onSubmit={submit} className={styles.loginCard}><p className="eyebrow">Secure administration</p><h1>{forgot ? 'Reset password' : 'Welcome back'}</h1><label>Email<input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></label>{!forgot && <label>Password<input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></label>}{error && <p className={styles.formStatus}>{error}</p>}<button type="submit">{forgot ? 'Send reset instructions' : 'Log in securely'}</button><button className={styles.linkButton} type="button" onClick={() => setForgot(!forgot)}>{forgot ? 'Back to login' : 'Forgot password?'}</button></form></section>;
-}
+  const [form, setForm] = useState({ email: 'admin@midlandtrucks.co.uk', password: '' });
+  const [feedback, setFeedback] = useState(null);
+  const [forgot, setForgot] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-function LeadDetail({ lead, onClose }) { return <div className={styles.modalBackdrop} role="dialog" aria-modal="true"><section className={styles.leadDetail}><header><div><p className="eyebrow">Lead #{lead.id}</p><h2>{lead.name}</h2></div><button onClick={onClose}>Close</button></header><h3>Conversation transcript</h3><div className={styles.transcript}>{lead.transcript?.length ? lead.transcript.map((m, i) => <p key={i}><strong>{m.sender}</strong>{m.text}</p>) : <p>No transcript captured.</p>}</div><h3>Status history</h3><div className={styles.history}>{lead.history?.length ? lead.history.map((h) => <p key={h.id}><strong>{h.from_status} → {h.to_status}</strong><span>{h.changed_by_name} · {new Date(h.created_at).toLocaleString('en-GB')}</span></p>) : <p>No status changes yet.</p>}</div></section></div>; }
+  async function submit(event) {
+    event.preventDefault();
+    setFeedback(null);
+    setSubmitting(true);
+    try {
+      if (forgot) {
+        const result = await api.forgotPassword(form.email);
+        setFeedback({ type: 'success', text: result.message });
+        return;
+      }
+      const result = await api.login(form);
+      adminToken.set(result.token);
+      onLogin(result.user);
+    } catch (error) {
+      setFeedback({ type: 'error', text: error.message });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <section className={styles.loginShell}>
+      <form onSubmit={submit} className={styles.loginCard}>
+        <div className={styles.loginBrand}>
+          <span className={styles.loginMark}><BrandMark /></span>
+          <span><strong>Midland</strong><small>Commercials · Admin</small></span>
+        </div>
+        <h1>{forgot ? 'Reset password' : 'Welcome back'}</h1>
+        <p className={styles.adminNote}>{forgot ? 'Enter your login email and we will send reset instructions.' : 'Sign in to manage stock, leads and enquiries.'}</p>
+        <label>Email<input type="email" required autoComplete="username" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label>
+        {!forgot && <label>Password<input type="password" required autoComplete="current-password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /></label>}
+        {feedback && <p className={`${styles.formStatus} ${feedback.type === 'error' ? styles.formError : ''}`} role={feedback.type === 'error' ? 'alert' : 'status'}>{feedback.text}</p>}
+        <button type="submit" disabled={submitting}>{submitting ? 'Please wait…' : forgot ? 'Send reset instructions' : 'Log in securely'}</button>
+        <button className={styles.linkButton} type="button" onClick={() => { setForgot(!forgot); setFeedback(null); }}>{forgot ? 'Back to login' : 'Forgot password?'}</button>
+      </form>
+    </section>
+  );
+}

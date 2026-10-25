@@ -1,0 +1,93 @@
+.statusPage {
+  display: grid;
+  min-height: calc(100vh - 220px);
+  place-items: center;
+  padding: clamp(48px, 8vw, 96px) 16px;
+  background:
+    radial-gradient(circle at 15% 10%, rgb(30 58 138 / 35%), transparent 40%),
+    linear-gradient(135deg, #0c1426 0%, #111a2e 60%, #1b2742 100%);
+}
+
+.panel {
+  position: relative;
+  width: min(640px, 100%);
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 12px;
+  padding: clamp(28px, 5vw, 48px);
+  color: #d0d5dd;
+  background: rgb(255 255 255 / 4%);
+  box-shadow: 0 30px 70px rgb(8 13 23 / 40%);
+}
+
+.panel :global(.eyebrow) {
+  color: #8fb0e8;
+}
+
+.panel h1 {
+  margin: 0 0 14px;
+  color: #ffffff;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.mark {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 22px;
+  place-items: center;
+  border-radius: 10px;
+  background: #1f2b45;
+}
+
+.code {
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  color: rgb(255 255 255 / 6%);
+  font-size: clamp(5rem, 14vw, 8rem);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.copy {
+  margin: 0 0 26px;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.help {
+  margin: 24px 0 0;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  padding-top: 18px;
+  font-size: 0.9rem;
+}
+
+.help a {
+  color: #ffffff;
+  font-weight: 900;
+}
+
+@media (max-width: 560px) {
+  .actions :global(.button) {
+    width: 100%;
+  }
+}
+
+/* --- Premium liquid-glass finish --- */
+.panel {
+  border: 1px solid var(--glass-dark-border);
+  background: var(--glass-dark-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-dark-shadow);
+  border-radius: 18px;
+}

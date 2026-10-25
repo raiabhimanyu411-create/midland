@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "i18next": "^26.3.6",
+    "lenis": "1.1.20",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "^17.0.11"

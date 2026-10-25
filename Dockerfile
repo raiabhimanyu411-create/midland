@@ -23,6 +23,7 @@ RUN npm ci --omit=dev --workspace backend
 COPY shared ./shared
 COPY backend ./backend
 COPY --from=build /app/client/dist ./client/dist
+COPY client/src/i18n/locales/en.json ./client/src/i18n/locales/en.json
 
 RUN mkdir -p /app/backend/uploads && chown -R node:node /app
 USER node

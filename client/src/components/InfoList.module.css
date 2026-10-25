@@ -58,3 +58,12 @@
   color: #667085;
   line-height: 1.55;
 }
+
+/* --- Premium liquid-glass finish --- */
+.valuesPanel div {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}

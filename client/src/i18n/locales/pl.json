@@ -31,8 +31,6 @@
   },
   "cookie": {
     "ariaLabel": "Zgoda na pliki cookie",
-    "message": "Używamy plików cookie do działania tej strony i analizy jej użytkowania. Przeczytaj naszą <1>Politykę prywatności</1>, aby dowiedzieć się więcej.",
-    "necessaryOnly": "Tylko niezbędne",
     "acceptAll": "Akceptuj wszystkie"
   },
   "compareBar": {
@@ -163,7 +161,6 @@
         "requestCallback": "Poproś o kontakt",
         "proofAria": "Zapewnienia dla kupujących",
         "cardLabel": "Najnowsza dostawa",
-        "cardTitle": "2022 Mercedes-Benz Actros",
         "cardCta": "Zobacz nową ofertę",
         "scrollCue": "Przewiń, aby zobaczyć więcej"
       },
@@ -216,7 +213,6 @@
         "mileagePlaceholder": "Przykład: 340 000 mil",
         "notesLabel": "Uwagi dotyczące pojazdu",
         "notesPlaceholder": "Stan techniczny, MOT, historia serwisowa, stan opon, dostępne zdjęcia nadwozia i docelowa ciężarówka zamienna",
-        "success": "Wniosek o wycenę zapisany w bazie danych.",
         "submit": "Poproś o wycenę"
       }
     },

@@ -10,7 +10,8 @@ export const routeNames = [
   'privacy',
   'about',
   'contact',
-  'admin'
+  'admin',
+  'thankYou'
 ];
 
 export function getRouteTitle(t, name) {
@@ -31,7 +32,7 @@ export function truckUrl(truck) {
   return `/truck/${truck.id}${truck.slug ? `-${encodeURIComponent(truck.slug)}` : ''}`;
 }
 
-export const routePaths = { home: '/', trucks: '/trucks', partExchange: '/part-exchange', faq: '/faq', privacy: '/privacy', about: '/about', contact: '/contact', blog: '/blog', admin: '/admin' };
+export const routePaths = { home: '/', trucks: '/trucks', partExchange: '/part-exchange', faq: '/faq', privacy: '/privacy', about: '/about', contact: '/contact', blog: '/blog', admin: '/admin', thankYou: '/thank-you' };
 
 export function getRoute() {
   const route = window.location.pathname.replace(/^\/+|\/+$/g, '');
@@ -49,7 +50,20 @@ export function getRoute() {
     return { name: 'blogPost', blogSlug, truckId: null, hash: `${route}${window.location.search}` };
   }
 
-  const routeName = route === 'part-exchange' ? 'partExchange' : route || 'home';
-  const knownRoute = routeNames.includes(routeName) && !['truckDetail', 'blogPost', 'notFound'].includes(routeName) && route !== 'partExchange';
+  const routeName = route === 'part-exchange' ? 'partExchange' : route === 'thank-you' ? 'thankYou' : route || 'home';
+  const knownRoute = routeNames.includes(routeName) && !['truckDetail', 'blogPost', 'notFound'].includes(routeName) && route !== 'partExchange' && route !== 'thankYou';
   return { name: knownRoute ? routeName : 'notFound', truckId: null, blogSlug: null, hash: `${route}${window.location.search}` };
+}
+
+const NAVIGATE_EVENT = 'midland:navigate';
+
+// In-app navigation from code (e.g. after a form is sent), using the same transition as link clicks.
+export function navigate(path) {
+  window.dispatchEvent(new CustomEvent(NAVIGATE_EVENT, { detail: path }));
+}
+
+export function onNavigate(handler) {
+  const listener = (event) => handler(event.detail);
+  window.addEventListener(NAVIGATE_EVENT, listener);
+  return () => window.removeEventListener(NAVIGATE_EVENT, listener);
 }

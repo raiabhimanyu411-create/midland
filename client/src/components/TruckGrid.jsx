@@ -7,6 +7,7 @@ import { demoDataEnabled } from '../utils/runtime.js';
 import { formatTruckStatus } from '../utils/truckStatus.js';
 import { truckUrl } from '../utils/routes.js';
 import { truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
+import { responsiveImage } from '../utils/images.js';
 import styles from './TruckGrid.module.css';
 
 export function TruckGrid({ trucks: truckList, variant = '', compareEnabled = false, compareIds = [], onToggleCompare }) {
@@ -55,7 +56,7 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
     >
       <div className={styles.truckImage}>
         {truck.image
-          ? <img src={truck.image} alt={truckDisplayTitle(truck)} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
+          ? <img {...responsiveImage(truck.image, '(max-width: 900px) 100vw, 400px')} alt={truckDisplayTitle(truck)} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
           : <div className={styles.imagePlaceholder}>{t('truckGrid.photoComingSoon')}</div>}
         {truck.badge && <span>{truck.badge}</span>}
         {truck.featured && <span className={styles.featuredBadge}>{t('truckGrid.hotDeal')}</span>}

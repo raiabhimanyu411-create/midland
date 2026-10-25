@@ -109,3 +109,13 @@
     justify-content: center;
   }
 }
+
+/* --- Premium liquid-glass finish --- */
+.bar {
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  border-radius: 14px;
+}

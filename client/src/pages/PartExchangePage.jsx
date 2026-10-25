@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHero } from '../components/PageHero.jsx';
 import { api } from '../utils/api.js';
+import { FormPrivacyNote } from '../components/FormPrivacyNote.jsx';
+import { navigate } from '../utils/routes.js';
 import styles from './PartExchangePage.module.css';
 
 export function PartExchangePage() {
@@ -43,6 +45,7 @@ export function PartExchangePage() {
               });
               formElement.reset();
               setSubmitted(true);
+              navigate('/thank-you?form=part-exchange');
             } catch (requestError) {
               setError(requestError.message);
             }
@@ -75,6 +78,7 @@ export function PartExchangePage() {
           {submitted && <p className={styles.formStatus}>{t('pages.partExchange.form.success')}</p>}
           {error && <p className={styles.formError}>{error}</p>}
           <button type="submit">{t('pages.partExchange.form.submit')}</button>
+          <FormPrivacyNote />
         </form>
       </section>
     </>
