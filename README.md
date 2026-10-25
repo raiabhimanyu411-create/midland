@@ -85,6 +85,12 @@ POST /api/auth/login
 
 Inventory writes, lead lists, users, audit logs, uploads, and blog administration require an authenticated admin session. Role checks protect manager/admin-only actions.
 
+Truck listings support up to nine JPEG, PNG, or WebP photos (8 MB maximum per photo). The first photo is the listing cover; all photos appear in the truck detail gallery. Truck specifications entered in Admin are saved to the listing and shown on the public page. On startup, the backend adds the photo and specification columns to an existing `trucks` table without replacing its records, so the database user needs `ALTER` permission on that table.
+
+The Admin photo editor accepts JPEG/PNG/WebP images up to 25 MB before processing, resizes them to 1800 px and converts them to WebP (the processed upload limit is 8 MB). It supports drag/drop upload, photo reordering and cover selection. Stock supports Draft, Available, Reserved, Sold, Coming Soon and Archived statuses; drafts are excluded from public listings and search engines. Featured trucks are prioritized on the home page and ordered by the homepage order field. Truck detail URLs include the editable SEO slug while retaining the numeric truck ID.
+
+Admin inventory also supports duplicate-to-draft, CSV import/export (use Export CSV as the import template; include a cover `image` URL and the required listing fields), walkaround video links, and per-truck SEO fields. The registration lookup proxy reads secrets only from the backend environment: `DVLA_VES_API_KEY`, and/or the DVSA `DVSA_CLIENT_ID`, `DVSA_CLIENT_SECRET`, `DVSA_TOKEN_URL`, `DVSA_SCOPE`, and `DVSA_API_KEY` values shown in `backend/.env.example`. The DVLA developer portal currently says new VES registrations are closed; DVSA MOT History also requires issued credentials/approval. When keys are absent, manual entry remains available.
+
 ## Before public launch
 
 Replace and legally verify all company identity, VAT, FCA/finance, ratings, testimonial, address, phone, privacy, cookie, retention, and consent copy in `client/src/i18n/locales/*.json` and `client/src/data/siteData.js`. The current content includes demonstration values and is not a finished legal notice.

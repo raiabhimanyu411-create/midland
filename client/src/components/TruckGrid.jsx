@@ -5,6 +5,8 @@ import { useInView } from '../utils/useInView.js';
 import { IconCamera } from './icons.jsx';
 import { demoDataEnabled } from '../utils/runtime.js';
 import { formatTruckStatus } from '../utils/truckStatus.js';
+import { truckUrl } from '../utils/routes.js';
+import { truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
 import styles from './TruckGrid.module.css';
 
 export function TruckGrid({ trucks: truckList, variant = '', compareEnabled = false, compareIds = [], onToggleCompare }) {
@@ -30,7 +32,6 @@ export function TruckGrid({ trucks: truckList, variant = '', compareEnabled = fa
     </div>
   );
 }
-
 export function TruckGridSkeleton({ count = 6, variant = '' }) {
   return (
     <div className={`${styles.truckGrid} ${variant === 'listing' ? styles.listing : ''}`} aria-hidden="true">
@@ -53,8 +54,11 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
       style={{ transitionDelay: `${Math.min(index, 5) * 90}ms` }}
     >
       <div className={styles.truckImage}>
-        <img src={truck.image} alt={truck.title} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
-        <span>{truck.badge}</span>
+        {truck.image
+          ? <img src={truck.image} alt={truckDisplayTitle(truck)} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
+          : <div className={styles.imagePlaceholder}>Photo coming soon</div>}
+        {truck.badge && <span>{truck.badge}</span>}
+        {truck.featured && <span className={styles.featuredBadge}>Hot deal</span>}
         {truck.photoCount > 0 && (
           <span className={styles.photoCount}>
             <IconCamera /> {truck.photoCount}
@@ -77,32 +81,24 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
       </div>
       <div className={styles.truckBody}>
         <p>{truck.location}</p>
-        <h3>{truck.title}</h3>
+        <h3>{truckDisplayTitle(truck)}</h3>
         <div className={styles.statusRow}>
           <span>{formatTruckStatus(t, truck.status)}</span>
           <span>{truck.vatStatus || t('truckGrid.vatConfirm')}</span>
         </div>
         <dl>
-          <Spec label={t('truckGrid.specs.year')} value={truck.year} />
-          <Spec label={t('truckGrid.specs.mileage')} value={truck.mileage} />
-          <Spec label={t('truckGrid.specs.body')} value={truck.type} />
-          <Spec label={t('truckGrid.specs.gearbox')} value={truck.gearbox} />
+          <Spec label={t('truckGrid.specs.year')} value={truck.year || confirm} />
+          <Spec label={t('truckGrid.specs.mileage')} value={truck.mileage || confirm} />
+          <Spec label={t('truckGrid.specs.body')} value={truck.type || confirm} />
+          <Spec label={t('truckGrid.specs.gearbox')} value={truck.gearbox || confirm} />
           <Spec label={t('truckGrid.specs.euro')} value={truck.euroRating || truck.badge || confirm} />
           <Spec label={t('truckGrid.specs.mot')} value={truck.motExpiry || truck.mot || confirm} />
         </dl>
         <div className={styles.cardFooter}>
-          <strong>{formatPrice(truck)}</strong>
-          <a href={`/truck/${truck.id}`}>{t('truckGrid.viewDetails')}</a>
+          <strong>{truckDisplayPrice(truck)}</strong>
+          <a href={truckUrl(truck)}>{t('truckGrid.viewDetails')}</a>
         </div>
       </div>
     </article>
   );
-}
-
-function formatPrice(truck) {
-  if (!truck.vatStatus || String(truck.price || '').includes('VAT')) {
-    return truck.price;
-  }
-
-  return `${truck.price} ${truck.vatStatus}`;
 }

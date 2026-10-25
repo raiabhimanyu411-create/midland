@@ -26,7 +26,7 @@ export async function sitemapXml(req, res, next) {
   try {
     const siteUrl = getSiteUrl(req);
     const [[truckRows], [blogRows]] = await Promise.all([
-      pool.query("SELECT * FROM trucks WHERE status != 'archived' ORDER BY id DESC"),
+      pool.query("SELECT * FROM trucks WHERE status NOT IN ('archived','draft') ORDER BY id DESC"),
       pool.query("SELECT * FROM blogs WHERE status = 'published' ORDER BY published_at DESC")
     ]);
 

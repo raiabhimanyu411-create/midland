@@ -8,6 +8,7 @@ import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
 import { formatTruckStatus } from '../utils/truckStatus.js';
 import { notFoundPage, truckJsonLd, truckSeo } from '../../../shared/seo.js';
+import { truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
 import { setPageMeta, siteUrl } from '../utils/seo.js';
 import styles from './TruckDetailPage.module.css';
 
@@ -19,6 +20,7 @@ export function TruckDetailPage({ truckId }) {
   const [truck, setTruck] = useState(() => findFallbackTruck(truckId));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -59,24 +61,39 @@ export function TruckDetailPage({ truckId }) {
   if (loading && !truck) return <section className="section"><p>{t('common.loading', { defaultValue: 'Loading vehicle…' })}</p></section>;
   if (!truck) return <section className="section"><h1>{t('common.notFound', { defaultValue: 'Vehicle unavailable' })}</h1><p>{error}</p><a className="button primary" href="/trucks">{t('nav.trucks')}</a></section>;
 
-  const gallery = [truck.image].filter(Boolean);
+  const gallery = [...new Set([truck.image, ...(Array.isArray(truck.images) ? truck.images : [])]
+    .filter((image) => typeof image === 'string' && image.trim()))];
+  const activeImage = gallery.includes(selectedImage) ? selectedImage : gallery[0] || '';
+  const videoEmbedUrl = getYoutubeEmbedUrl(truck.videoUrl);
+  const displayTitle = truckDisplayTitle(truck);
 
   return (
     <>
-      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.trucks'), href: '/trucks' }, { label: truck.title }]} />
+      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.trucks'), href: '/trucks' }, { label: displayTitle }]} />
       <PageHero
         eyebrow={t('pages.truckDetail.hero.eyebrow')}
-        title={truck.title}
+        title={displayTitle}
         copy={t('pages.truckDetail.hero.copy')}
-        image={truck.image}
+        image={activeImage}
       />
       <section className={styles.detailLayout}>
         <div>
-          <img className={styles.detailImage} src={truck.image} alt={truck.title} decoding="async" />
+          {activeImage
+            ? <img className={styles.detailImage} src={activeImage} alt={displayTitle} decoding="async" />
+            : <div className={`${styles.detailImage} ${styles.detailImagePlaceholder}`}>Truck photos coming soon</div>}
           {gallery.length > 1 && (
             <div className={styles.thumbnailRow} aria-label={t('pages.truckDetail.galleryAria')}>
-              {gallery.map((image) => (
-                <img src={image} alt="" key={image} />
+              {gallery.map((image, index) => (
+                <button
+                  type="button"
+                  className={image === activeImage ? styles.thumbnailActive : ''}
+                  aria-label={`Show truck photo ${index + 1}`}
+                  aria-pressed={image === activeImage}
+                  onClick={() => setSelectedImage(image)}
+                  key={image}
+                >
+                  <img src={image} alt="" loading="lazy" decoding="async" />
+                </button>
               ))}
             </div>
           )}
@@ -89,29 +106,33 @@ export function TruckDetailPage({ truckId }) {
         </div>
         <aside className={styles.detailPanel}>
           <span className={styles.statusBadge}>{formatTruckStatus(t, truck.status)}</span>
-          <strong>{formatPrice(truck)}</strong>
+          <strong>{truckDisplayPrice(truck)}</strong>
           <p className={styles.priceNote}>
             {truck.vatStatus
               ? t('pages.truckDetail.priceNoteVat', { vatStatus: truck.vatStatus })
               : t('pages.truckDetail.priceNoteConfirm')}
           </p>
           <dl>
-            <Spec label={t('pages.truckDetail.specs.make')} value={truck.make} />
-            <Spec label={t('pages.truckDetail.specs.body')} value={truck.type} />
-            <Spec label={t('pages.truckDetail.specs.year')} value={truck.year} />
+            <Spec label={t('pages.truckDetail.specs.make')} value={truck.make || confirm} />
+            <Spec label={t('pages.truckDetail.specs.body')} value={truck.type || confirm} />
+            <Spec label={t('pages.truckDetail.specs.year')} value={truck.year || confirm} />
             <Spec label={t('pages.truckDetail.specs.registration')} value={truck.registration || confirm} />
-            <Spec label={t('pages.truckDetail.specs.mileage')} value={truck.mileage} />
-            <Spec label={t('pages.truckDetail.specs.gearbox')} value={truck.gearbox} />
-            <Spec label={t('pages.truckDetail.specs.location')} value={truck.location} />
-            <Spec label={t('pages.truckDetail.specs.cab')} value={truck.cab} />
-            <Spec label={t('pages.truckDetail.specs.power')} value={truck.power} />
+            <Spec label="VIN" value={truck.vin || confirm} />
+            <Spec label="Fuel" value={truck.fuelType || confirm} />
+            <Spec label="Colour" value={truck.colour || confirm} />
+            <Spec label={t('pages.truckDetail.specs.mileage')} value={truck.mileage || confirm} />
+            <Spec label={t('pages.truckDetail.specs.gearbox')} value={truck.gearbox || confirm} />
+            <Spec label={t('pages.truckDetail.specs.location')} value={truck.location || confirm} />
+            <Spec label={t('pages.truckDetail.specs.cab')} value={truck.cab || confirm} />
+            <Spec label={t('pages.truckDetail.specs.power')} value={truck.power || confirm} />
             <Spec label={t('pages.truckDetail.specs.axle')} value={truck.axle || confirm} />
             <Spec label={t('pages.truckDetail.specs.weight')} value={truck.grossWeight || confirm} />
             <Spec label={t('pages.truckDetail.specs.payload')} value={truck.payload || confirm} />
             <Spec label={t('pages.truckDetail.specs.euroCaz')} value={truck.cleanAir || truck.euroRating || confirm} />
-            <Spec label={t('pages.truckDetail.specs.mot')} value={truck.motExpiry || truck.mot} />
+            <Spec label={t('pages.truckDetail.specs.mot')} value={truck.motExpiry || truck.mot || confirm} />
             <Spec label={t('pages.truckDetail.specs.service')} value={truck.serviceHistory || confirm} />
-            <Spec label={t('pages.truckDetail.specs.owners')} value={truck.owners || confirm} />
+            <Spec label="Previous owners" value={truck.owners || confirm} />
+            <Spec label="Tacho" value={truck.tacho || confirm} />
             <Spec label={t('pages.truckDetail.specs.warranty')} value={truck.warranty || confirm} />
           </dl>
           <a className="button primary" href={`/contact?truck=${truck.id}`}>{t('pages.truckDetail.reserveEnquire')}</a>
@@ -119,14 +140,26 @@ export function TruckDetailPage({ truckId }) {
           <a className="button outline" href="/delivery">{t('pages.truckDetail.deliveryQuote')}</a>
         </aside>
       </section>
+      {truck.videoUrl && (
+        <section className={`${styles.copyBlock} section`}>
+          <p className="eyebrow">Truck walkaround</p>
+          <h2>See this truck in action</h2>
+          {videoEmbedUrl
+            ? <div className={styles.videoFrame}><iframe src={videoEmbedUrl} title={`${displayTitle} walkaround video`} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div>
+            : <a className="button secondary" href={truck.videoUrl} target="_blank" rel="noopener noreferrer">Watch walkaround video</a>}
+        </section>
+      )}
     </>
   );
 }
 
-function formatPrice(truck) {
-  if (!truck.vatStatus || String(truck.price || '').includes('VAT')) {
-    return truck.price;
-  }
-
-  return `${truck.price} ${truck.vatStatus}`;
+function getYoutubeEmbedUrl(value) {
+  try {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase().replace(/^www\./, '');
+    const id = host === 'youtu.be' ? url.pathname.slice(1).split('/')[0]
+      : host === 'youtube.com' || host === 'm.youtube.com' ? (url.pathname === '/watch' ? url.searchParams.get('v') : url.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1])
+        : null;
+    return id && /^[\w-]{11}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : '';
+  } catch { return ''; }
 }

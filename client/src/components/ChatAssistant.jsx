@@ -5,6 +5,8 @@ import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
 import { createId } from '../utils/id.js';
 import { formatTruckStatus } from '../utils/truckStatus.js';
+import { truckUrl } from '../utils/routes.js';
+import { truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
 import { IconClose, IconDelivery, IconMail, IconPin } from './icons.jsx';
 import styles from './ChatAssistant.module.css';
 
@@ -368,10 +370,10 @@ function ChatBubble({ message, t }) {
       {message.trucks?.length > 0 && (
         <div className={styles.truckCards}>
           {message.trucks.map((truck) => (
-            <a className={styles.truckCard} href={`/truck/${truck.id}`} key={truck.id}>
-              <img src={truck.image} alt="" />
+            <a className={`${styles.truckCard} ${truck.image ? '' : styles.truckCardWithoutImage}`} href={truckUrl(truck)} key={truck.id}>
+              {truck.image && <img src={truck.image} alt="" />}
               <div>
-                <strong>{truck.title}</strong>
+                <strong>{truckDisplayTitle(truck)}</strong>
                 <span>{formatTruckLine(t, truck)}</span>
               </div>
             </a>
@@ -565,7 +567,7 @@ function describeTruck(ctx, truck, query) {
   const lines = [];
 
   if (containsAny(query, intentTerms.mileage)) {
-    lines.push(t('chat.replies.mileageLine', { title: truck.title, mileage: truck.mileage }));
+    lines.push(t('chat.replies.mileageLine', { title: truckDisplayTitle(truck), mileage: truck.mileage || confirm }));
   }
   if (containsAny(query, intentTerms.price)) {
     lines.push(t('chat.replies.priceLine', { price: formatPrice(truck) }));
@@ -574,10 +576,10 @@ function describeTruck(ctx, truck, query) {
     lines.push(t('chat.replies.motLine', { mot: truck.motExpiry || truck.mot || confirm, service: truck.serviceHistory || confirm }));
   }
   if (containsAny(query, intentTerms.gearbox)) {
-    lines.push(t('chat.replies.gearboxLine', { gearbox: truck.gearbox }));
+    lines.push(t('chat.replies.gearboxLine', { gearbox: truck.gearbox || confirm }));
   }
   if (containsAny(query, intentTerms.location)) {
-    lines.push(t('chat.replies.locationLine', { location: truck.location }));
+    lines.push(t('chat.replies.locationLine', { location: truck.location || confirm }));
   }
   if (containsAny(query, intentTerms.warranty)) {
     lines.push(t('chat.replies.warrantyLine', { owners: truck.owners || confirm, warranty: truck.warranty || confirm }));
@@ -603,13 +605,13 @@ function describeTruck(ctx, truck, query) {
 
   if (lines.length === 0) {
     lines.push(t('chat.replies.fullSummaryLine', {
-      title: truck.title,
+      title: truckDisplayTitle(truck),
       price: formatPrice(truck),
-      mileage: truck.mileage,
-      year: truck.year,
-      gearbox: truck.gearbox,
-      location: truck.location,
-      description: truck.description
+      mileage: truck.mileage || confirm,
+      year: truck.year || confirm,
+      gearbox: truck.gearbox || confirm,
+      location: truck.location || confirm,
+      description: truck.description || confirm
     }));
   }
 
@@ -752,8 +754,7 @@ function extractBudget(query) {
 }
 
 function formatPrice(truck) {
-  if (!truck.vatStatus || String(truck.price || '').includes('VAT')) return truck.price;
-  return `${truck.price} ${truck.vatStatus}`;
+  return truckDisplayPrice(truck);
 }
 
 function formatTruckLine(t, truck) {

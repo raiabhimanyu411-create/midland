@@ -183,7 +183,7 @@ function FeaturedStock() {
   useEffect(() => {
     async function loadFeatured() {
       try {
-        const response = await api.listTrucks({ sort: 'newest' });
+        const response = await api.listTrucks({ sort: 'home' });
         setFeaturedTrucks((response.data || []).slice(0, 3));
       } catch {
         setFeaturedTrucks(demoDataEnabled ? trucks.slice(0, 3) : []);

@@ -29,13 +29,18 @@ export function getRouteDescription(t, name) {
 
 export const primaryRoutes = ['home', 'trucks', 'finance', 'partExchange', 'delivery', 'about', 'contact'];
 
+export function truckUrl(truck) {
+  return `/truck/${truck.id}${truck.slug ? `-${encodeURIComponent(truck.slug)}` : ''}`;
+}
+
 export const routePaths = { home: '/', trucks: '/trucks', finance: '/finance', partExchange: '/part-exchange', delivery: '/delivery', faq: '/faq', privacy: '/privacy', about: '/about', contact: '/contact', blog: '/blog', admin: '/admin' };
 
 export function getRoute() {
   const route = window.location.pathname.replace(/^\/+|\/+$/g, '');
 
   if (route.startsWith('truck/')) {
-    const truckId = Number(route.split('/')[1]);
+    const identifier = route.split('/')[1];
+    const truckId = Number(identifier.match(/^\d+/)?.[0]);
     return { name: 'truckDetail', truckId: Number.isInteger(truckId) && truckId > 0 ? truckId : null, hash: `${route}${window.location.search}` };
   }
 

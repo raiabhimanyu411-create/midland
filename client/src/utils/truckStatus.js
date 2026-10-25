@@ -2,6 +2,8 @@ const statusDefaults = {
   available: 'Available',
   reserved: 'Reserved',
   sold: 'Sold',
+  draft: 'Draft',
+  'coming-soon': 'Coming Soon',
   archived: 'Archived'
 };
 

@@ -64,6 +64,7 @@ const submissionLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 30, stand
 
 app.use('/api', apiLimiter);
 app.use('/api/auth/login', authLimiter);
+app.patch('/api/auth/credentials', authLimiter);
 app.use('/api/auth/forgot-password', authLimiter);
 app.use('/api/auth/reset-password', authLimiter);
 app.post('/api/enquiries', submissionLimiter);

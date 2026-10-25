@@ -140,6 +140,10 @@
   object-fit: cover;
 }
 
+.truckCardWithoutImage {
+  grid-template-columns: 1fr;
+}
+
 .truckCard div {
   min-width: 0;
   padding-right: 8px;

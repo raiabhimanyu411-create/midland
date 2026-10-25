@@ -37,17 +37,43 @@ export async function initializeDatabase() {
       mileage_value INT NOT NULL DEFAULT 0,
       year VARCHAR(10) NOT NULL,
       gearbox VARCHAR(80) NOT NULL,
+      registration VARCHAR(40) DEFAULT '',
+      vin VARCHAR(80) DEFAULT '',
+      vat_status VARCHAR(40) DEFAULT '',
+      axle VARCHAR(100) DEFAULT '',
+      gross_weight VARCHAR(100) DEFAULT '',
+      payload VARCHAR(100) DEFAULT '',
+      euro_rating VARCHAR(50) DEFAULT '',
+      clean_air VARCHAR(120) DEFAULT '',
+      mot_expiry VARCHAR(160) DEFAULT '',
+      service_history TEXT,
+      owners VARCHAR(100) DEFAULT '',
+      warranty VARCHAR(160) DEFAULT '',
+      fuel_type VARCHAR(80) DEFAULT '',
+      colour VARCHAR(80) DEFAULT '',
+      tacho VARCHAR(160) DEFAULT '',
+      video_url VARCHAR(500) DEFAULT '',
+      slug VARCHAR(220) DEFAULT '',
+      meta_title VARCHAR(70) DEFAULT '',
+      meta_description VARCHAR(160) DEFAULT '',
+      featured BOOLEAN NOT NULL DEFAULT FALSE,
+      sort_order INT NOT NULL DEFAULT 0,
+      sold_at DATETIME NULL,
+      sold_price INT NULL,
       badge VARCHAR(80) DEFAULT '',
       cab VARCHAR(120) DEFAULT '',
       power VARCHAR(80) DEFAULT '',
       mot VARCHAR(160) DEFAULT '',
       description TEXT,
       image TEXT,
+      images JSON NULL,
       status VARCHAR(30) NOT NULL DEFAULT 'available',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
   `);
+
+  await ensureTruckColumns();
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS enquiries (
@@ -239,8 +265,9 @@ async function seedTruckData() {
   }
 }
 
-export function mapTruck(row) {
-  return {
+export function mapTruck(row, { includePrivate = false } = {}) {
+  const images = normalizeStoredImages(row.images, row.image);
+  const mapped = {
     id: row.id,
     title: row.title,
     make: row.make,
@@ -252,16 +279,100 @@ export function mapTruck(row) {
     mileageValue: row.mileage_value,
     year: row.year,
     gearbox: row.gearbox,
+    registration: row.registration || '',
+    vin: row.vin || '',
+    vatStatus: row.vat_status || '',
+    axle: row.axle || '',
+    grossWeight: row.gross_weight || '',
+    payload: row.payload || '',
+    euroRating: row.euro_rating || '',
+    cleanAir: row.clean_air || '',
+    motExpiry: row.mot_expiry || '',
+    serviceHistory: row.service_history || '',
+    owners: row.owners || '',
+    warranty: row.warranty || '',
+    fuelType: row.fuel_type || '',
+    colour: row.colour || '',
+    tacho: row.tacho || '',
+    videoUrl: row.video_url || '',
+    slug: row.slug || '',
+    metaTitle: row.meta_title || '',
+    metaDescription: row.meta_description || '',
+    featured: Boolean(row.featured),
+    sortOrder: Number(row.sort_order || 0),
     badge: row.badge,
     cab: row.cab,
     power: row.power,
     mot: row.mot,
     description: row.description,
-    image: row.image,
+    image: images[0] || '',
+    images,
+    photoCount: images.length,
     status: row.status,
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
+  if (includePrivate) {
+    mapped.soldAt = row.sold_at || null;
+    mapped.soldPrice = row.sold_price === null ? null : Number(row.sold_price);
+  }
+  return mapped;
+}
+
+async function ensureTruckColumns() {
+  const definitions = {
+    registration: "VARCHAR(40) DEFAULT ''",
+    vin: "VARCHAR(80) DEFAULT ''",
+    vat_status: "VARCHAR(40) DEFAULT ''",
+    axle: "VARCHAR(100) DEFAULT ''",
+    gross_weight: "VARCHAR(100) DEFAULT ''",
+    payload: "VARCHAR(100) DEFAULT ''",
+    euro_rating: "VARCHAR(50) DEFAULT ''",
+    clean_air: "VARCHAR(120) DEFAULT ''",
+    mot_expiry: "VARCHAR(160) DEFAULT ''",
+    service_history: 'TEXT NULL',
+    owners: "VARCHAR(100) DEFAULT ''",
+    warranty: "VARCHAR(160) DEFAULT ''",
+    fuel_type: "VARCHAR(80) DEFAULT ''",
+    colour: "VARCHAR(80) DEFAULT ''",
+    tacho: "VARCHAR(160) DEFAULT ''",
+    video_url: "VARCHAR(500) DEFAULT ''",
+    slug: "VARCHAR(220) DEFAULT ''",
+    meta_title: "VARCHAR(70) DEFAULT ''",
+    meta_description: "VARCHAR(160) DEFAULT ''",
+    featured: 'BOOLEAN NOT NULL DEFAULT FALSE',
+    sort_order: 'INT NOT NULL DEFAULT 0',
+    sold_at: 'DATETIME NULL',
+    sold_price: 'INT NULL',
+    images: 'JSON NULL'
+  };
+  const [rows] = await pool.query(
+    'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
+    ['trucks']
+  );
+  const existing = new Set(rows.map((row) => row.COLUMN_NAME));
+
+  for (const [column, definition] of Object.entries(definitions)) {
+    if (existing.has(column)) continue;
+    try {
+      await pool.query(`ALTER TABLE trucks ADD COLUMN ${column} ${definition}`);
+    } catch (error) {
+      // Another backend instance may have applied this additive migration at the same time.
+      if (error.code !== 'ER_DUP_FIELDNAME') throw error;
+    }
+  }
+}
+
+function normalizeStoredImages(value, primaryImage) {
+  let storedImages = value;
+  if (typeof storedImages === 'string') {
+    try { storedImages = JSON.parse(storedImages); } catch { storedImages = []; }
+  }
+  const candidates = Array.isArray(storedImages) ? storedImages : [];
+  return [...new Set([primaryImage, ...candidates]
+    .filter((image) => typeof image === 'string' && image.trim())
+    .map((image) => image.trim()))]
+    .slice(0, 9);
 }
 
 export function mapBlog(row) {

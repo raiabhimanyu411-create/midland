@@ -95,7 +95,7 @@ const primaryLinks = [
 ];
 
 async function listVisibleTrucks() {
-  const [rows] = await pool.query("SELECT * FROM trucks WHERE status != 'archived' ORDER BY CAST(year AS UNSIGNED) DESC, id DESC");
+  const [rows] = await pool.query("SELECT * FROM trucks WHERE status NOT IN ('archived','draft') ORDER BY featured DESC, sort_order ASC, CAST(year AS UNSIGNED) DESC, id DESC");
   return rows.map(mapTruck);
 }
 
@@ -104,11 +104,11 @@ async function resolvePage(pathname, siteUrl) {
     return { status: 200, meta: { ...adminPage, path: null } };
   }
 
-  const truckMatch = pathname.match(/^\/truck\/([^/]+)$/);
+  const truckMatch = pathname.match(/^\/truck\/(\d+)(?:-[^/]+)?$/);
   if (truckMatch) {
     const id = positiveInt(truckMatch[1]);
     const [rows] = id
-      ? await pool.query("SELECT * FROM trucks WHERE id = ? AND status != 'archived'", [id])
+      ? await pool.query("SELECT * FROM trucks WHERE id = ? AND status NOT IN ('archived','draft')", [id])
       : [[]];
     if (!rows[0]) return notFound();
     const truck = mapTruck(rows[0]);

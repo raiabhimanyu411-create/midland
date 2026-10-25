@@ -1,5 +1,6 @@
 // SEO metadata shared by the server (initial HTML, sitemap) and the client (route changes),
 // so crawlers and browsers always see the same title, description, canonical URL and JSON-LD.
+import { truckDisplayTitle } from './truck.js';
 
 export const SITE_NAME = 'MidLand Trucks';
 export const businessLocations = [
@@ -112,17 +113,20 @@ export function truncate(text, maxLength) {
 }
 
 export function truckPath(truck) {
-  return `/truck/${truck.id}`;
+  const slug = String(truck.slug || '').trim();
+  return `/truck/${truck.id}${slug ? `-${encodeURIComponent(slug)}` : ''}`;
 }
 
 export function truckSeo(truck) {
+  const title = truckDisplayTitle(truck);
   const price = truck.price ? ` – ${truck.price}` : '';
   const facts = [truck.year, truck.mileage, truck.gearbox, truck.badge, truck.location].filter(Boolean).join(', ');
+  const images = Array.isArray(truck.images) && truck.images.length ? truck.images : [truck.image];
   return {
-    title: truncate(`${truck.title}${price} | ${SITE_NAME}`, 70),
-    description: truncate(`${truck.title} for sale${facts ? `: ${facts}` : ''}. ${truck.description || ''}`, 160),
+    title: truncate(truck.metaTitle || `${title}${price} | ${SITE_NAME}`, 70),
+    description: truncate(truck.metaDescription || `${title} for sale${facts ? `: ${facts}` : ''}. ${truck.description || ''}`, 160),
     path: truckPath(truck),
-    image: truck.image || DEFAULT_IMAGE,
+    image: images.find(Boolean) || DEFAULT_IMAGE,
     type: 'product'
   };
 }
@@ -130,20 +134,24 @@ export function truckSeo(truck) {
 const availabilityByStatus = {
   available: 'https://schema.org/InStock',
   reserved: 'https://schema.org/LimitedAvailability',
-  sold: 'https://schema.org/SoldOut'
+  sold: 'https://schema.org/SoldOut',
+  'coming-soon': 'https://schema.org/PreOrder'
 };
 
 export function truckJsonLd(truck, siteUrl) {
+  const title = truckDisplayTitle(truck);
   const url = absoluteUrl(siteUrl, truckPath(truck));
   const status = String(truck.status || 'available').toLowerCase();
+  const images = Array.isArray(truck.images) && truck.images.length ? truck.images : [truck.image];
+  const imageUrls = images.filter(Boolean).map((image) => absoluteUrl(siteUrl, image));
   const data = {
     '@context': 'https://schema.org',
     '@type': ['Product', 'Vehicle'],
-    name: truck.title,
+    name: title,
     url,
-    description: truncate(truck.description || truck.title, 500),
+    description: truncate(truck.description || title, 500),
     brand: truck.make ? { '@type': 'Brand', name: truck.make } : undefined,
-    image: truck.image ? [absoluteUrl(siteUrl, truck.image)] : undefined,
+    image: imageUrls.length ? imageUrls : undefined,
     vehicleModelDate: truck.year || undefined,
     bodyType: truck.type || undefined,
     vehicleTransmission: truck.gearbox || undefined,
@@ -176,7 +184,7 @@ export function truckListJsonLd(trucks, siteUrl) {
       '@type': 'ListItem',
       position: index + 1,
       url: absoluteUrl(siteUrl, truckPath(truck)),
-      name: truck.title
+      name: truckDisplayTitle(truck)
     }))
   };
 }

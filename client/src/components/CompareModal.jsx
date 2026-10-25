@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconClose } from './icons.jsx';
 import styles from './CompareModal.module.css';
+import { truckUrl } from '../utils/routes.js';
+import { truckDisplayTitle } from '../../../shared/truck.js';
 
 export function CompareModal({ trucks, onClose, onRemove }) {
   const { t } = useTranslation();
@@ -55,8 +57,8 @@ export function CompareModal({ trucks, onClose, onRemove }) {
                 <th scope="col" className={styles.rowLabelCell} />
                 {trucks.map((truck) => (
                   <th scope="col" key={truck.id}>
-                    <img src={truck.image} alt={truck.title} />
-                    <span>{truck.title}</span>
+                    {truck.image && <img src={truck.image} alt={truckDisplayTitle(truck)} />}
+                    <span>{truckDisplayTitle(truck)}</span>
                     <button type="button" className="text-link" onClick={() => onRemove(truck.id)}>
                       {t('compareModal.remove')}
                     </button>
@@ -79,7 +81,7 @@ export function CompareModal({ trucks, onClose, onRemove }) {
                 <th scope="row" className={styles.rowLabelCell} />
                 {trucks.map((truck) => (
                   <td key={truck.id}>
-                    <a className="button primary" href={`/truck/${truck.id}`}>
+                    <a className="button primary" href={truckUrl(truck)}>
                       {t('compareModal.viewDetails')}
                     </a>
                   </td>

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { IconClose, IconScale } from './icons.jsx';
 import styles from './CompareBar.module.css';
+import { truckDisplayTitle } from '../../../shared/truck.js';
 
 export function CompareBar({ trucks, onRemove, onClear, onOpen }) {
   const { t } = useTranslation();
@@ -12,11 +13,11 @@ export function CompareBar({ trucks, onRemove, onClear, onOpen }) {
       <div className={styles.items}>
         {trucks.map((truck) => (
           <div className={styles.item} key={truck.id}>
-            <img src={truck.image} alt="" />
-            <span>{truck.title}</span>
+            {truck.image && <img src={truck.image} alt="" />}
+            <span>{truckDisplayTitle(truck)}</span>
             <button
               type="button"
-              aria-label={t('compareBar.removeAria', { title: truck.title })}
+              aria-label={t('compareBar.removeAria', { title: truckDisplayTitle(truck) })}
               onClick={() => onRemove(truck.id)}
             >
               <IconClose />
