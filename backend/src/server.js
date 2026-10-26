@@ -31,6 +31,12 @@ validateRuntimeConfig();
 
 app.disable('x-powered-by');
 if (isProduction) app.set('trust proxy', Number(process.env.TRUST_PROXY || 1));
+
+// Google treats www as canonical: permanently send bare-domain requests to the www host.
+app.use((req, res, next) => {
+  if (String(req.hostname || '').toLowerCase() !== 'midlandcommercials.com') return next();
+  res.redirect(301, `https://www.midlandcommercials.com${req.originalUrl}`);
+});
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: 'cross-origin' }
