@@ -98,9 +98,13 @@ function getTemplate() {
   return template;
 }
 
+const CANONICAL_SITE_URL = 'https://www.midlandcommercials.com';
+
 export function getSiteUrl(req) {
   const configured = String(process.env.SITE_URL || '').trim().replace(/\/$/, '');
-  return configured || `${req.protocol}://${req.get('host')}`;
+  const siteUrl = configured || `${req.protocol}://${req.get('host')}`;
+  // Google treats www as canonical, so the bare domain must never appear in canonicals or the sitemap.
+  return siteUrl.replace(/^https?:\/\/midlandcommercials\.com(?=$|[/:])/i, CANONICAL_SITE_URL);
 }
 
 function escapeHtml(value) {
