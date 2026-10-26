@@ -1,6 +1,8 @@
 import { mapBlog, mapTruck, pool } from '../db/mysql.js';
 import { absoluteUrl, blogPath, staticPages, truckPath } from '../../../shared/seo.js';
-import { getSiteUrl } from './render.js';
+
+// Canonical domain — hamesha www + https
+const CANONICAL_SITE_URL = (process.env.CANONICAL_SITE_URL || 'https://www.midlandcommercials.com').replace(/\/+$/, '');
 
 function escapeXml(value) {
   return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -24,7 +26,7 @@ function urlEntry({ loc, lastmod, changefreq, priority }) {
 
 export async function sitemapXml(req, res, next) {
   try {
-    const siteUrl = getSiteUrl(req);
+    const siteUrl = CANONICAL_SITE_URL;
     const [[truckRows], [blogRows]] = await Promise.all([
       pool.query("SELECT * FROM trucks WHERE status NOT IN ('archived','draft') ORDER BY id DESC"),
       pool.query("SELECT * FROM blogs WHERE status = 'published' ORDER BY published_at DESC")
@@ -59,8 +61,7 @@ export async function sitemapXml(req, res, next) {
 }
 
 export function robotsTxt(req, res) {
-  const siteUrl = getSiteUrl(req);
   res.type('text/plain').set('Cache-Control', 'public, max-age=86400').send(
-    ['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /thank-you', '', `Sitemap: ${absoluteUrl(siteUrl, '/sitemap.xml')}`, ''].join('\n')
+    ['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /thank-you', '', `Sitemap: ${absoluteUrl(CANONICAL_SITE_URL, '/sitemap.xml')}`, ''].join('\n')
   );
 }
