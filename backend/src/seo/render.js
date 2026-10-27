@@ -4,6 +4,7 @@ import { clientDistDir, projectRoot } from '../config/paths.js';
 import { mapBlog, mapTruck, pool } from '../db/mysql.js';
 import { positiveInt } from '../utils/validation.js';
 import { truckDisplayPrice } from '../../../shared/truck.js';
+import { parseBlogContent, parseInline } from '../../../shared/blogContent.js';
 import {
   absoluteUrl,
   adminPage,
@@ -84,6 +85,18 @@ function staticPageBody(pageName) {
   }
 }
 
+function inlineHtml(text) {
+  return parseInline(text).map((part) => (part.href ? `<a href="${escapeHtml(part.href)}">${escapeHtml(part.text)}</a>` : escapeHtml(part.text))).join('');
+}
+
+function blogHtml(content) {
+  return parseBlogContent(content).map((block) => {
+    if (block.type === 'h2' || block.type === 'h3') return `<${block.type}>${escapeHtml(block.text)}</${block.type}>`;
+    if (block.type === 'ul' || block.type === 'ol') return `<${block.type}>${block.items.map((item) => `<li>${inlineHtml(item)}</li>`).join('')}</${block.type}>`;
+    return `<p>${inlineHtml(block.text)}</p>`;
+  }).join('');
+}
+
 function truckListHtml(trucks) {
   if (!trucks.length) return '';
   const items = trucks.map((truck) => {
@@ -155,7 +168,7 @@ function renderBody(meta) {
   ].join('');
 }
 
-const primaryLinks = [
+const allPrimaryLinks = [
   { label: 'Used Trucks For Sale', href: '/trucks' },
   { label: 'Part Exchange', href: '/part-exchange' },
   { label: 'Guides & News', href: '/blog' },
@@ -163,12 +176,45 @@ const primaryLinks = [
   { label: 'Contact', href: '/contact' }
 ];
 
+// Short-lived cache so most page loads skip the database. Any admin change clears it (see server.js).
+const PAGE_CACHE_MS = 60 * 1000;
+const pageCache = new Map();
+
+export function clearSeoCache() {
+  pageCache.clear();
+}
+
+async function cached(key, load) {
+  const hit = pageCache.get(key);
+  if (hit && hit.expires > Date.now()) return hit.value;
+  const value = await load();
+  if (pageCache.size > 500) pageCache.clear();
+  pageCache.set(key, { value, expires: Date.now() + PAGE_CACHE_MS });
+  return value;
+}
+
+// The blog stays out of links and the sitemap until at least one post is published.
+export function hasPublishedBlogs() {
+  return cached('has-blogs', async () => {
+    const [rows] = await pool.query("SELECT 1 FROM blogs WHERE status = 'published' LIMIT 1");
+    return rows.length > 0;
+  });
+}
+
 async function listVisibleTrucks() {
   const [rows] = await pool.query("SELECT * FROM trucks WHERE status NOT IN ('archived','draft') ORDER BY featured DESC, sort_order ASC, CAST(year AS UNSIGNED) DESC, id DESC");
   return rows.map(mapTruck);
 }
 
 async function resolvePage(pathname, siteUrl) {
+  const hasBlogs = await hasPublishedBlogs();
+  const primaryLinks = hasBlogs ? allPrimaryLinks : allPrimaryLinks.filter((link) => link.href !== '/blog');
+  const notFound = () => ({ status: 404, meta: { ...notFoundPage, path: null, links: primaryLinks }, hasBlogs });
+  const page = await resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs);
+  return { ...page, hasBlogs };
+}
+
+async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) {
   if (pathname === '/admin' || pathname.startsWith('/admin/')) {
     return { status: 200, meta: { ...adminPage, path: null } };
   }
@@ -215,11 +261,7 @@ async function resolvePage(pathname, siteUrl) {
       meta: {
         ...blogSeo(post),
         heading: post.title,
-        bodyHtml: post.content
-          .split(/\n\s*\n/)
-          .filter((paragraph) => paragraph.trim())
-          .map((paragraph) => `<p>${escapeHtml(paragraph.trim())}</p>`)
-          .join(''),
+        bodyHtml: blogHtml(post.content),
         links: primaryLinks,
         jsonLd: [blogJsonLd(post, siteUrl)]
       }
@@ -251,6 +293,7 @@ async function resolvePage(pathname, siteUrl) {
   }
 
   if (pageName === 'blog') {
+    if (!hasBlogs) meta.robots = 'noindex, follow';
     const [rows] = await pool.query("SELECT * FROM blogs WHERE status = 'published' ORDER BY published_at DESC LIMIT 50");
     meta.links = [...rows.map(mapBlog).map((post) => ({ label: post.title, href: blogPath(post) })), ...primaryLinks];
   }
@@ -258,16 +301,12 @@ async function resolvePage(pathname, siteUrl) {
   return { status: 200, meta };
 }
 
-function notFound() {
-  return { status: 404, meta: { ...notFoundPage, path: null, links: primaryLinks } };
-}
-
 export async function renderPage(req, res, next) {
   try {
     const siteUrl = getSiteUrl(req);
     let page;
     try {
-      page = await resolvePage(req.path, siteUrl);
+      page = await cached(`page:${siteUrl}${req.path}`, () => resolvePage(req.path, siteUrl));
     } catch (error) {
       // If the database is unavailable, still serve the app shell with the default tags.
       console.error('SEO page resolution failed', error);
@@ -276,7 +315,7 @@ export async function renderPage(req, res, next) {
 
     if (page.meta.robots?.startsWith('noindex')) res.set('X-Robots-Tag', page.meta.robots);
     const html = getTemplate()
-      .replace(SEO_BLOCK, renderHead(page.meta, siteUrl))
+      .replace(SEO_BLOCK, `${renderHead(page.meta, siteUrl)}\n    <meta name="midland:has-blog" content="${page.hasBlogs === false ? '0' : '1'}" />`)
       .replace(BODY_MARKER, renderBody(page.meta));
     res.status(page.status).type('html').set('Cache-Control', 'no-cache').send(html);
   } catch (error) {

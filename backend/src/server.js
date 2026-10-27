@@ -16,7 +16,7 @@ import { chatLeadsRouter } from './routes/chatLeads.js';
 import { authRouter } from './routes/auth.js';
 import { adminRouter } from './routes/admin.js';
 import { blogsRouter } from './routes/blogs.js';
-import { renderPage } from './seo/render.js';
+import { clearSeoCache, renderPage } from './seo/render.js';
 import { robotsTxt, sitemapXml } from './seo/sitemap.js';
 
 const app = express();
@@ -44,6 +44,7 @@ app.use(helmet({
 
 if (allowedOrigins.length) {
   app.use(cors({
+    credentials: true,
     origin(origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -69,6 +70,11 @@ const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHea
 const submissionLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 30, standardHeaders: 'draft-8', legacyHeaders: false });
 
 app.use('/api', apiLimiter);
+// Any write (new truck, blog post, status change) refreshes the cached page HTML.
+app.use('/api', (req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') res.on('finish', clearSeoCache);
+  next();
+});
 app.use('/api/auth/login', authLimiter);
 app.patch('/api/auth/credentials', authLimiter);
 app.use('/api/auth/forgot-password', authLimiter);

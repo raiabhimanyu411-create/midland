@@ -15,7 +15,7 @@
     "about": "About Us",
     "contact": "Contact Us",
     "admin": "Admin",
-    "blog": "News"
+    "blog": "Guides & News"
   },
   "routeDescriptions": {
     "home": "Quality used trucks, tractor units, rigids and trailers for sale from Midland Commercials in Swadlincote. Clear VAT and MOT details and part exchange welcome.",
@@ -270,7 +270,8 @@
         ],
         "cardLabel": "Latest Arrival",
         "cardCta": "Explore New Stock",
-        "scrollCue": "Scroll To Explore"
+        "scrollCue": "Scroll To Explore",
+        "imageAlt": "White Scania tractor unit pulling a container trailer"
       },
       "intro": {
         "eyebrow": "Welcome To Midland Commercials",
@@ -427,25 +428,126 @@
     "privacy": {
       "hero": {
         "eyebrow": "Privacy And Terms",
-        "title": "Clear Rules For UK Truck Enquiries And Reservations.",
-        "copy": "How enquiry data, vehicle information and deposits are handled before a sale completes."
+        "title": "Privacy Policy And Sales Terms.",
+        "copy": "How Midland Commercials collects, uses and protects your personal data under UK GDPR and the Data Protection Act 2018."
+      },
+      "updated": "Last updated: {{date}}",
+      "controller": {
+        "heading": "Who We Are",
+        "intro": "Midland Commercials is the data controller for personal data collected through this website. If you have any question about this policy or your data, contact us using the details below.",
+        "registeredName": "Registered name: {{value}}",
+        "companyNumber": "Company number: {{value}} (registered in England and Wales)",
+        "registeredOffice": "Registered office: {{value}}",
+        "tradingAddress": "Trading address: {{value}}",
+        "ico": "ICO registration number: {{value}}",
+        "contact": "Email: {{email}} · Phone: {{phone}}"
       },
       "sections": [
         {
-          "heading": "Customer Data",
-          "copy": "Enquiry details are stored securely and are only available to authorised Midland Commercials staff responding to vehicle, viewing and part exchange requests. Contact our sales team to request access, correction or deletion."
+          "heading": "What We Collect",
+          "paragraphs": [
+            "We only collect what we need to answer your enquiry and sell you a vehicle:"
+          ],
+          "items": [
+            "Contact details: your name, phone number and email address.",
+            "Enquiry details: the vehicle you are interested in, your requirements and any notes you send.",
+            "Part exchange details: your vehicle registration, mileage, condition notes and photos you share with us.",
+            "Stock alert preferences: the type of vehicle you want us to tell you about.",
+            "Chat messages you send through the website assistant.",
+            "Technical data: your IP address and browser details in server logs, kept for security.",
+            "Analytics and advertising data, only if you accept those cookies."
+          ]
         },
         {
-          "heading": "Vehicle Information",
-          "copy": "Listings are prepared in good faith from available stock information. Buyers should confirm final specification, VAT status, MOT, condition, mileage, Clean Air Zone suitability and availability before purchase."
+          "heading": "How We Use It And Our Legal Basis",
+          "paragraphs": [
+            "UK GDPR requires a legal basis for each use of your data. Ours are:"
+          ],
+          "items": [
+            "Answering enquiries, arranging viewings and valuing part exchanges: to take steps at your request before entering a contract, and our legitimate interest in running the business.",
+            "Completing a sale and keeping sales records: performance of a contract and our legal obligations (for example HMRC and VAT records).",
+            "Stock alerts and marketing messages: your consent, which you can withdraw at any time.",
+            "Website security and fraud prevention: our legitimate interest in keeping the site and your data safe.",
+            "Analytics and advertising cookies: your consent, given through the cookie banner."
+          ]
         },
         {
-          "heading": "Reservation And Payment Terms",
-          "copy": "This website does not take online payments. Deposits, reservations, part exchange values, the full price, taxes and cancellation terms are confirmed directly with the sales team before a sale is completed."
+          "heading": "Who We Share It With",
+          "paragraphs": [
+            "We never sell your data. We only share it with service providers who help us run the website, under contracts that require them to protect it:"
+          ],
+          "items": [
+            "Our website hosting and database provider, which stores enquiry data on secure servers.",
+            "Google (Google Analytics and Google Ads), only if you accept analytics or marketing cookies.",
+            "Meta Platforms (Meta Pixel), only if you accept marketing cookies.",
+            "Unsplash, which serves some website images and receives your IP address when they load.",
+            "DVLA and DVSA, when we check a vehicle registration you send us for a part exchange.",
+            "Professional advisers, finance and law enforcement bodies, only where the law requires it."
+          ]
+        },
+        {
+          "heading": "International Transfers",
+          "paragraphs": [
+            "Some providers, such as Google and Meta, may process data outside the UK. Where they do, the transfer is protected by the UK International Data Transfer Agreement, the UK Extension to the EU-US Data Privacy Framework or another safeguard approved under UK law."
+          ]
+        },
+        {
+          "heading": "How Long We Keep It",
+          "items": [
+            "Enquiries, chat messages and part exchange details: up to 24 months from your last contact with us, then deleted.",
+            "Sales records and invoices: 6 years after the end of the financial year, as required by HMRC.",
+            "Stock alert and marketing preferences: until you unsubscribe or ask us to stop.",
+            "Server security logs: up to 90 days.",
+            "Cookie choices: stored in your browser for up to 12 months."
+          ]
+        },
+        {
+          "heading": "Your Rights",
+          "paragraphs": [
+            "Under UK GDPR you have the right to:"
+          ],
+          "items": [
+            "Access the personal data we hold about you.",
+            "Ask us to correct data that is wrong or incomplete.",
+            "Ask us to delete your data.",
+            "Ask us to restrict or stop using your data, or object to how we use it.",
+            "Receive your data in a portable format.",
+            "Withdraw your consent at any time, without affecting earlier use."
+          ],
+          "after": [
+            "To use any of these rights, email {{email}}. We will reply within one month and there is no charge.",
+            "If you are unhappy with how we handle your data, you can complain to the Information Commissioner's Office (ICO) at ico.org.uk or on 0303 123 1113. We would appreciate the chance to put things right first."
+          ]
         },
         {
           "heading": "Cookies",
-          "copy": "Your cookie choices are stored in your browser. Analytics and marketing cookies (Google Analytics, Google Ads and the Meta Pixel) are only used if you accept them, and you can change your choice at any time using the Cookie Settings link at the bottom of every page."
+          "paragraphs": [
+            "Essential cookies and browser storage keep the website working and remember your cookie choice. Analytics and marketing cookies (Google Analytics, Google Ads and the Meta Pixel) are only set if you accept them. You can change your choice at any time using the Cookie Settings link at the bottom of every page."
+          ]
+        },
+        {
+          "heading": "Keeping Your Data Secure",
+          "paragraphs": [
+            "Data is sent over an encrypted HTTPS connection and stored on access-controlled servers. Only authorised Midland Commercials staff can see enquiries, and every admin action is logged."
+          ]
+        },
+        {
+          "heading": "Vehicle Information",
+          "paragraphs": [
+            "Listings are prepared in good faith from available stock information. Buyers should confirm final specification, VAT status, MOT, condition, mileage, Clean Air Zone suitability and availability before purchase."
+          ]
+        },
+        {
+          "heading": "Reservation And Payment Terms",
+          "paragraphs": [
+            "This website does not take online payments. Deposits, reservations, part exchange values, the full price, taxes and cancellation terms are confirmed directly with the sales team before a sale is completed."
+          ]
+        },
+        {
+          "heading": "Changes To This Policy",
+          "paragraphs": [
+            "We may update this policy from time to time. The date at the top of this page shows when it was last changed."
+          ]
         }
       ]
     },
@@ -564,16 +666,40 @@
         "heading": "No Trucks Match Those Filters.",
         "copy": "Clear the filters or send the team your requirement for incoming stock.",
         "cta": "Send Requirement"
+      },
+      "noStock": {
+        "heading": "New Stock Arriving Soon",
+        "copy": "Our next trucks are being prepared at the yard. Set up a free stock alert or tell us what you need, and we'll contact you as soon as a match is ready to view.",
+        "cta": "Get A Stock Alert",
+        "secondaryCta": "Send Your Requirement"
       }
     },
     "blog": {
-      "eyebrow": "Midland Commercials News",
-      "title": "Truck Buying Guides & News",
-      "copy": "Practical advice on buying and running used trucks.",
+      "eyebrow": "Guides For UK Operators",
+      "title": "Used Truck Buying Guides",
+      "copy": "Straight-talking advice on choosing, checking and running a used truck in the UK, from Euro 6 and clean air zones to part exchange.",
       "loading": "Loading Articles…",
       "empty": "New Articles Are Coming Soon.",
       "unavailable": "Article Unavailable",
-      "backHome": "Back To Home"
+      "backHome": "Back To Home",
+      "statGuides_one": "{{count}} guide",
+      "statGuides_other": "{{count}} guides",
+      "statUk": "Written for UK operators",
+      "statFree": "Free to read",
+      "filterLabel": "Filter guides by topic",
+      "allTopics": "All Topics",
+      "featured": "Latest Guide",
+      "guide": "Buying Guide",
+      "moreGuides": "More Buying Guides",
+      "readTime_one": "{{count}} min read",
+      "readTime_other": "{{count}} min read",
+      "readMore": "Read The Guide",
+      "ctaHeading": "Ready To Find Your Next Truck?",
+      "ctaCopy": "Browse checked used trucks at our Swadlincote yard, open 7 days a week, or get an alert when the right one arrives.",
+      "ctaPrimary": "Browse Used Trucks",
+      "ctaSecondary": "Get A Stock Alert",
+      "backToGuides": "All Guides",
+      "byline": "By {{name}}"
     }
   },
   "content": {

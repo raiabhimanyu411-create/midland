@@ -33,7 +33,7 @@ export async function sitemapXml(req, res, next) {
     ]);
 
     const entries = [
-      ...Object.values(staticPages).map((page) => ({
+      ...Object.entries(staticPages).filter(([name]) => name !== 'blog' || blogRows.length > 0).map(([, page]) => page).map((page) => ({
         loc: absoluteUrl(siteUrl, page.path),
         changefreq: page.changefreq,
         priority: page.priority

@@ -1,17 +1,13 @@
-import { readStorage, removeStorage, writeStorage } from './storage.js';
+import { removeStorage } from './storage.js';
 
-const TOKEN_KEY = 'midland_admin_token';
 export const SESSION_EXPIRED_EVENT = 'midland:session-expired';
 
-export const adminToken = {
-  get: () => readStorage(TOKEN_KEY),
-  set: (token) => writeStorage(TOKEN_KEY, token),
-  clear: () => removeStorage(TOKEN_KEY)
-};
+// The admin session is an httpOnly cookie set by the server, so scripts never see the token.
+// Remove the token older versions kept in localStorage.
+removeStorage('midland_admin_token');
 
-function handleUnauthorized(response, token) {
-  if (response.status === 401 && token) {
-    adminToken.clear();
+function handleUnauthorized(response, path) {
+  if (response.status === 401 && path !== '/auth/login') {
     window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
   }
 }
@@ -37,12 +33,11 @@ export function apiAssetUrl(assetPath) {
 }
 
 export async function apiRequest(path, options = {}) {
-  const token = adminToken.get();
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {})
     }
   });
@@ -50,7 +45,7 @@ export async function apiRequest(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    handleUnauthorized(response, token);
+    handleUnauthorized(response, path);
     throw new Error(data.message || statusMessage(response.status, 'The request could not be completed. Please try again.'));
   }
 
@@ -73,11 +68,10 @@ export const api = {
   lookupVehicleByRegistration: (registration) => apiRequest('/trucks/admin/lookup-registration', { method: 'POST', body: JSON.stringify({ registration }) }),
   importTrucksCsv: (csv) => apiRequest('/trucks/admin/import.csv', { method: 'POST', headers: { 'Content-Type': 'text/csv' }, body: csv }),
   exportTrucksCsv: async () => {
-    const token = adminToken.get();
-    const response = await fetch(`${API_BASE_URL}/trucks/admin/export.csv`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+    const response = await fetch(`${API_BASE_URL}/trucks/admin/export.csv`, { credentials: 'include' });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
-      handleUnauthorized(response, token);
+      handleUnauthorized(response, '/trucks/admin/export.csv');
       throw new Error(data.message || 'CSV export failed');
     }
     return response.blob();
@@ -113,11 +107,10 @@ export const api = {
   ,updateBlog: (id, payload) => apiRequest(`/blogs/${id}`, { method: 'PUT', body: JSON.stringify(payload) })
   ,deleteBlog: (id) => apiRequest(`/blogs/${id}`, { method: 'DELETE' })
   ,uploadTruckImage: async (file) => {
-    const token = adminToken.get();
     const form = new FormData(); form.append('image', file);
-    const response = await fetch(`${API_BASE_URL}/admin/upload`, { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body: form });
+    const response = await fetch(`${API_BASE_URL}/admin/upload`, { method: 'POST', credentials: 'include', body: form });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) { handleUnauthorized(response, token); throw new Error(data.message || statusMessage(response.status, 'Upload failed. Please try again.')); }
+    if (!response.ok) { handleUnauthorized(response, '/admin/upload'); throw new Error(data.message || statusMessage(response.status, 'Upload failed. Please try again.')); }
     return data;
   }
 };

@@ -93,10 +93,10 @@ function Hero({ latest }) {
         <span />
         <span />
       </div>
-      <div className={styles.heroMedia} aria-hidden="true">
+      <div className={styles.heroMedia}>
         <img
           {...responsiveImage('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85')}
-          alt=""
+          alt={t('pages.home.hero.imageAlt')}
           fetchPriority="high"
           decoding="async"
         />

@@ -20,10 +20,31 @@
   font-weight: 900;
 }
 
-.policyPage p {
-  margin-bottom: 0;
+.policyPage p,
+.policyPage li {
   color: #667085;
   line-height: 1.7;
+}
+
+.policyPage p {
+  margin: 0 0 10px;
+}
+
+.policyPage p:last-child,
+.policyPage ul:last-child {
+  margin-bottom: 0;
+}
+
+.policyPage ul {
+  margin: 0 0 10px;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 6px;
+}
+
+.policyPage .updated {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 560px) {

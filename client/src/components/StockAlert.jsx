@@ -73,7 +73,7 @@ export function StockAlert() {
             ))}
           </div>
         </div>
-        <form className={styles.formCard} onSubmit={handleSubmit}>
+        <form method="post" className={styles.formCard} onSubmit={handleSubmit}>
           <div className={styles.formHeading}>
             <span>{t('stockAlert.formEyebrow')}</span>
             <strong>{t('stockAlert.formHeading')}</strong>

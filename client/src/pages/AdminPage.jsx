@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { adminToken, api, apiAssetUrl, SESSION_EXPIRED_EVENT } from '../utils/api.js';
+import { api, apiAssetUrl, SESSION_EXPIRED_EVENT } from '../utils/api.js';
 import styles from './AdminPage.module.css';
 import { BrandMark } from '../components/BrandLogo.jsx';
 import { truckDisplayTitle, truckDisplayPrice } from '../../../shared/truck.js';
@@ -231,7 +231,7 @@ export function AdminPage() {
     return () => clearTimeout(timer);
   }, [message]);
 
-  useEffect(() => { api.me().then((r) => setUser(r.user)).catch(() => adminToken.clear()).finally(() => setAuthLoading(false)); }, []);
+  useEffect(() => { api.me().then((r) => setUser(r.user)).catch(() => setUser(null)).finally(() => setAuthLoading(false)); }, []);
   useEffect(() => {
     const handleExpired = () => {
       setUser(null);
@@ -413,7 +413,7 @@ export function AdminPage() {
     }
   }
 
-  async function logout() { try { await api.logout(); } catch { /* Session may already be gone. */ } finally { adminToken.clear(); setUser(null); } }
+  async function logout() { try { await api.logout(); } catch { /* Session may already be gone. */ } finally { setUser(null); } }
 
   if (authLoading) return <section className={styles.loginShell}><p>Checking secure session…</p></section>;
   if (!user) return <AdminLogin onLogin={setUser} />;
@@ -1265,6 +1265,7 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
           <label>
             Content
             <textarea className={styles.contentArea} value={form.content} onChange={(event) => onFieldChange('content', event.target.value)} required />
+            <small>Leave a blank line between paragraphs. Start a line with ## for a heading, ### for a sub-heading, - for a bullet point. Add a link like [used trucks](/trucks).</small>
           </label>
           <AdminInput label="Cover image URL" value={form.coverImage} onChange={(value) => onFieldChange('coverImage', value)} />
           <label>Upload cover image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={onUploadCover} /></label>
@@ -1996,7 +1997,6 @@ function AdminLogin({ onLogin }) {
         return;
       }
       const result = await api.login(form);
-      adminToken.set(result.token);
       onLogin(result.user);
     } catch (error) {
       setFeedback({ type: 'error', text: error.message });

@@ -10,6 +10,12 @@ function openCookieSettings(event) {
   window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS));
 }
 
+// The server marks the page when no blog posts are published yet, so the footer hides the link.
+function blogHasPosts() {
+  if (typeof document === 'undefined') return true;
+  return document.querySelector('meta[name="midland:has-blog"]')?.getAttribute('content') !== '0';
+}
+
 export function Footer() {
   const { t } = useTranslation();
   const headquarters = locations[0];
@@ -27,7 +33,7 @@ export function Footer() {
       links: [
         { label: t('footer.links.aboutUs'), href: '/about' },
         { label: t('footer.links.faq'), href: '/faq' },
-        { label: t('footer.links.news'), href: '/blog' },
+        ...(blogHasPosts() ? [{ label: t('footer.links.news'), href: '/blog' }] : []),
         { label: t('footer.links.contactUs'), href: '/contact' },
         { label: t('footer.links.privacyPolicy'), href: '/privacy' },
         { label: t('footer.links.cookieSettings'), href: '#cookie-settings', onClick: openCookieSettings }

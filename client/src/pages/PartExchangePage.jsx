@@ -26,6 +26,7 @@ export function PartExchangePage() {
           <p>{t('pages.partExchange.details.copy')}</p>
         </div>
         <form
+          method="post"
           className={styles.contactForm}
           onSubmit={async (event) => {
             event.preventDefault();

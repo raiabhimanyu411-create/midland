@@ -1,6 +1,7 @@
 // SEO metadata shared by the server (initial HTML, sitemap) and the client (route changes),
 // so crawlers and browsers always see the same title, description, canonical URL and JSON-LD.
 import { truckDisplayPrice, truckDisplayTitle } from './truck.js';
+import { plainBlogText } from './blogContent.js';
 
 export const SITE_NAME = 'Midland Commercials';
 export const SITE_EMAIL = 'sales@midlandcommercials.com';
@@ -13,6 +14,15 @@ export const businessAddress = {
   addressLocality: 'Swadlincote',
   postalCode: 'DE12 7BJ',
   addressCountry: 'GB'
+};
+// Legal details shown on the privacy policy. Fill these in once the client confirms them;
+// empty values are simply left off the page.
+export const legalDetails = {
+  registeredName: '', // e.g. 'Midland Commercials Ltd'
+  companyNumber: '', // Companies House number
+  registeredOffice: '', // only if different from the trading address
+  icoNumber: '', // ICO data protection fee registration number, e.g. 'ZA123456'
+  privacyUpdated: '28 October 2026'
 };
 export const openingHours = { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '08:00', closes: '18:00' };
 
@@ -197,7 +207,7 @@ export function blogPath(post) {
 export function blogSeo(post) {
   return {
     title: truncate(`${post.metaTitle || post.title} | ${SITE_NAME}`, 70),
-    description: truncate(post.metaDescription || post.excerpt || post.content, 160),
+    description: truncate(post.metaDescription || post.excerpt || plainBlogText(post.content), 160),
     path: blogPath(post),
     image: post.coverImage || DEFAULT_IMAGE,
     type: 'article'
@@ -209,7 +219,7 @@ export function blogJsonLd(post, siteUrl) {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: truncate(post.title, 110),
-    description: truncate(post.metaDescription || post.excerpt || post.content, 300),
+    description: truncate(post.metaDescription || post.excerpt || plainBlogText(post.content), 300),
     image: [absoluteUrl(siteUrl, post.coverImage || DEFAULT_IMAGE)],
     datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
     dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,

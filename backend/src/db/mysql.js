@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import { trucks as seedTrucks } from '../data/trucks.js';
+import { starterBlogPosts } from '../data/blogPosts.js';
 import bcrypt from 'bcryptjs';
 
 export const dbConfig = {
@@ -204,9 +205,23 @@ export async function initializeDatabase() {
   )`);
 
   await ensureDefaultAdmin();
+  await seedStarterBlogs();
 
   if (process.env.NODE_ENV !== 'production' || process.env.SEED_DEMO_DATA === 'true') {
     await seedTruckData();
+  }
+}
+
+// Adds the starter buying guides once, on a site with no blog posts yet (production too).
+async function seedStarterBlogs() {
+  const [rows] = await pool.query('SELECT COUNT(*) AS total FROM blogs');
+  if (rows[0].total > 0) return;
+  for (const post of starterBlogPosts) {
+    await pool.query(
+      `INSERT IGNORE INTO blogs (title, slug, excerpt, content, tags, meta_title, meta_description, status, author_name, published_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'published', 'Midland Commercials', DATE_SUB(NOW(), INTERVAL ? DAY))`,
+      [post.title, post.slug, post.excerpt, post.content, post.tags, post.metaTitle, post.metaDescription, post.daysAgo]
+    );
   }
 }
 

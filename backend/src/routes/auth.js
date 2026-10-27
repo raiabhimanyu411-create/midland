@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import { pool } from '../db/mysql.js';
-import { audit, requireAuth, signAdminToken } from '../middleware/auth.js';
+import { audit, clearAdminCookie, readAdminSession, requireAuth, setAdminCookie, signAdminToken } from '../middleware/auth.js';
 
 export const authRouter = Router();
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -17,12 +17,23 @@ authRouter.post('/login', async (req, res, next) => {
     const sid = crypto.randomUUID();
     await pool.query('INSERT INTO admin_sessions(id,user_id,expires_at) VALUES(?,?,DATE_ADD(NOW(), INTERVAL 8 HOUR))', [sid, user.id]);
     req.admin = user; await audit(req, 'login', 'session', sid);
-    res.json({ token: signAdminToken(user, sid), user: publicUser(user), expiresIn: 28800 });
+    setAdminCookie(res, signAdminToken(user, sid));
+    res.json({ user: publicUser(user), expiresIn: 28800 });
   } catch (e) { next(e); }
 });
 
-authRouter.post('/logout', requireAuth, async (req, res, next) => {
-  try { await pool.query('UPDATE admin_sessions SET revoked_at=NOW() WHERE id=?', [req.admin.session_id]); await audit(req,'logout','session',req.admin.session_id); res.json({ message:'Logged out' }); } catch(e){next(e);}
+authRouter.post('/logout', async (req, res, next) => {
+  try {
+    // Always clear the cookie, even when the session has already expired.
+    const admin = await readAdminSession(req);
+    if (admin) {
+      req.admin = admin;
+      await pool.query('UPDATE admin_sessions SET revoked_at=NOW() WHERE id=?', [admin.session_id]);
+      await audit(req, 'logout', 'session', admin.session_id);
+    }
+    clearAdminCookie(res);
+    res.json({ message: 'Logged out' });
+  } catch (e) { next(e); }
 });
 authRouter.get('/me', requireAuth, (req,res)=>res.json({ user: publicUser(req.admin) }));
 

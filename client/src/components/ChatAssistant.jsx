@@ -251,7 +251,7 @@ export function ChatAssistant() {
             ))}
 
             {enquiry.active && (
-              <form className={styles.enquiryForm} onSubmit={submitEnquiry}>
+              <form method="post" className={styles.enquiryForm} onSubmit={submitEnquiry}>
                 <label>
                   {t('chat.form.nameLabel')}
                   <input

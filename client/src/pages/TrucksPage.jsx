@@ -233,7 +233,15 @@ export function TrucksPage() {
                 <TruckStructuredData trucks={filteredTrucks} />
               </>
             )}
-            {!loading && filteredTrucks.length === 0 && (
+            {!loading && filteredTrucks.length === 0 && activeChips.length === 0 && (
+              <div className={styles.emptyState}>
+                <h3>{t('pages.trucks.noStock.heading')}</h3>
+                <p>{t('pages.trucks.noStock.copy')}</p>
+                <a className="button primary" href="/#stock-alert">{t('pages.trucks.noStock.cta')}</a>{' '}
+                <a className="button outline" href="/contact">{t('pages.trucks.noStock.secondaryCta')}</a>
+              </div>
+            )}
+            {!loading && filteredTrucks.length === 0 && activeChips.length > 0 && (
               <div className={styles.emptyState}>
                 <h3>{t('pages.trucks.emptyState.heading')}</h3>
                 <p>{t('pages.trucks.emptyState.copy')}</p>

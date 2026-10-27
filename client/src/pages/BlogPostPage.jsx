@@ -1,13 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
-import { PageHero } from '../components/PageHero.jsx';
+import { BlogHero } from '../components/BlogHero.jsx';
 import { api } from '../utils/api.js';
 import { blogJsonLd, blogSeo, notFoundPage } from '../../../shared/seo.js';
 import { setPageMeta, siteUrl } from '../utils/seo.js';
+import { parseBlogContent, parseInline, readingMinutes } from '../../../shared/blogContent.js';
 import styles from './BlogPostPage.module.css';
 
-const fallbackImage = 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85';
+function Inline({ text }) {
+  return parseInline(text).map((part, index) => (part.href ? <a key={index} href={part.href}>{part.text}</a> : part.text));
+}
+
+function BlogBlock({ block }) {
+  if (block.type === 'h2') return <h2>{block.text}</h2>;
+  if (block.type === 'h3') return <h3>{block.text}</h3>;
+  if (block.type === 'ul' || block.type === 'ol') {
+    const List = block.type;
+    return <List>{block.items.map((item, index) => <li key={index}><Inline text={item} /></li>)}</List>;
+  }
+  return <p><Inline text={block.text} /></p>;
+}
+
 
 export function BlogPostPage({ slug }) {
   const { t } = useTranslation();
@@ -40,18 +54,32 @@ export function BlogPostPage({ slug }) {
   return (
     <>
       <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.blog'), href: '/blog' }, { label: post.title }]} />
-      <PageHero eyebrow={t('pages.blog.eyebrow')} title={post.title} copy={post.excerpt} image={post.coverImage || fallbackImage} />
+      <BlogHero
+        eyebrow={post.tags?.[0] || t('pages.blog.guide')}
+        title={post.title}
+        copy={post.excerpt}
+        image={post.coverImage}
+        meta={[
+          post.publishedAt && new Date(post.publishedAt).toLocaleDateString('en-GB', { dateStyle: 'long' }),
+          t('pages.blog.readTime', { count: readingMinutes(post.content) }),
+          post.authorName && t('pages.blog.byline', { name: post.authorName })
+        ]}
+      />
       <article className={styles.article}>
-        <div className={styles.meta}>
-          {post.authorName && <span>By {post.authorName}</span>}
-          {post.publishedAt && <time dateTime={post.publishedAt}>{new Date(post.publishedAt).toLocaleDateString('en-GB', { dateStyle: 'long' })}</time>}
-        </div>
         <div className={styles.content}>
-          {post.content.split(/\n\s*\n/).filter((paragraph) => paragraph.trim()).map((paragraph, index) => (
-            <p key={index}>{paragraph.trim()}</p>
-          ))}
+          {parseBlogContent(post.content).map((block, index) => <BlogBlock key={index} block={block} />)}
         </div>
         {post.tags?.length > 0 && <div className={styles.tags}>{post.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+        <aside className={styles.endCta}>
+          <div>
+            <strong>{t('pages.blog.ctaHeading')}</strong>
+            <p>{t('pages.blog.ctaCopy')}</p>
+          </div>
+          <div className={styles.endActions}>
+            <a className="button primary" href="/trucks">{t('pages.blog.ctaPrimary')}</a>
+            <a className="button outline" href="/blog">{t('pages.blog.backToGuides')}</a>
+          </div>
+        </aside>
       </article>
     </>
   );

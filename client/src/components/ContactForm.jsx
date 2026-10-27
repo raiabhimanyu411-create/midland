@@ -19,6 +19,7 @@ export function ContactForm({ embedded = false }) {
 
   return (
     <form
+      method="post"
       className={`${styles.contactForm} ${embedded ? styles.embedded : ''}`}
       onSubmit={async (event) => {
         event.preventDefault();
