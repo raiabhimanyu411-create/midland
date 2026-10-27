@@ -54,6 +54,8 @@ function staticPageBody(pageName) {
   switch (pageName) {
     case 'home':
       return { heading: pages.home?.hero?.title, bodyHtml: paragraphs(pages.home?.hero?.copy, pages.home?.intro?.heading, pages.home?.intro?.copy) };
+    case 'blog':
+      return { heading: pages.blog?.title, bodyHtml: paragraphs(pages.blog?.copy) };
     case 'trucks':
       return { heading: pages.trucks?.hero?.title, bodyHtml: paragraphs(pages.trucks?.hero?.copy) };
     case 'about':
