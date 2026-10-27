@@ -3,7 +3,9 @@
     "confirm": "Confirm",
     "phone": "0121 663 1118",
     "loading": "Loading Vehicle…",
-    "notFound": "Vehicle Unavailable"
+    "notFound": "Vehicle Unavailable",
+    "loadError": "This Page Could Not Load",
+    "tryAgain": "Try Again"
   },
   "nav": {
     "home": "Home",
@@ -699,7 +701,8 @@
       "ctaPrimary": "Browse Used Trucks",
       "ctaSecondary": "Get A Stock Alert",
       "backToGuides": "All Guides",
-      "byline": "By {{name}}"
+      "byline": "By {{name}}",
+      "loadError": "This Guide Could Not Load"
     }
   },
   "content": {

@@ -28,9 +28,13 @@ export function BlogPostPage({ slug }) {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [notFound, setNotFound] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
+    setError('');
 
     api.getBlogBySlug(slug)
       .then((response) => {
@@ -41,15 +45,29 @@ export function BlogPostPage({ slug }) {
       .catch((requestError) => {
         if (!active) return;
         setError(requestError.message);
-        setPageMeta({ ...notFoundPage, path: null });
+        // Only a real 404 means the post is gone. For network or server errors keep the
+        // server-rendered title and robots tags, so a slow API never de-indexes the article.
+        if (requestError.status === 404) {
+          setNotFound(true);
+          setPageMeta({ ...notFoundPage, path: null });
+        }
       })
       .finally(() => active && setLoading(false));
 
     return () => { active = false; };
-  }, [slug]);
+  }, [slug, attempt]);
 
-  if (loading) return <section className="section"><p>{t('pages.blog.loading')}</p></section>;
-  if (!post) return <section className="section"><h1>{t('pages.blog.unavailable')}</h1><p>{error}</p><a className="button primary" href="/">{t('pages.blog.backHome')}</a></section>;
+  if (loading && !post) return <section className="section"><p>{t('pages.blog.loading')}</p></section>;
+  if (!post && notFound) return <section className="section"><h1>{t('pages.blog.unavailable')}</h1><p>{error}</p><a className="button primary" href="/blog">{t('pages.blog.backToGuides')}</a></section>;
+  if (!post) {
+    return (
+      <section className="section">
+        <h1>{t('pages.blog.loadError')}</h1>
+        <p>{error}</p>
+        <button type="button" className="button primary" onClick={() => setAttempt((count) => count + 1)}>{t('common.tryAgain')}</button>
+      </section>
+    );
+  }
 
   return (
     <>

@@ -46,7 +46,9 @@ export async function apiRequest(path, options = {}) {
 
   if (!response.ok) {
     handleUnauthorized(response, path);
-    throw new Error(data.message || statusMessage(response.status, 'The request could not be completed. Please try again.'));
+    const error = new Error(data.message || statusMessage(response.status, 'The request could not be completed. Please try again.'));
+    error.status = response.status;
+    throw error;
   }
 
   return data;

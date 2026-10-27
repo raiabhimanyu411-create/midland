@@ -61,7 +61,19 @@ export async function sitemapXml(req, res, next) {
 }
 
 export function robotsTxt(req, res) {
-  res.type('text/plain').set('Cache-Control', 'public, max-age=86400').send(
-    ['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /thank-you', '', `Sitemap: ${absoluteUrl(CANONICAL_SITE_URL, '/sitemap.xml')}`, ''].join('\n')
+  res.type('text/plain').set('Cache-Control', 'public, max-age=3600').send(
+    [
+      'User-agent: *',
+      'Allow: /',
+      // Google renders pages with JavaScript, so it must be able to read the public data they load.
+      'Allow: /api/blogs',
+      'Allow: /api/trucks',
+      'Disallow: /api/blogs/admin',
+      'Disallow: /api/trucks/admin',
+      'Disallow: /admin',
+      'Disallow: /api/',
+      'Disallow: /thank-you',
+      '',
+      `Sitemap: ${absoluteUrl(CANONICAL_SITE_URL, '/sitemap.xml')}`, ''].join('\n')
   );
 }

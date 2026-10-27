@@ -20,6 +20,7 @@ export function TruckDetailPage({ truckId }) {
   const [truck, setTruck] = useState(() => findFallbackTruck(truckId));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [requestStatus, setRequestStatus] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export function TruckDetailPage({ truckId }) {
       } catch (requestError) {
         if (!active) return;
         setError(requestError.message);
+        setRequestStatus(requestError.status || 0);
         setTruck(findFallbackTruck(truckId));
       } finally {
         if (active) setLoading(false);
@@ -52,13 +54,24 @@ export function TruckDetailPage({ truckId }) {
   useEffect(() => {
     if (loading && !truck) return;
     if (!truck) {
-      setPageMeta({ ...notFoundPage, path: null });
+      // Only a real 404 marks the page as not found. Network or server errors keep the
+      // server-rendered tags, so a slow API never de-indexes a listing.
+      if (requestStatus === 404 || !truckId) setPageMeta({ ...notFoundPage, path: null });
       return;
     }
     setPageMeta({ ...truckSeo(truck), jsonLd: [truckJsonLd(truck, siteUrl())] });
-  }, [truck, loading]);
+  }, [truck, loading, requestStatus, truckId]);
 
   if (loading && !truck) return <section className="section"><p>{t('common.loading')}</p></section>;
+  if (!truck && truckId && requestStatus !== 404) {
+    return (
+      <section className="section">
+        <h1>{t('common.loadError')}</h1>
+        <p>{error}</p>
+        <button type="button" className="button primary" onClick={() => window.location.reload()}>{t('common.tryAgain')}</button>
+      </section>
+    );
+  }
   if (!truck) return <section className="section"><h1>{t('common.notFound')}</h1><p>{error}</p><a className="button primary" href="/trucks">{t('nav.trucks')}</a></section>;
 
   const gallery = [...new Set([truck.image, ...(Array.isArray(truck.images) ? truck.images : [])]
