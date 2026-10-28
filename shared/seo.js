@@ -4,6 +4,8 @@ import { truckDisplayPrice, truckDisplayTitle } from './truck.js';
 import { plainBlogText } from './blogContent.js';
 
 export const SITE_NAME = 'Midland Commercials';
+// Other names people search for the business by (e.g. "midland trucks"), used in JSON-LD.
+export const SITE_ALT_NAMES = ['Midland Trucks', 'Midland Commercial Vehicles'];
 export const SITE_EMAIL = 'sales@midlandcommercials.com';
 export const businessLocations = [
   { address: 'Little Wigston, Swadlincote, DE12 7BJ', phone: '0121 663 1118' }
@@ -32,8 +34,8 @@ export const DEFAULT_IMAGE = '/og-image.jpg';
 export const staticPages = {
   home: {
     path: '/',
-    title: 'Midland Commercials | Used Trucks, Tractor Units & Trailers For Sale UK',
-    description: 'Quality used trucks, tractor units, rigids and trailers for sale from Midland Commercials in Swadlincote. Clear VAT and MOT details and part exchange welcome.',
+    title: 'Midland Trucks | Used Trucks For Sale UK | Midland Commercials',
+    description: 'Midland Trucks for sale at Midland Commercials, Swadlincote. Used tractor units, rigids and trailers with clear VAT and MOT details. Part exchange welcome.',
     changefreq: 'daily',
     priority: '1.0'
   },
@@ -247,6 +249,7 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
     '@context': 'https://schema.org',
     '@type': 'AutoDealer',
     name: SITE_NAME,
+    alternateName: SITE_ALT_NAMES,
     url: absoluteUrl(siteUrl, '/'),
     logo: absoluteUrl(siteUrl, '/logo.svg'),
     image: absoluteUrl(siteUrl, DEFAULT_IMAGE),
@@ -264,6 +267,16 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
     ...(locations.length > 1 ? {
       department: locations.slice(1).map((location) => ({ '@type': 'AutoDealer', name: SITE_NAME, telephone: location.phone, address: location.address }))
     } : {})
+  };
+}
+
+export function websiteJsonLd(siteUrl) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    alternateName: SITE_ALT_NAMES,
+    url: absoluteUrl(siteUrl, '/')
   };
 }
 
