@@ -8,7 +8,7 @@ import { CinematicEffects } from './components/CinematicEffects.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Header } from './components/Header.jsx';
 import { HomePage } from './pages/HomePage.jsx';
-import { adminPage, notFoundPage, thankYouPage, organizationJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
+import { adminPage, notFoundPage, thankYouPage, organizationJsonLd, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
 import { getRoute, getRouteDescription, getRouteTitle, onNavigate } from './utils/routes.js';
 import { setPageMeta, siteUrl } from './utils/seo.js';
 import { trackPageView } from './utils/analytics.js';
@@ -46,7 +46,7 @@ function routeMeta(t, language, routeName) {
     description: (isEnglish ? page.description : getRouteDescription(t, routeName)) || page.description,
     path: page.path,
     jsonLd: routeName === 'home'
-      ? [organizationJsonLd(siteUrl()), { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: `${siteUrl()}/` }]
+      ? [organizationJsonLd(siteUrl()), websiteJsonLd(siteUrl())]
       : []
   };
 }
