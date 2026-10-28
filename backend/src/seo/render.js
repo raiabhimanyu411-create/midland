@@ -15,6 +15,7 @@ import {
   notFoundPage,
   thankYouPage,
   organizationJsonLd,
+  websiteJsonLd,
   pageForPath,
   serializeJsonLd,
   SITE_NAME,
@@ -279,12 +280,7 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
   if (body.bodyHtml) meta.bodyHtml = body.bodyHtml;
 
   if (pageName === 'home') {
-    meta.jsonLd.push(organizationJsonLd(siteUrl), {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: SITE_NAME,
-      url: absoluteUrl(siteUrl, '/')
-    });
+    meta.jsonLd.push(organizationJsonLd(siteUrl), websiteJsonLd(siteUrl));
   }
 
   if (pageName === 'trucks' || pageName === 'home') {
