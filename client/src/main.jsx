@@ -8,7 +8,8 @@ import { CinematicEffects } from './components/CinematicEffects.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Header } from './components/Header.jsx';
 import { HomePage } from './pages/HomePage.jsx';
-import { adminPage, notFoundPage, thankYouPage, organizationJsonLd, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
+import { adminPage, faqJsonLd, locationJsonLd, locationSeo, notFoundPage, thankYouPage, organizationJsonLd, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
+import { locationPages } from '../../shared/locations.js';
 import { getRoute, getRouteDescription, getRouteTitle, onNavigate } from './utils/routes.js';
 import { setPageMeta, siteUrl } from './utils/seo.js';
 import { trackPageView } from './utils/analytics.js';
@@ -26,6 +27,7 @@ const FaqPage = lazyPage(() => import('./pages/FaqPage.jsx'), 'FaqPage');
 const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage.jsx'), 'NotFoundPage');
 const ThankYouPage = lazyPage(() => import('./pages/ThankYouPage.jsx'), 'ThankYouPage');
 const PartExchangePage = lazyPage(() => import('./pages/PartExchangePage.jsx'), 'PartExchangePage');
+const LocationPage = lazyPage(() => import('./pages/LocationPage.jsx'), 'LocationPage');
 const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage.jsx'), 'PrivacyPage');
 const TruckDetailPage = lazyPage(() => import('./pages/TruckDetailPage.jsx'), 'TruckDetailPage');
 const TrucksPage = lazyPage(() => import('./pages/TrucksPage.jsx'), 'TrucksPage');
@@ -34,7 +36,12 @@ const ChatAssistant = lazyPage(() => import('./components/ChatAssistant.jsx'), '
 // Truck and blog pages set their own metadata once their data has loaded.
 const pagesWithOwnMeta = new Set(['truckDetail', 'blogPost']);
 
-function routeMeta(t, language, routeName) {
+function routeMeta(t, language, routeName, route) {
+  if (routeName === 'location') {
+    const location = locationPages.find((item) => item.slug === route.locationSlug);
+    // The visible Breadcrumb component adds its own BreadcrumbList, so drop the server's copy here.
+    if (location) return { ...locationSeo(location), jsonLd: locationJsonLd(location, siteUrl()).filter((data) => data['@type'] !== 'BreadcrumbList') };
+  }
   if (routeName === 'admin') return { ...adminPage, path: null };
   if (routeName === 'notFound') return { ...notFoundPage, path: null };
   if (routeName === 'thankYou') return { ...thankYouPage, path: null };
@@ -47,7 +54,9 @@ function routeMeta(t, language, routeName) {
     path: page.path,
     jsonLd: routeName === 'home'
       ? [organizationJsonLd(siteUrl()), websiteJsonLd(siteUrl())]
-      : []
+      : routeName === 'faq'
+        ? [faqJsonLd(t('content.faqs', { returnObjects: true }))]
+        : []
   };
 }
 
@@ -171,8 +180,8 @@ function App() {
 
   useEffect(() => {
     if (pagesWithOwnMeta.has(route.name)) return;
-    setPageMeta(routeMeta(t, i18n.language, route.name));
-  }, [route.name, t, i18n.language]);
+    setPageMeta(routeMeta(t, i18n.language, route.name, route));
+  }, [route.name, route.locationSlug, t, i18n.language]);
 
   return (
     <>
@@ -187,6 +196,7 @@ function App() {
             {route.name === 'partExchange' && <PartExchangePage />}
             {route.name === 'faq' && <FaqPage />}
             {route.name === 'privacy' && <PrivacyPage />}
+            {route.name === 'location' && <LocationPage slug={route.locationSlug} />}
             {route.name === 'about' && <AboutPage />}
             {route.name === 'contact' && <ContactPage />}
             {route.name === 'blog' && <BlogListPage />}
