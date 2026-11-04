@@ -25,8 +25,14 @@ import {
   truckSeo,
   businessLocations,
   SITE_EMAIL,
-  truckListJsonLd
+  truckListJsonLd,
+  breadcrumbJsonLd,
+  faqJsonLd,
+  locationJsonLd,
+  locationSeo
 } from '../../../shared/seo.js';
+import { locationForPath, locationLinks, locationPages, locationPath } from '../../../shared/locations.js';
+import { localImageSet, pageHeroImages } from '../../../shared/images.js';
 
 const SEO_BLOCK = /<!-- seo:start[\s\S]*?<!-- seo:end -->/;
 const BODY_MARKER = '<!-- seo:body -->';
@@ -47,26 +53,51 @@ function getCopy() {
 
 const stripTags = (text) => String(text || '').replace(/<\/?\d+>/g, '');
 const paragraphs = (...texts) => texts.filter(Boolean).map((text) => `<p>${escapeHtml(stripTags(text))}</p>`).join('');
+const list = (items) => (Array.isArray(items) ? items : []);
+const section = (heading, ...html) => `<section>${heading ? `<h2>${escapeHtml(stripTags(heading))}</h2>` : ''}${html.join('')}</section>`;
+const cards = (items, tag = 'h3') => list(items).map((item) => `<${tag}>${escapeHtml(stripTags(item.title))}</${tag}>${paragraphs(item.copy)}`).join('');
+const pageCrumbs = { trucks: 'Used Trucks For Sale', partExchange: 'Part Exchange', faq: 'FAQs', about: 'About Us', contact: 'Contact Us', blog: 'Guides & News', privacy: 'Privacy Policy' };
 
 function staticPageBody(pageName) {
   const pages = getCopy().pages || {};
   const content = getCopy().content || {};
   const location = businessLocations[0] || {};
   switch (pageName) {
-    case 'home':
-      return { heading: pages.home?.hero?.title, bodyHtml: paragraphs(pages.home?.hero?.copy, pages.home?.intro?.heading, pages.home?.intro?.copy) };
+    case 'home': {
+      const home = pages.home || {};
+      return {
+        heading: home.hero?.title,
+        bodyHtml: paragraphs(home.hero?.copy)
+          + section(home.intro?.heading, paragraphs(home.intro?.copy), `<ul>${list(home.intro?.points).map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul>`)
+          + section(home.journey?.heading, paragraphs(home.journey?.copy), cards(home.journey?.steps))
+          + section(home.featureBand?.heading, paragraphs(home.featureBand?.copy), cards(home.featureBand?.items))
+          + section(null, cards(content.serviceCards))
+          + section(home.featuredStock?.heading)
+      };
+    }
     case 'blog':
       return { heading: pages.blog?.title, bodyHtml: paragraphs(pages.blog?.copy) };
     case 'trucks':
       return { heading: pages.trucks?.hero?.title, bodyHtml: paragraphs(pages.trucks?.hero?.copy) };
     case 'about':
-      return { heading: pages.about?.hero?.title, bodyHtml: paragraphs(pages.about?.hero?.copy, pages.about?.approach?.p1, pages.about?.approach?.p2) };
+      return {
+        heading: pages.about?.hero?.title,
+        bodyHtml: paragraphs(pages.about?.hero?.copy)
+          + section(pages.about?.approach?.heading, paragraphs(pages.about?.approach?.p1, pages.about?.approach?.p2), cards(pages.about?.values))
+          + section(pages.about?.cta?.heading, paragraphs(pages.about?.cta?.copy))
+      };
     case 'partExchange':
-      return { heading: pages.partExchange?.hero?.title, bodyHtml: paragraphs(pages.partExchange?.hero?.copy, pages.partExchange?.details?.copy) };
+      return {
+        heading: pages.partExchange?.hero?.title,
+        bodyHtml: paragraphs(pages.partExchange?.hero?.copy)
+          + section(pages.partExchange?.details?.heading, paragraphs(pages.partExchange?.details?.copy))
+          + section(pages.home?.featureBand?.heading, paragraphs(pages.home?.featureBand?.copy), cards(pages.home?.featureBand?.items))
+      };
     case 'contact':
       return {
         heading: pages.contact?.hero?.title,
         bodyHtml: paragraphs(pages.contact?.hero?.copy)
+          + section(pages.contact?.salesDesk?.heading, paragraphs(pages.contact?.salesDesk?.copy, pages.contact?.responseNote))
           + `<address>${escapeHtml(location.address || '')}<br>${escapeHtml(location.phone || '')}<br>${escapeHtml(SITE_EMAIL)}</address>`
           + paragraphs(pages.contact?.details?.hours)
       };
@@ -76,16 +107,18 @@ function staticPageBody(pageName) {
         heading: pages.faq?.hero?.title,
         bodyHtml: paragraphs(pages.faq?.hero?.copy)
           + `<dl>${faqs.map((faq) => `<dt>${escapeHtml(faq.question)}</dt><dd>${escapeHtml(faq.answer)}</dd>`).join('')}</dl>`,
-        jsonLd: faqs.length ? [{
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: faqs.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } }))
-        }] : []
+        jsonLd: [faqJsonLd(faqs)].filter(Boolean)
       };
     }
     default:
       return {};
   }
+}
+
+function locationBody(location) {
+  return paragraphs(location.intro)
+    + location.sections.map((part) => `<h2>${escapeHtml(part.heading)}</h2>${part.paragraphs.map((text) => `<p>${inlineHtml(text)}</p>`).join('')}`).join('')
+    + `<h2>${escapeHtml(`${location.place} Buyers Ask`)}</h2><dl>${location.faqs.map((faq) => `<dt>${escapeHtml(faq.question)}</dt><dd>${escapeHtml(faq.answer)}</dd>`).join('')}</dl>`;
 }
 
 function inlineHtml(text) {
@@ -132,6 +165,13 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+// The hero photo is the largest thing on most pages, so the browser starts fetching it with the HTML.
+function preloadTag(hero) {
+  const image = hero && localImageSet(hero.photoId, hero.width);
+  if (!image) return null;
+  return `<link rel="preload" as="image" type="image/webp" href="${image.src}" imagesrcset="${image.srcSet}" imagesizes="100vw" fetchpriority="high" />`;
+}
+
 function renderHead(meta, siteUrl) {
   const canonical = meta.path ? absoluteUrl(siteUrl, meta.path) : null;
   const image = absoluteUrl(siteUrl, meta.image || DEFAULT_IMAGE);
@@ -147,6 +187,7 @@ function renderHead(meta, siteUrl) {
     canonical && `<meta property="og:url" content="${escapeHtml(canonical)}" />`,
     `<meta property="og:image" content="${escapeHtml(image)}" />`,
     '<meta property="og:locale" content="en_GB" />',
+    preloadTag(meta.heroImage),
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${escapeHtml(meta.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(meta.description)}" />`,
@@ -178,6 +219,13 @@ const allPrimaryLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' }
 ];
+
+// Posts sharing a tag come first, then the newest others.
+function relatedPosts(post, others, count = 2) {
+  const tags = new Set((post.tags || []).map((tag) => String(tag).toLowerCase()));
+  const shared = (item) => (item.tags || []).filter((tag) => tags.has(String(tag).toLowerCase())).length;
+  return [...others].sort((a, b) => shared(b) - shared(a)).slice(0, count);
+}
 
 // Short-lived cache so most page loads skip the database. Any admin change clears it (see server.js).
 const PAGE_CACHE_MS = 60 * 1000;
@@ -211,7 +259,7 @@ async function listVisibleTrucks() {
 
 async function resolvePage(pathname, siteUrl) {
   const hasBlogs = await hasPublishedBlogs();
-  const primaryLinks = hasBlogs ? allPrimaryLinks : allPrimaryLinks.filter((link) => link.href !== '/blog');
+  const primaryLinks = [...(hasBlogs ? allPrimaryLinks : allPrimaryLinks.filter((link) => link.href !== '/blog')), ...locationLinks()];
   const notFound = () => ({ status: 404, meta: { ...notFoundPage, path: null, links: primaryLinks }, hasBlogs });
   const page = await resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs);
   return { ...page, hasBlogs };
@@ -247,7 +295,7 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
         bodyHtml: `<dl>${specs.map(([label, value]) => `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`).join('')}</dl>`
           + (truck.description ? `<p>${escapeHtml(truck.description)}</p>` : ''),
         links: [{ label: 'Enquire about this truck', href: `/contact?truck=${truck.id}` }, ...primaryLinks],
-        jsonLd: [truckJsonLd(truck, siteUrl)]
+        jsonLd: [truckJsonLd(truck, siteUrl), breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Trucks', href: '/trucks' }, { label: truck.title }], siteUrl)]
       }
     };
   }
@@ -259,14 +307,32 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
     const [rows] = await pool.query("SELECT * FROM blogs WHERE slug = ? AND status = 'published'", [slug]);
     if (!rows[0]) return notFound();
     const post = mapBlog(rows[0]);
+    const [others] = await pool.query("SELECT * FROM blogs WHERE status = 'published' AND id <> ? ORDER BY published_at DESC LIMIT 20", [post.id]);
+    const related = relatedPosts(post, others.map(mapBlog));
+    const byline = [post.authorName ? `By ${post.authorName}` : `By the ${SITE_NAME} team`, post.publishedAt && new Date(post.publishedAt).toLocaleDateString('en-GB', { dateStyle: 'long' })].filter(Boolean).join(' · ');
     return {
       status: 200,
       meta: {
         ...blogSeo(post),
         heading: post.title,
-        bodyHtml: blogHtml(post.content),
+        bodyHtml: `<p>${escapeHtml(byline)}</p>${blogHtml(post.content)}`,
+        links: [...related.map((item) => ({ label: item.title, href: blogPath(item) })), ...primaryLinks],
+        jsonLd: [blogJsonLd(post, siteUrl), breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Guides & News', href: '/blog' }, { label: post.title }], siteUrl)]
+      }
+    };
+  }
+
+  const location = locationForPath(pathname);
+  if (location) {
+    return {
+      status: 200,
+      meta: {
+        ...locationSeo(location),
+        heading: location.heading,
+        bodyHtml: locationBody(location),
+        heroImage: pageHeroImages.location,
         links: primaryLinks,
-        jsonLd: [blogJsonLd(post, siteUrl)]
+        jsonLd: locationJsonLd(location, siteUrl)
       }
     };
   }
@@ -275,7 +341,8 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
   if (!pageName) return notFound();
   const page = staticPages[pageName];
   const body = staticPageBody(pageName);
-  const meta = { ...page, links: primaryLinks, jsonLd: [...(body.jsonLd || [])] };
+  const meta = { ...page, heroImage: pageHeroImages[pageName], links: primaryLinks, jsonLd: [...(body.jsonLd || [])] };
+  if (pageCrumbs[pageName]) meta.jsonLd.push(breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: pageCrumbs[pageName], href: page.path }], siteUrl));
   if (body.heading) meta.heading = stripTags(body.heading);
   if (body.bodyHtml) meta.bodyHtml = body.bodyHtml;
 
