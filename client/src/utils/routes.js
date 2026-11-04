@@ -1,3 +1,5 @@
+import { locationForPath } from '../../../shared/locations.js';
+
 export const routeNames = [
   'home',
   'trucks',
@@ -11,7 +13,8 @@ export const routeNames = [
   'about',
   'contact',
   'admin',
-  'thankYou'
+  'thankYou',
+  'location'
 ];
 
 export function getRouteTitle(t, name) {
@@ -43,6 +46,11 @@ export function getRoute() {
     return { name: 'truckDetail', truckId: Number.isInteger(truckId) && truckId > 0 ? truckId : null, hash: `${route}${window.location.search}` };
   }
 
+  if (route.startsWith('used-trucks-for-sale/')) {
+    const location = locationForPath(`/${route}`);
+    return { name: location ? 'location' : 'notFound', locationSlug: location?.slug || null, truckId: null, blogSlug: null, hash: `${route}${window.location.search}` };
+  }
+
   if (route.startsWith('blog/')) {
     const encodedSlug = route.slice('blog/'.length);
     let blogSlug = encodedSlug;
@@ -51,7 +59,7 @@ export function getRoute() {
   }
 
   const routeName = route === 'part-exchange' ? 'partExchange' : route === 'thank-you' ? 'thankYou' : route || 'home';
-  const knownRoute = routeNames.includes(routeName) && !['truckDetail', 'blogPost', 'notFound'].includes(routeName) && route !== 'partExchange' && route !== 'thankYou';
+  const knownRoute = routeNames.includes(routeName) && !['truckDetail', 'blogPost', 'notFound', 'location'].includes(routeName) && route !== 'partExchange' && route !== 'thankYou';
   return { name: knownRoute ? routeName : 'notFound', truckId: null, blogSlug: null, hash: `${route}${window.location.search}` };
 }
 
