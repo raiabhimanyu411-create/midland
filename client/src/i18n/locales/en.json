@@ -53,7 +53,8 @@
       "cookieSettings": "Cookie Settings"
     },
     "legalLine": "Midland Commercials · Little Wigston, Swadlincote, DE12 7BJ · Open Monday to Sunday, 8:00am – 6:00pm",
-    "credit": "© {{year}} Midland Commercials. Designed and developed by Devmora Technology."
+    "credit": "© {{year}} Midland Commercials. Designed and developed by Devmora Technology.",
+    "areasHeading": "Areas We Serve"
   },
   "cookie": {
     "ariaLabel": "Cookie Consent",
@@ -377,7 +378,7 @@
     "contact": {
       "hero": {
         "eyebrow": "Contact Us",
-        "title": "Get In Touch With Our Sales Team.",
+        "title": "Contact Midland Commercials, Swadlincote",
         "copy": "Whether you’re looking for your next truck, want to book a viewing or have a vehicle to part exchange, we’re here to help — 7 days a week."
       },
       "salesDesk": {
@@ -395,14 +396,14 @@
     "faq": {
       "hero": {
         "eyebrow": "Questions",
-        "title": "Answers Before You Call Or Travel.",
+        "title": "Used Truck Buying FAQs",
         "copy": "Common buying, viewing, reservation and part exchange questions in one place."
       }
     },
     "partExchange": {
       "hero": {
         "eyebrow": "Part Exchange",
-        "title": "Trade Your Current Truck Into The Next One.",
+        "title": "Truck Part Exchange: Trade In Your Current Truck",
         "copy": "Send your vehicle details, condition notes and photos so the sales team can prepare a fair part exchange valuation."
       },
       "details": {
@@ -829,6 +830,26 @@
       {
         "question": "Do You Show MOT And Clean Air Zone Information?",
         "answer": "Listings include MOT status and Euro/CAZ notes where available. Buyers should still check registration-specific details before use."
+      },
+      {
+        "question": "Where Is Your Yard?",
+        "answer": "Our sales yard is at Little Wigston, Swadlincote, DE12 7BJ, close to junction 11 of the M42 where it joins the A42. It is an easy trip from Derby, Leicester, Nottingham, Burton upon Trent and Birmingham."
+      },
+      {
+        "question": "What Are Your Opening Hours?",
+        "answer": "We are open Monday to Sunday, 8:00am to 6:00pm. Call 0121 663 1118 before you travel so we can have the truck and its paperwork ready for you."
+      },
+      {
+        "question": "How Do I Know If A Truck Is Euro 6?",
+        "answer": "Every listing shows the Euro rating. As a rule, heavy goods vehicles first registered from the start of 2014 are Euro 6, but you should always check the registration on the official clean air zone vehicle checker before driving into a charging zone."
+      },
+      {
+        "question": "What Should I Check When Buying A Used Truck?",
+        "answer": "Look at the service history, MOT history, tyre condition, cab and body condition, and make sure the VIN matches the V5C. We go through these with you at the viewing and can send extra photos or a walkaround video beforehand."
+      },
+      {
+        "question": "Can You Tell Me When A Particular Truck Comes In?",
+        "answer": "Yes. Set up a free stock alert with the make, body type and budget you are looking for, and we will let you know as soon as a matching truck arrives at the yard."
       }
     ]
   },
