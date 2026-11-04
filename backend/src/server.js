@@ -16,6 +16,8 @@ import { chatLeadsRouter } from './routes/chatLeads.js';
 import { authRouter } from './routes/auth.js';
 import { adminRouter } from './routes/admin.js';
 import { blogsRouter } from './routes/blogs.js';
+import { mediaRouter, warmMediaCache } from './routes/media.js';
+import { pageHeroImages } from '../../shared/images.js';
 import { clearSeoCache, renderPage } from './seo/render.js';
 import { robotsTxt, sitemapXml } from './seo/sitemap.js';
 
@@ -70,6 +72,11 @@ const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHea
 const submissionLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 30, standardHeaders: 'draft-8', legacyHeaders: false });
 
 app.use('/api', apiLimiter);
+// Crawlers may fetch the public API to render pages, but the raw JSON must never show up in search results.
+app.use('/api', (_req, res, next) => {
+  res.set('X-Robots-Tag', 'noindex, nofollow');
+  next();
+});
 // Any write (new truck, blog post, status change) refreshes the cached page HTML.
 app.use('/api', (req, res, next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') res.on('finish', clearSeoCache);
@@ -111,6 +118,7 @@ app.use('/api/{*splat}', (_req, res) => {
   res.status(404).json({ message: 'API route not found' });
 });
 
+app.use('/media', mediaRouter);
 app.get('/robots.txt', robotsTxt);
 app.get('/sitemap.xml', sitemapXml);
 
@@ -168,6 +176,8 @@ initializeDatabase()
   .then(() => {
     server.listen(port, () => {
       console.log(`Backend running on http://localhost:${port}`);
+      // Unique hero photos, cached in the background so first visitors are served locally.
+      if (isProduction) warmMediaCache([...new Map(Object.values(pageHeroImages).map((image) => [image.photoId, image])).values()]);
     });
   })
   .catch((error) => {
