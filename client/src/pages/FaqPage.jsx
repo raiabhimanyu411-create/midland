@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Breadcrumb } from '../components/Breadcrumb.jsx';
 import { PageHero } from '../components/PageHero.jsx';
 import styles from './FaqPage.module.css';
 
@@ -8,6 +9,7 @@ export function FaqPage() {
 
   return (
     <>
+      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.faq') }]} />
       <PageHero
         eyebrow={t('pages.faq.hero.eyebrow')}
         title={t('pages.faq.hero.title')}

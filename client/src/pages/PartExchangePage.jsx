@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Breadcrumb } from '../components/Breadcrumb.jsx';
 import { PageHero } from '../components/PageHero.jsx';
 import { api } from '../utils/api.js';
 import { FormPrivacyNote } from '../components/FormPrivacyNote.jsx';
@@ -13,6 +14,7 @@ export function PartExchangePage() {
 
   return (
     <>
+      <Breadcrumb items={[{ label: t('nav.home'), href: '/' }, { label: t('nav.partExchange') }]} />
       <PageHero
         eyebrow={t('pages.partExchange.hero.eyebrow')}
         title={t('pages.partExchange.hero.title')}

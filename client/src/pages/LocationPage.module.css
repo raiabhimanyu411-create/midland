@@ -1,0 +1,88 @@
+.article {
+  width: min(860px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 72px 0 96px;
+  color: #18212f;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.article h2 {
+  margin: 1.8em 0 0.6em;
+  font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+  line-height: 1.25;
+}
+
+.article section:first-child h2 {
+  margin-top: 0;
+}
+
+.article p {
+  margin: 0 0 1.1em;
+}
+
+.article a {
+  color: #1e3a8a;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.faqs details {
+  margin-bottom: 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 18px 22px;
+  background: #ffffff;
+}
+
+.faqs summary {
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.faqs details p {
+  margin: 10px 0 0;
+  color: #475467;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 48px;
+  padding: 28px;
+  border-radius: 12px;
+  background: #111a2e;
+  color: #ffffff;
+}
+
+.cta p {
+  margin: 6px 0 0;
+  color: rgb(255 255 255 / 78%);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.actions a {
+  text-decoration: none;
+}
+
+.areas {
+  margin-top: 40px;
+}
+
+.areas ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}

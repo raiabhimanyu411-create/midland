@@ -30,6 +30,23 @@ export function BlogPostPage({ slug }) {
   const [error, setError] = useState('');
   const [notFound, setNotFound] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [related, setRelated] = useState([]);
+
+  // Two related guides (shared tags first, then the newest) for internal linking.
+  useEffect(() => {
+    if (!post) return undefined;
+    let active = true;
+    const tags = new Set((post.tags || []).map((tag) => String(tag).toLowerCase()));
+    const shared = (item) => (item.tags || []).filter((tag) => tags.has(String(tag).toLowerCase())).length;
+    api.listBlogs({ limit: 12 })
+      .then((response) => {
+        if (!active) return;
+        const others = (response.data || []).filter((item) => item.slug !== post.slug);
+        setRelated([...others].sort((a, b) => shared(b) - shared(a)).slice(0, 2));
+      })
+      .catch(() => active && setRelated([]));
+    return () => { active = false; };
+  }, [post]);
 
   useEffect(() => {
     let active = true;
@@ -80,7 +97,7 @@ export function BlogPostPage({ slug }) {
         meta={[
           post.publishedAt && new Date(post.publishedAt).toLocaleDateString('en-GB', { dateStyle: 'long' }),
           t('pages.blog.readTime', { count: readingMinutes(post.content) }),
-          post.authorName && t('pages.blog.byline', { name: post.authorName })
+          t('pages.blog.byline', { name: post.authorName || 'Midland Commercials' })
         ]}
       />
       <article className={styles.article}>
@@ -88,6 +105,14 @@ export function BlogPostPage({ slug }) {
           {parseBlogContent(post.content).map((block, index) => <BlogBlock key={index} block={block} />)}
         </div>
         {post.tags?.length > 0 && <div className={styles.tags}>{post.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+        {related.length > 0 && (
+          <nav className={styles.related} aria-label={t('pages.blog.moreGuides')}>
+            <strong>{t('pages.blog.moreGuides')}</strong>
+            <ul>
+              {related.map((item) => <li key={item.slug}><a href={`/blog/${encodeURIComponent(item.slug)}`}>{item.title}</a></li>)}
+            </ul>
+          </nav>
+        )}
         <aside className={styles.endCta}>
           <div>
             <strong>{t('pages.blog.ctaHeading')}</strong>
@@ -95,6 +120,7 @@ export function BlogPostPage({ slug }) {
           </div>
           <div className={styles.endActions}>
             <a className="button primary" href="/trucks">{t('pages.blog.ctaPrimary')}</a>
+            <a className="button outline" href="/part-exchange">{t('nav.partExchange')}</a>
             <a className="button outline" href="/blog">{t('pages.blog.backToGuides')}</a>
           </div>
         </aside>
