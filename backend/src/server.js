@@ -39,6 +39,14 @@ app.use((req, res, next) => {
   if (String(req.hostname || '').toLowerCase() !== 'midlandcommercials.com') return next();
   res.redirect(301, `https://www.midlandcommercials.com${req.originalUrl}`);
 });
+// Pages that no longer exist (finance and delivery were dropped) permanently point to the closest live page,
+// so Google transfers their ranking instead of keeping a 404.
+const retiredPages = { '/finance': '/trucks', '/delivery': '/contact' };
+app.use((req, res, next) => {
+  const target = retiredPages[req.path.replace(/\/+$/, '') || '/'];
+  if (!target || (req.method !== 'GET' && req.method !== 'HEAD')) return next();
+  res.redirect(301, target);
+});
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: 'cross-origin' }
