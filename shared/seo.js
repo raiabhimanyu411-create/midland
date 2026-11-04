@@ -2,6 +2,7 @@
 // so crawlers and browsers always see the same title, description, canonical URL and JSON-LD.
 import { truckDisplayPrice, truckDisplayTitle } from './truck.js';
 import { plainBlogText } from './blogContent.js';
+import { locationPath } from './locations.js';
 
 export const SITE_NAME = 'Midland Commercials';
 // Other names people search for the business by (e.g. "midland trucks"), used in JSON-LD.
@@ -14,9 +15,14 @@ export const businessAddress = {
   '@type': 'PostalAddress',
   streetAddress: 'Little Wigston',
   addressLocality: 'Swadlincote',
+  addressRegion: 'Leicestershire',
   postalCode: 'DE12 7BJ',
   addressCountry: 'GB'
 };
+// Postcode centroid for DE12 7BJ (postcodes.io). Replace with the yard's exact pin if the client supplies it.
+export const businessGeo = { '@type': 'GeoCoordinates', latitude: 52.685636, longitude: -1.551274 };
+// Date the static page copy last changed, used as <lastmod> in the sitemap. Bump it when page text changes.
+export const SITE_CONTENT_UPDATED = '2026-11-04';
 // Legal details shown on the privacy policy. Fill these in once the client confirms them;
 // empty values are simply left off the page.
 export const legalDetails = {
@@ -41,7 +47,7 @@ export const staticPages = {
   },
   trucks: {
     path: '/trucks',
-    title: 'Used Trucks For Sale | Tractor Units, Rigids & Tippers | Midland Commercials',
+    title: 'Used Trucks For Sale | Tractor Units & Rigids | Midland',
     description: 'Browse used trucks for sale with filters for make, body type and price. VAT, MOT and Euro rating shown on every Midland Commercials listing.',
     changefreq: 'daily',
     priority: '0.9'
@@ -55,7 +61,7 @@ export const staticPages = {
   },
   faq: {
     path: '/faq',
-    title: 'Used Truck Buying FAQ | Midland Commercials',
+    title: 'Used Truck Buying FAQs | Midland Commercials',
     description: 'Answers to common questions about buying, viewing and part exchanging a used truck.',
     changefreq: 'monthly',
     priority: '0.5'
@@ -256,7 +262,13 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
     telephone: '+44 121 663 1118',
     email: SITE_EMAIL,
     address: businessAddress,
-    areaServed: { '@type': 'Country', name: 'United Kingdom' },
+    geo: businessGeo,
+    hasMap: `https://www.google.com/maps/search/?api=1&query=${businessGeo.latitude},${businessGeo.longitude}`,
+    areaServed: [
+      { '@type': 'Country', name: 'United Kingdom' },
+      ...['Derby', 'Leicester', 'Birmingham', 'Nottingham'].map((name) => ({ '@type': 'City', name })),
+      { '@type': 'AdministrativeArea', name: 'East Midlands' }
+    ],
     priceRange: '££',
     openingHoursSpecification: [{
       '@type': 'OpeningHoursSpecification',
@@ -268,6 +280,36 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
       department: locations.slice(1).map((location) => ({ '@type': 'AutoDealer', name: SITE_NAME, telephone: location.phone, address: location.address }))
     } : {})
   };
+}
+
+export function faqJsonLd(faqs) {
+  const items = (Array.isArray(faqs) ? faqs : []).filter((faq) => faq?.question && faq?.answer);
+  if (!items.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((faq) => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: plainBlogText(faq.answer) } }))
+  };
+}
+
+export function locationSeo(location) {
+  return { title: location.title, description: location.description, path: locationPath(location), type: 'website' };
+}
+
+export function locationJsonLd(location, siteUrl) {
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: location.heading,
+      description: location.description,
+      url: absoluteUrl(siteUrl, locationPath(location)),
+      about: { '@type': 'AutoDealer', name: SITE_NAME, url: absoluteUrl(siteUrl, '/'), address: businessAddress, geo: businessGeo },
+      areaServed: { '@type': location.slug === 'east-midlands' ? 'AdministrativeArea' : 'City', name: location.place }
+    },
+    breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: location.heading, href: locationPath(location) }], siteUrl),
+    faqJsonLd(location.faqs)
+  ].filter(Boolean);
 }
 
 export function websiteJsonLd(siteUrl) {
