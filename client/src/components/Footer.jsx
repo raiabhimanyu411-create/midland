@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { locations } from '../data/siteData.js';
 import { SITE_EMAIL } from '../../../shared/seo.js';
+import { locationPages, locationPath } from '../../../shared/locations.js';
 import { BrandMark } from './BrandLogo.jsx';
 import { OPEN_COOKIE_SETTINGS } from '../utils/analytics.js';
 import styles from './Footer.module.css';
@@ -27,6 +28,10 @@ export function Footer() {
         { label: t('footer.links.allTrucks'), href: '/trucks' },
         { label: t('footer.links.partExchange'), href: '/part-exchange' }
       ]
+    },
+    {
+      heading: t('footer.areasHeading', { defaultValue: 'Areas We Serve' }),
+      links: locationPages.map((location) => ({ label: location.place, href: locationPath(location) }))
     },
     {
       heading: t('footer.companyHeading'),

@@ -5,7 +5,7 @@
 
 .footerTop {
   display: grid;
-  grid-template-columns: minmax(240px, 1.4fr) repeat(2, minmax(140px, 1fr));
+  grid-template-columns: minmax(240px, 1.4fr) repeat(3, minmax(140px, 1fr));
   gap: clamp(24px, 5vw, 56px);
   width: min(1180px, calc(100% - 36px));
   margin: 0 auto;
