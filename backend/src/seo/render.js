@@ -110,6 +110,15 @@ function staticPageBody(pageName) {
         jsonLd: [faqJsonLd(faqs)].filter(Boolean)
       };
     }
+    case 'privacy': {
+      const privacy = pages.privacy || {};
+      return {
+        heading: privacy.hero?.title,
+        bodyHtml: paragraphs(privacy.hero?.copy)
+          + list(privacy.sections).map((part) => section(part.heading, paragraphs(...list(part.paragraphs)),
+            list(part.items).length ? `<ul>${list(part.items).map((item) => `<li>${escapeHtml(stripTags(item))}</li>`).join('')}</ul>` : '')).join('')
+      };
+    }
     default:
       return {};
   }

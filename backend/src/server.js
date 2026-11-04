@@ -3,6 +3,7 @@ import http from 'node:http';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -47,6 +48,8 @@ app.use((req, res, next) => {
   if (!target || (req.method !== 'GET' && req.method !== 'HEAD')) return next();
   res.redirect(301, target);
 });
+// Gzip JS, CSS, JSON and XML (nginx only compresses HTML), so pages load faster for visitors and Google.
+app.use(compression());
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: 'cross-origin' }

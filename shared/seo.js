@@ -8,6 +8,9 @@ export const SITE_NAME = 'Midland Commercials';
 // Other names people search for the business by (e.g. "midland trucks"), used in JSON-LD.
 export const SITE_ALT_NAMES = ['Midland Trucks', 'Midland Commercial Vehicles'];
 export const SITE_EMAIL = 'sales@midlandcommercials.com';
+// Official profiles (Google Business Profile, Facebook, LinkedIn…), added to JSON-LD as sameAs.
+// Fill these in once the client shares the links; an empty list is left out.
+export const SITE_PROFILES = [];
 export const businessLocations = [
   { address: 'Little Wigston, Swadlincote, DE12 7BJ', phone: '0121 663 1118' }
 ];
@@ -62,7 +65,7 @@ export const staticPages = {
   faq: {
     path: '/faq',
     title: 'Used Truck Buying FAQs | Midland Commercials',
-    description: 'Answers to common questions about buying, viewing and part exchanging a used truck.',
+    description: 'Answers to common questions about buying a used truck from Midland Commercials: viewings, reservations, VAT, MOT, paperwork and part exchange.',
     changefreq: 'monthly',
     priority: '0.5'
   },
@@ -90,7 +93,7 @@ export const staticPages = {
   privacy: {
     path: '/privacy',
     title: 'Privacy Policy | Midland Commercials',
-    description: 'How Midland Commercials collects, uses and protects your personal data.',
+    description: 'How Midland Commercials collects, uses and protects your personal data under UK GDPR, plus our used vehicle sales terms and your rights.',
     changefreq: 'yearly',
     priority: '0.2'
   }
@@ -231,8 +234,11 @@ export function blogJsonLd(post, siteUrl) {
     image: [absoluteUrl(siteUrl, post.coverImage || DEFAULT_IMAGE)],
     datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
     dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
-    author: post.authorName ? { '@type': 'Person', name: post.authorName } : { '@type': 'Organization', name: SITE_NAME },
-    publisher: { '@type': 'Organization', name: SITE_NAME },
+    // Posts written "by" the business itself are credited to the organisation, not a person.
+    author: post.authorName && post.authorName.trim().toLowerCase() !== SITE_NAME.toLowerCase()
+      ? { '@type': 'Person', name: post.authorName }
+      : { '@type': 'Organization', name: SITE_NAME, url: absoluteUrl(siteUrl, '/') },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: absoluteUrl(siteUrl, '/'), logo: { '@type': 'ImageObject', url: absoluteUrl(siteUrl, '/logo.svg') } },
     mainEntityOfPage: absoluteUrl(siteUrl, blogPath(post))
   };
 }
@@ -269,6 +275,7 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
       ...['Derby', 'Leicester', 'Birmingham', 'Nottingham'].map((name) => ({ '@type': 'City', name })),
       { '@type': 'AdministrativeArea', name: 'East Midlands' }
     ],
+    ...(SITE_PROFILES.length ? { sameAs: SITE_PROFILES } : {}),
     priceRange: '££',
     openingHoursSpecification: [{
       '@type': 'OpeningHoursSpecification',
