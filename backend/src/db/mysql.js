@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import { trucks as seedTrucks } from '../data/trucks.js';
 import { starterBlogPosts } from '../data/blogPosts.js';
+import { moreBlogPosts } from '../data/moreBlogPosts.js';
 import bcrypt from 'bcryptjs';
 
 export const dbConfig = {
@@ -206,6 +207,7 @@ export async function initializeDatabase() {
 
   await ensureDefaultAdmin();
   await seedStarterBlogs();
+  await seedMoreBlogs();
 
   if (process.env.NODE_ENV !== 'production' || process.env.SEED_DEMO_DATA === 'true') {
     await seedTruckData();
@@ -222,6 +224,25 @@ async function seedStarterBlogs() {
        VALUES (?, ?, ?, ?, ?, ?, ?, 'published', 'Midland Commercials', DATE_SUB(NOW(), INTERVAL ? DAY))`,
       [post.title, post.slug, post.excerpt, post.content, post.tags, post.metaTitle, post.metaDescription, post.daysAgo]
     );
+  }
+}
+
+// Adds newer buying guides to sites that already have posts. Each slug is added
+// only once (recorded in blog_seed_log), so a post deleted in the admin panel stays deleted.
+async function seedMoreBlogs() {
+  await pool.query(`CREATE TABLE IF NOT EXISTS blog_seed_log (
+    slug VARCHAR(220) PRIMARY KEY, seeded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`);
+  const [logged] = await pool.query('SELECT slug FROM blog_seed_log');
+  const done = new Set(logged.map((row) => row.slug));
+  for (const post of moreBlogPosts) {
+    if (done.has(post.slug)) continue;
+    await pool.query(
+      `INSERT IGNORE INTO blogs (title, slug, excerpt, content, tags, meta_title, meta_description, status, author_name, published_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'published', 'Midland Commercials', DATE_SUB(NOW(), INTERVAL ? DAY))`,
+      [post.title, post.slug, post.excerpt, post.content, post.tags, post.metaTitle, post.metaDescription, post.daysAgo]
+    );
+    await pool.query('INSERT IGNORE INTO blog_seed_log (slug) VALUES (?)', [post.slug]);
   }
 }
 
