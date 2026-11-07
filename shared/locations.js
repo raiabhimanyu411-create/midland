@@ -8,13 +8,13 @@ export const locationPages = [
   {
     slug: 'derby',
     place: 'Derby',
-    title: 'Used Trucks For Sale in Derby | Midland Commercials',
+    title: 'Used Trucks for Sale in Derby | Midland Commercials',
     description: 'Used trucks for sale near Derby. Tractor units, rigids and tippers with clear VAT, MOT and Euro details at our Swadlincote yard. Part exchange welcome.',
-    heading: 'Used Trucks For Sale in Derby',
+    heading: 'Used Trucks for Sale in Derby',
     intro: 'Looking for a used truck near Derby? Midland Commercials is a short run down the road from the city, with checked tractor units, rigids, tippers and trailers ready to view seven days a week.',
     sections: [
       {
-        heading: 'A Local Truck Dealer For Derby Operators',
+        heading: 'A Local Truck Dealer for Derby Operators',
         paragraphs: [
           'Derby has a long history of making and moving things. Car plants, aerospace suppliers, rail engineering and the warehouses that feed them all rely on a steady flow of trucks, and many of the hauliers serving them are small firms or owner-drivers who cannot afford a vehicle that lets them down. That is the customer we built Midland Commercials around.',
           'Our yard sits at Little Wigston, Swadlincote (DE12 7BJ), close to the A42 and M42. For most Derby businesses that is an easy trip, so you can come and look over a truck in person, sit in the cab and check the paperwork before you commit. If you would rather not travel, we can send extra photos or film a walkaround video and talk you through it on the phone.'
@@ -41,7 +41,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Buying From Us If You Are Based In Derby',
+        heading: 'Buying from Us If You Are Based in Derby',
         paragraphs: [
           'Start by browsing our [current used trucks for sale](/trucks), or set up a stock alert if you are waiting for a particular make or body type. When something catches your eye, call us on 0121 663 1118 or send an enquiry and we will confirm availability, VAT status and any extra details you need.',
           'Viewings are available Monday to Sunday, 8:00am to 6:00pm. Once you are happy, a deposit holds the truck while we finish the paperwork, and we will agree a handover time that works around your schedule. You can read our [buying FAQs](/faq) for more on reservations, VAT and paperwork.'
@@ -51,15 +51,15 @@ export const locationPages = [
     faqs: [
       { question: 'How far is your yard from Derby?', answer: 'Our yard at Little Wigston, Swadlincote is south of Derby, near the M42 and A42. Most Derby customers find it an easy trip, and we will give you directions when we book your viewing.' },
       { question: 'Do you sell trucks with tail lifts for Derby multi-drop work?', answer: 'Yes. Curtainside and box rigids with tail lifts come through regularly. Set up a stock alert with the weight and body you need and we will tell you when one arrives.' },
-      { question: 'Can you deliver a truck to Derby?', answer: 'Most buyers collect from the yard, but ask us when you reserve. We can talk through the options for your truck and timescale.' }
+      { question: 'Can I see a truck on video before I travel from Derby?', answer: 'Yes. We can film a walkaround video showing the engine starting, the cab, tyres and bodywork, so you can decide before you make the trip to our yard.' }
     ]
   },
   {
     slug: 'leicester',
     place: 'Leicester',
-    title: 'Used Trucks For Sale in Leicester | Midland Commercials',
+    title: 'Used Trucks for Sale in Leicester | Midland Commercials',
     description: 'Used trucks for sale near Leicester and Leicestershire. Rigids, tractor units and tippers with clear VAT and MOT details. Viewings 7 days a week.',
-    heading: 'Used Trucks For Sale in Leicester',
+    heading: 'Used Trucks for Sale in Leicester',
     intro: 'Midland Commercials is based in North West Leicestershire, so for Leicester hauliers, distributors and builders we are a local dealer, not a long drive. Browse checked used trucks and arrange a viewing any day of the week.',
     sections: [
       {
@@ -70,14 +70,14 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'The Right Truck For Distribution And Trade',
+        heading: 'The Right Truck for Distribution and Trade',
         paragraphs: [
           'For trunking work between distribution centres, a Euro 6 tractor unit with a sleeper or high-roof cab is the usual choice, and we regularly stock 4x2 and 6x2 units from DAF, Scania, Volvo and MAN. For deliveries into Leicester city centre and the surrounding towns, smaller rigids are often more practical, with 7.5 tonne, 12 tonne and 18 tonne trucks easier to manoeuvre and to park.',
           'Builders and landscapers across Leicestershire also buy tippers from us, from compact rigid tippers for domestic jobs to 8x4 tippers for muck-away and aggregate work. Whatever you need, our [used truck listings](/trucks) can be filtered by make, body type and price.'
         ]
       },
       {
-        heading: 'Clear Prices And VAT Status',
+        heading: 'Clear Prices and VAT Status',
         paragraphs: [
           'Accounts teams want to know exactly what they are paying for. Every one of our listings shows whether the price is plus VAT, VAT included or no VAT, and we confirm the final position on the invoice before you pay. You will also see the MOT status and Euro rating, which matters if your routes take you into any clean air zone.',
           'Fleet buyers in Leicester often purchase more than one vehicle at a time. If you are looking for a matching pair of rigids or several units for a new contract, tell us what you need and we will let you know what is in stock and what is arriving soon.'
@@ -90,7 +90,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Visit Our Yard From Leicester',
+        heading: 'Visit Our Yard from Leicester',
         paragraphs: [
           'Our yard is at Little Wigston, Swadlincote (DE12 7BJ), in the north west of the county, and is open Monday to Sunday, 8:00am to 6:00pm. We prepare the truck and its paperwork before you arrive so you can inspect it properly, ask questions and take it for a look around the yard.',
           'If you cannot get over in person, we can arrange a video walkaround and hold the truck after final checks and an agreed deposit. Call 0121 663 1118, or read our [buying guides](/blog) for advice on choosing your next truck.'
@@ -106,13 +106,13 @@ export const locationPages = [
   {
     slug: 'birmingham',
     place: 'Birmingham',
-    title: 'Used Trucks For Sale in Birmingham | Midland Commercials',
+    title: 'Used Trucks for Sale in Birmingham | Midland Commercials',
     description: 'Used trucks for sale near Birmingham. Euro 6 tractor units, rigids and tippers ready for the Clean Air Zone, with VAT and MOT shown on every listing.',
-    heading: 'Used Trucks For Sale in Birmingham',
+    heading: 'Used Trucks for Sale in Birmingham',
     intro: 'Birmingham operators can reach our Swadlincote yard straight up the M42. We sell checked used tractor units, rigids and tippers, with the Euro rating shown on every listing so you know where you stand with the Clean Air Zone.',
     sections: [
       {
-        heading: 'Serving The West Midlands From Up The M42',
+        heading: 'Serving the West Midlands from Up the M42',
         paragraphs: [
           'Birmingham is one of the busiest freight hubs in the country. The M5, M6 and M42 meet around the city, and a large share of UK distribution passes through the West Midlands every day. Add a construction sector that never seems to slow down, and you get a constant demand for good, honest used trucks.',
           'Our yard is at Little Wigston, Swadlincote (DE12 7BJ), close to junction 11 of the M42. For most Birmingham businesses that means a straightforward motorway run to come and see a truck before buying.'
@@ -126,7 +126,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Trucks For Haulage, Distribution And Construction',
+        heading: 'Trucks for Haulage, Distribution and Construction',
         paragraphs: [
           'Long-distance hauliers from the West Midlands usually look for Euro 6 tractor units with sleeper cabs, automated gearboxes and a full service history. Multi-drop and retail distribution firms ask for curtainside and box rigids, often with a tail lift. Construction, demolition and groundworks contractors working on Birmingham\'s many building sites buy tippers and grab loaders.',
           'For city work, think about size as well as emissions. A 7.5 tonne or 12 tonne rigid is far easier to manoeuvre through Birmingham\'s inner-city streets and loading bays, while a 26 tonne rigid or an artic makes more sense for out-of-town distribution parks. If you are not sure which is right for a new contract, tell us about the work and we will point you towards the trucks that suit it.',
@@ -141,7 +141,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Arrange A Viewing',
+        heading: 'Arrange a Viewing',
         paragraphs: [
           'We are open Monday to Sunday, 8:00am to 6:00pm. Call 0121 663 1118 or send an enquiry from any truck listing, and we will confirm availability and VAT status and book a time for you to come and see it. Our [FAQs](/faq) cover reservations, deposits and paperwork.'
         ]
@@ -156,13 +156,13 @@ export const locationPages = [
   {
     slug: 'nottingham',
     place: 'Nottingham',
-    title: 'Used Trucks For Sale in Nottingham | Midland Commercials',
+    title: 'Used Trucks for Sale in Nottingham | Midland Commercials',
     description: 'Used trucks for sale near Nottingham. Tippers, rigids and tractor units checked before sale, with clear VAT, MOT and Euro details. Part exchange welcome.',
-    heading: 'Used Trucks For Sale in Nottingham',
+    heading: 'Used Trucks for Sale in Nottingham',
     intro: 'From tippers for Nottinghamshire\'s building sites to tractor units for M1 trunking, Midland Commercials supplies checked used trucks to Nottingham operators, with viewings at our yard seven days a week.',
     sections: [
       {
-        heading: 'Trucks For Nottinghamshire Businesses',
+        heading: 'Trucks for Nottinghamshire Businesses',
         paragraphs: [
           'Nottingham sits on the M1 corridor, with easy links north to Yorkshire and south to London. That puts the city and its surrounding towns in a strong position for haulage and distribution, while house building, road schemes and quarrying across Nottinghamshire keep a large fleet of tippers and construction vehicles busy.',
           'Many of the businesses we deal with around Nottingham are family firms and owner-drivers who know exactly what they want from a truck. Others are growing fleets that need a reliable extra vehicle quickly to cover a new contract. Either way, we aim to give you straight answers, accurate descriptions and a fair price, without the hard sell.',
@@ -170,14 +170,14 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Tippers And Construction Vehicles',
+        heading: 'Tippers and Construction Vehicles',
         paragraphs: [
           'A large share of our Nottingham customers work in construction and aggregates. For that work we stock 6x4 and 8x4 tippers, grab loaders and rigid tippers from DAF, Volvo, Scania, MAN and Mercedes-Benz. We look closely at the body, the tipping gear, the chassis and the tyres before listing them, because these trucks work hard and the condition of the body matters as much as the engine.',
           'If you need a particular body, such as an insulated tipper for asphalt or an 8x4 with a specific bed length, tell us and we will let you know when a suitable truck arrives.'
         ]
       },
       {
-        heading: 'Tractor Units And Rigids For The M1 Corridor',
+        heading: 'Tractor Units and Rigids for the M1 Corridor',
         paragraphs: [
           'Hauliers based around Nottingham often run trunking work up and down the M1. For that, a Euro 6 tractor unit with a comfortable sleeper cab, an automated gearbox and a good service history is the usual choice. Local and regional distributors tend to buy 18 tonne and 26 tonne rigids with curtainside or box bodies.',
           'Every listing on our [used trucks page](/trucks) shows the mileage, gearbox, cab type, VAT status, MOT and Euro rating, so you can compare trucks properly before you call.'
@@ -190,7 +190,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'How To Buy From Nottingham',
+        heading: 'How to Buy from Nottingham',
         paragraphs: [
           'Shortlist a truck online, then call 0121 663 1118 or send an enquiry. We confirm availability, VAT status and any extra details, and send more photos or a walkaround video if you want them. Viewings run Monday to Sunday, 8:00am to 6:00pm, and a deposit will hold the truck while the paperwork is finished.',
           'Not sure what to buy? Our [truck buying guides](/blog) cover emissions standards, inspections and running costs, and our [FAQs](/faq) answer the most common questions about buying from us.'
@@ -206,13 +206,13 @@ export const locationPages = [
   {
     slug: 'east-midlands',
     place: 'East Midlands',
-    title: 'Used Trucks For Sale in the East Midlands | Midland Commercials',
+    title: 'Used Trucks for Sale in the East Midlands | Midland Commercials',
     description: 'East Midlands used truck dealer near the M1, M42 and A42. Tractor units, rigids, tippers and trailers with clear VAT and MOT details. Open 7 days.',
-    heading: 'Used Trucks For Sale in the East Midlands',
+    heading: 'Used Trucks for Sale in the East Midlands',
     intro: 'Midland Commercials is an independent used truck dealer in the East Midlands, at Little Wigston, Swadlincote. We supply checked tractor units, rigids, tippers and trailers to operators across Leicestershire, Derbyshire, Nottinghamshire and beyond.',
     sections: [
       {
-        heading: 'At The Centre Of The UK Road Network',
+        heading: 'At the Centre of the UK Road Network',
         paragraphs: [
           'The East Midlands is often described as part of the UK\'s logistics "golden triangle", the area where most of the country\'s population can be reached within a few hours by truck. The M1, M42, A42, A50 and A1 all pass through the region, and sites such as East Midlands Airport and the East Midlands Gateway rail freight terminal handle huge volumes of goods.',
           'Our yard is close to junction 11 of the M42, where it becomes the A42. That puts us within easy reach of Derby, Leicester, Nottingham, Burton upon Trent, Loughborough, Coalville, Tamworth and the surrounding towns.',
@@ -227,7 +227,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Why East Midlands Operators Buy From Us',
+        heading: 'Why East Midlands Operators Buy from Us',
         paragraphs: [
           'We keep things simple. Every truck is checked before it is listed, every advert shows the details that matter, and the price you see comes with a clear VAT status. If there is something you should know about a vehicle, we tell you before you travel, not when you arrive.',
           'Because we are local, you can come and see a truck in person at a time that suits you. We are open Monday to Sunday, 8:00am to 6:00pm, which suits owner-drivers and small fleets who cannot take a weekday off the road.'
@@ -240,7 +240,7 @@ export const locationPages = [
         ]
       },
       {
-        heading: 'Part Exchange And Next Steps',
+        heading: 'Part Exchange and Next Steps',
         paragraphs: [
           'If you have a truck, van or trailer to move on, we can take it in [part exchange](/part-exchange) against your next vehicle. Send the registration, mileage and some photos and we will come back with a valuation.',
           'Ready to talk? Call 0121 663 1118, email sales@midlandcommercials.com or [send us a message](/contact). We aim to reply to every enquiry the same day.'

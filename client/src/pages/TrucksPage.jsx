@@ -126,7 +126,7 @@ export function TrucksPage() {
         eyebrow={t('pages.trucks.hero.eyebrow')}
         title={!loading && trucks.length === 0 && activeChips.length === 0 ? t('pages.trucks.hero.titleEmpty') : t('pages.trucks.hero.title')}
         copy={t('pages.trucks.hero.copy')}
-        image="https://images.unsplash.com/photo-1506306460327-3164753b74c7?auto=format&fit=crop&w=1800&q=85"
+        image="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85"
       />
       <section className={`section ${styles.listingSection}`} data-no-tilt>
         <div className={styles.listingLayout}>

@@ -16,7 +16,7 @@ export function AboutPage() {
         eyebrow={t('pages.about.hero.eyebrow')}
         title={t('pages.about.hero.title')}
         copy={t('pages.about.hero.copy')}
-        image="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1800&q=85"
+        image="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1800&q=85"
       />
       <section className={`section ${styles.aboutGrid}`}>
         <div>

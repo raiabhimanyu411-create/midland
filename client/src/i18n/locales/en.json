@@ -58,7 +58,7 @@
   },
   "cookie": {
     "ariaLabel": "Cookie Consent",
-    "message": "We use essential cookies to make this site work. With your permission we’d also like to use analytics and marketing cookies to understand how the site is used and to measure our adverts. Read our <1>Privacy Policy</1> for details.",
+    "message": "We use essential cookies to run this site. With your permission we’d also like to use analytics and marketing cookies to improve the site and measure our adverts. Read our <1>Privacy Policy</1> for details.",
     "rejectAll": "Reject All",
     "manage": "Manage Preferences",
     "savePreferences": "Save Preferences",
@@ -72,10 +72,10 @@
     "marketingCopy": "Meta (Facebook) Pixel and Google Ads measure how well our adverts work."
   },
   "trustBar": {
-    "ariaLabel": "Why Buy From Midland Commercials",
+    "ariaLabel": "Why Buy from Midland Commercials",
     "badges": [
       {
-        "title": "Trusted By UK Operators",
+        "title": "Trusted by UK Operators",
         "copy": "Hauliers, builders and owner-drivers who come back for their next truck."
       },
       {
@@ -90,7 +90,7 @@
   },
   "compareBar": {
     "ariaLabel": "Truck Comparison Tray",
-    "removeAria": "Remove {{title}} From Comparison",
+    "removeAria": "Remove {{title}} from Comparison",
     "clear": "Clear",
     "compare": "Compare ({{count}})"
   },
@@ -112,16 +112,16 @@
     }
   },
   "stockAlert": {
-    "badge": "Free Priority Stock Alert",
-    "eyebrow": "Don't See The Right Truck Yet",
-    "heading": "Let The Right Truck Find You.",
-    "copy": "Tell us what you need once. We will watch new and incoming stock, then contact you when a genuine match arrives.",
+    "badge": "Free Stock Alert",
+    "eyebrow": "Can't Find the Right Truck?",
+    "heading": "Let the Right Truck Find You",
+    "copy": "Tell us what you need once. We will keep an eye on new and incoming stock and contact you when a suitable truck arrives.",
     "previewLabel": "Example Match Alert",
     "previewDefault": "Euro 6 Tractor Unit Under £55k",
     "previewMeta": "New Stock Match · Just Now",
     "assurances": [
       "No Spam",
-      "Cancel Anytime",
+      "Unsubscribe at Any Time",
       "Early Stock Access"
     ],
     "formEyebrow": "Create Your Alert",
@@ -148,10 +148,10 @@
   "contactForm": {
     "nameLabel": "Name",
     "namePlaceholder": "Your name",
-    "reasonLabel": "Reason For Contact",
+    "reasonLabel": "Reason for Contact",
     "reasons": [
       "General Enquiry",
-      "Buying A Truck",
+      "Buying a Truck",
       "Part Exchange",
       "Viewing Appointment"
     ],
@@ -167,8 +167,8 @@
   },
   "contactPreview": {
     "badge": "Sales Team Online",
-    "eyebrow": "Speak To Sales",
-    "heading": "Tell Us What Truck You Need.",
+    "eyebrow": "Speak to Sales",
+    "heading": "Tell Us What Truck You Need",
     "intro": "Share the job, budget and timescale. A member of the Midland Commercials sales team will come back with suitable stock or vehicles arriving soon.",
     "benefits": [
       {
@@ -184,42 +184,42 @@
         "copy": "Truck, part exchange and viewing"
       }
     ],
-    "preferTalk": "Prefer To Talk?",
+    "preferTalk": "Prefer to Talk?",
     "hoursNote": "Monday to Sunday · 8:00am – 6:00pm",
     "quickEnquiry": "Quick Enquiry",
-    "quickEnquirySub": "Takes Less Than 60 Seconds",
-    "stepBadge": "Step 1 Of 1",
+    "quickEnquirySub": "Send Us Your Requirement",
+    "stepBadge": "Step 1 of 1",
     "privacyNote": "Your details stay private and are only used to answer your enquiry."
   },
   "locationsSection": {
     "ariaLabel": "Midland Commercials Location",
     "eyebrow": "Visit Our Yard",
-    "heading": "Come And See The Stock In Person.",
+    "heading": "Come and See the Stock in Person",
     "getDirections": "Get Directions"
   },
   "teamSection": {
     "ariaLabel": "Midland Commercials Team",
-    "eyebrow": "Meet The Team",
-    "heading": "The People Behind Every Enquiry."
+    "eyebrow": "Meet the Team",
+    "heading": "The People Behind Every Enquiry"
   },
   "testimonials": {
     "ariaLabel": "Buyer Testimonials",
     "eyebrow": "What Our Customers Say",
-    "heading": "Trusted By Operators Across Britain.",
-    "starsAria": "{{rating}} Out Of 5 Stars"
+    "heading": "Trusted by Operators Across Britain",
+    "starsAria": "{{rating}} Out of 5 Stars"
   },
   "timeline": {
     "ariaLabel": "Company Milestones",
     "eyebrow": "Our Story",
-    "heading": "How Midland Commercials Got Here."
+    "heading": "How Midland Commercials Got Here"
   },
   "videoWalkaround": {
     "ariaLabel": "Truck Walkaround Videos",
     "eyebrow": "See Before You Travel",
-    "heading": "Every Reserved Truck Can Get A Full Walkaround Video.",
-    "copy": "Engine start-up, tyre condition, cab interior and known marks filmed on request, so you can decide before booking a viewing.",
-    "cta": "Request A Walkaround Video",
-    "imageAlt": "Tractor Unit Ready For A Walkaround Video"
+    "heading": "Walkaround Videos on Request",
+    "copy": "We can film the engine starting, the cab interior, tyres and any known marks, so you can decide before you travel for a viewing.",
+    "cta": "Request a Walkaround Video",
+    "imageAlt": "Tractor Unit Ready for a Walkaround Video"
   },
   "searchBand": {
     "ariaLabel": "Truck Search",
@@ -234,13 +234,13 @@
     "search": "Search Trucks"
   },
   "brandStrip": {
-    "ariaLabel": "Browse Stock By Make",
+    "ariaLabel": "Browse Stock by Make",
     "heading": "Find Your Preferred Make",
     "viewMake": "View {{make}} Stock"
   },
   "truckGrid": {
-    "compareRemoveHint": "Remove A Truck From Comparison To Add This One",
-    "compareAddHint": "Add To Comparison",
+    "compareRemoveHint": "Remove a Truck from Comparison to Add This One",
+    "compareAddHint": "Add to Comparison",
     "compareLabel": "Compare",
     "available": "Available",
     "vatConfirm": "VAT status to confirm",
@@ -254,17 +254,17 @@
     },
     "viewDetails": "View Details",
     "photoComingSoon": "Photo Coming Soon",
-    "hotDeal": "Hot Deal"
+    "hotDeal": "Featured"
   },
   "pages": {
     "home": {
       "hero": {
-        "kicker": "Fresh Stock Arriving Weekly",
-        "eyebrow": "Used Trucks For Sale In The Midlands",
-        "title": "Midland Trucks: Quality Used Tractor Units, Rigids And Trailers.",
+        "kicker": "Open 7 Days, 8:00am – 6:00pm",
+        "eyebrow": "Midland Commercials, Swadlincote",
+        "title": "Used Trucks for Sale in the Midlands",
         "copy": "Hand-picked stock from UK fleets, prepared at our Swadlincote yard with clear VAT and MOT details. Part exchange welcome and viewings available seven days a week.",
         "viewStock": "View Available Stock",
-        "requestCallback": "Request A Callback",
+        "requestCallback": "Request a Callback",
         "proofAria": "Buyer Reassurance",
         "proof": [
           "Inspected Stock",
@@ -273,22 +273,22 @@
         ],
         "cardLabel": "Latest Arrival",
         "cardCta": "Explore New Stock",
-        "scrollCue": "Scroll To Explore",
+        "scrollCue": "Scroll to Explore",
         "imageAlt": "White Scania tractor unit pulling a container trailer"
       },
       "intro": {
-        "eyebrow": "Welcome To Midland Commercials",
-        "heading": "Quality Used Trucks & Trailers From The Heart Of The Midlands.",
-        "copy": "Midland Commercials (often searched as Midland Trucks) is based in Swadlincote. We supply used tractor units, rigids, tippers and trailers sourced direct from UK fleets. Every vehicle is checked over before sale and comes with an honest description, a clear price and straightforward, no-pressure service. Part exchange welcome — open 7 days a week.",
+        "eyebrow": "Welcome to Midland Commercials",
+        "heading": "Used Tractor Units, Rigids and Trailers From UK Fleets",
+        "copy": "Midland Commercials is an independent used truck dealer based in Swadlincote. We supply tractor units, rigids, tippers and trailers sourced directly from UK fleets. Every vehicle is checked before sale and comes with an honest description, a clear price and straightforward, no-pressure service. Part exchange welcome, and we are open seven days a week.",
         "points": [
-          "Sourced From UK Fleets",
+          "Sourced from UK Fleets",
           "Checked Before Sale",
           "Part Exchange Welcome"
         ]
       },
       "journey": {
-        "eyebrow": "A Simpler Way To Buy",
-        "heading": "From Search To Handover, Without The Guesswork.",
+        "eyebrow": "A Simpler Way to Buy",
+        "heading": "From Search to Handover, Without the Guesswork",
         "copy": "Clear information at every step means less time chasing answers and more time running your fleet.",
         "cta": "Start Your Search",
         "steps": [
@@ -304,7 +304,7 @@
           },
           {
             "number": "03",
-            "title": "Reserve With Confidence",
+            "title": "Reserve with Confidence",
             "copy": "Agree part exchange, viewing and handover before paying a deposit."
           }
         ]
@@ -315,14 +315,14 @@
         "viewAll": "View Full Listing",
         "emptyHeading": "New Stock Arriving This Week",
         "emptyCopy": "Our latest trucks are being prepared at the yard right now. Set up a free stock alert and we’ll tell you as soon as they’re ready to view.",
-        "emptyCta": "Get A Stock Alert"
+        "emptyCta": "Get a Stock Alert"
       },
       "serviceCard": {
         "openPage": "Open Page"
       },
       "featureBand": {
-        "eyebrow": "Part Exchange And Viewings",
-        "heading": "Trade In, Drive Away And Get Back To Work.",
+        "eyebrow": "Part Exchange and Viewings",
+        "heading": "Trade In, Drive Away and Get Back to Work",
         "copy": "We can take your current vehicle in part exchange, film a walkaround video and book you a viewing at our Swadlincote yard before you reserve.",
         "items": [
           {
@@ -334,7 +334,7 @@
             "copy": "Send your registration, mileage and photos for a valuation."
           },
           {
-            "title": "Reserve With Confidence",
+            "title": "Reserve with Confidence",
             "copy": "Availability, VAT status and deposit terms confirmed before payment."
           }
         ]
@@ -343,12 +343,12 @@
     "about": {
       "hero": {
         "eyebrow": "About Us",
-        "title": "Quality Used Commercial Vehicles From The Heart Of The Midlands.",
+        "title": "Independent Used Truck Dealer in Swadlincote",
         "copy": "Midland Commercials is an independent used truck and trailer dealer based in Swadlincote, supplying hauliers, builders, owner-drivers and fleet operators across the UK."
       },
       "approach": {
         "eyebrow": "Who We Are",
-        "heading": "Honest Trucks, Fair Prices And A Friendly Service.",
+        "heading": "Honest Trucks, Fair Prices and a Friendly Service",
         "p1": "We buy quality used tractor units, rigids, tippers and trailers direct from UK fleets and operators, then check them over before they go on sale. Whether you run one truck or a whole fleet, we’ll help you find the right vehicle for the job — without the hard sell.",
         "p2": "Every advert shows the details that matter: year, mileage, gearbox, cab, VAT status, MOT and Euro rating. Need more? We’re happy to send extra photos or a walkaround video, and you’re always welcome to come and see the truck in person at our yard."
       },
@@ -362,16 +362,16 @@
           "copy": "Got a truck, van or trailer to move on? We’ll give you a fair price against your next vehicle."
         },
         {
-          "title": "Open 7 Days A Week",
+          "title": "Open 7 Days a Week",
           "copy": "Viewings at our Swadlincote yard, Monday to Sunday, 8:00am – 6:00pm."
         }
       ],
       "statsAria": "Midland Commercials Milestones",
       "cta": {
-        "eyebrow": "Speak To The Team",
-        "heading": "Come And See Us, Or Give Us A Call.",
+        "eyebrow": "Speak to the Team",
+        "heading": "Come and See Us, or Give Us a Call",
         "copy": "Looking for something specific? Tell us what you need and we’ll let you know what’s in stock or arriving soon.",
-        "getInTouch": "Get In Touch",
+        "getInTouch": "Get in Touch",
         "call": "Call 0121 663 1118"
       }
     },
@@ -382,8 +382,8 @@
         "copy": "Whether you’re looking for your next truck, want to book a viewing or have a vehicle to part exchange, we’re here to help — 7 days a week."
       },
       "salesDesk": {
-        "eyebrow": "Speak To Us",
-        "heading": "Call, Email Or Pop Into The Yard.",
+        "eyebrow": "Speak to Us",
+        "heading": "Call, Email or Pop into the Yard",
         "copy": "Give us a call for a quick answer, or send us a message with the truck you’re interested in. We can send extra photos and walkaround videos, and value your part exchange."
       },
       "details": {
@@ -408,7 +408,7 @@
       },
       "details": {
         "eyebrow": "Valuation Details",
-        "heading": "A Quick Valuation With The Details That Matter.",
+        "heading": "A Quick Valuation with the Details That Matter",
         "copy": "Registration, mileage, MOT status, service history, tyre condition and cab/body photos help the team estimate value and move the deal forward without repeated calls."
       },
       "form": {
@@ -430,8 +430,8 @@
     },
     "privacy": {
       "hero": {
-        "eyebrow": "Privacy And Terms",
-        "title": "Privacy Policy And Sales Terms.",
+        "eyebrow": "Privacy and Terms",
+        "title": "Privacy Policy and Sales Terms",
         "copy": "How Midland Commercials collects, uses and protects your personal data under UK GDPR and the Data Protection Act 2018."
       },
       "updated": "Last updated: {{date}}",
@@ -462,7 +462,7 @@
           ]
         },
         {
-          "heading": "How We Use It And Our Legal Basis",
+          "heading": "How We Use It and Our Legal Basis",
           "paragraphs": [
             "UK GDPR requires a legal basis for each use of your data. Ours are:"
           ],
@@ -485,7 +485,7 @@
             "Meta Platforms (Meta Pixel), only if you accept marketing cookies.",
             "Unsplash, which serves some website images and receives your IP address when they load.",
             "DVLA and DVSA, when we check a vehicle registration you send us for a part exchange.",
-            "Professional advisers, finance and law enforcement bodies, only where the law requires it."
+            "Professional advisers such as our accountants, and law enforcement bodies, only where the law requires it."
           ]
         },
         {
@@ -541,13 +541,13 @@
           ]
         },
         {
-          "heading": "Reservation And Payment Terms",
+          "heading": "Reservation and Payment Terms",
           "paragraphs": [
             "This website does not take online payments. Deposits, reservations, part exchange values, the full price, taxes and cancellation terms are confirmed directly with the sales team before a sale is completed."
           ]
         },
         {
-          "heading": "Changes To This Policy",
+          "heading": "Changes to This Policy",
           "paragraphs": [
             "We may update this policy from time to time. The date at the top of this page shows when it was last changed."
           ]
@@ -561,7 +561,7 @@
       },
       "prepNotes": {
         "eyebrow": "Preparation Notes",
-        "heading": "Ready For Inspection And Buyer Checks."
+        "heading": "Ready for Inspection and Buyer Checks"
       },
       "items": [
         {
@@ -573,13 +573,13 @@
           "copy": "Reserve after final availability checks, a viewing or confirmation of your part exchange."
         },
         {
-          "title": "VAT And Invoice Check",
+          "title": "VAT and Invoice Check",
           "copy": "VAT status, deposit terms and warranty cover are confirmed before payment."
         }
       ],
       "galleryAria": "Vehicle Gallery",
-      "priceNoteVat": "Commercial Price Shown {{vatStatus}}.",
-      "priceNoteConfirm": "Confirm VAT Status Before Invoice.",
+      "priceNoteVat": "Price shown {{vatStatus}}.",
+      "priceNoteConfirm": "VAT status confirmed before invoicing.",
       "specs": {
         "make": "Make",
         "body": "Body",
@@ -604,20 +604,20 @@
         "previousOwners": "Previous Owners",
         "tacho": "Tacho"
       },
-      "reserveEnquire": "Reserve Or Enquire",
+      "reserveEnquire": "Reserve or Enquire",
       "photosComingSoon": "Truck Photos Coming Soon",
       "walkaround": {
         "eyebrow": "Truck Walkaround",
-        "heading": "See This Truck In Action",
+        "heading": "See This Truck in Action",
         "watch": "Watch Walkaround Video"
       }
     },
     "trucks": {
       "hero": {
-        "eyebrow": "Used Trucks For Sale",
-        "title": "Quality Used Trucks & Trailers In Stock Now.",
+        "eyebrow": "Used Trucks for Sale",
+        "title": "Used Trucks and Trailers for Sale",
         "copy": "Browse our current stock of used tractor units, rigids, tippers and trailers, all sourced from UK fleets and ready to view at our Swadlincote yard. Can’t see what you need? Call 0121 663 1118 — new stock arrives every week.",
-        "titleEmpty": "New Stock Arriving Soon."
+        "titleEmpty": "New Stock Arriving Soon"
       },
       "filters": {
         "make": "Make",
@@ -652,39 +652,42 @@
       "clearFiltersCount": "Clear Filters ({{count}})",
       "toolbar": {
         "eyebrow": "Available Stock",
-        "heading": "{{count}} Trucks Ready To Enquire"
+        "heading": "{{count}} Trucks Available",
+        "heading_zero": "No Trucks to Show",
+        "heading_one": "1 Truck Available",
+        "heading_other": "{{count}} Trucks Available"
       },
       "sortAria": "Sort Trucks",
       "sortOptions": {
         "newest": "Newest Stock First",
         "yearOld": "Year: Oldest First",
-        "priceLow": "Price: Low To High",
-        "priceHigh": "Price: High To Low",
-        "mileageLow": "Mileage: Low To High"
+        "priceLow": "Price: Low to High",
+        "priceHigh": "Price: High to Low",
+        "mileageLow": "Mileage: Low to High"
       },
       "activeFiltersAria": "Active Filters",
       "clearAll": "Clear All",
       "loadMore": "Load More Trucks ({{count}} Remaining)",
       "emptyState": {
-        "heading": "No Trucks Match Those Filters.",
+        "heading": "No Trucks Match Those Filters",
         "copy": "Clear the filters or send the team your requirement for incoming stock.",
         "cta": "Send Requirement"
       },
       "noStock": {
         "heading": "New Stock Arriving Soon",
         "copy": "Our next trucks are being prepared at the yard. Set up a free stock alert or tell us what you need, and we'll contact you as soon as a match is ready to view.",
-        "cta": "Get A Stock Alert",
+        "cta": "Get a Stock Alert",
         "secondaryCta": "Send Your Requirement"
       }
     },
     "blog": {
-      "eyebrow": "Guides For UK Operators",
+      "eyebrow": "Guides for UK Operators",
       "title": "Used Truck Buying Guides",
       "copy": "Straight-talking advice on choosing, checking and running a used truck in the UK, from Euro 6 and clean air zones to part exchange.",
       "loading": "Loading Articles…",
-      "empty": "New Articles Are Coming Soon.",
+      "empty": "New Articles Are Coming Soon",
       "unavailable": "Article Unavailable",
-      "backHome": "Back To Home",
+      "backHome": "Back to Home",
       "statGuides_one": "{{count}} guide",
       "statGuides_other": "{{count}} guides",
       "statUk": "Written for UK operators",
@@ -696,11 +699,11 @@
       "moreGuides": "More Buying Guides",
       "readTime_one": "{{count}} min read",
       "readTime_other": "{{count}} min read",
-      "readMore": "Read The Guide",
-      "ctaHeading": "Ready To Find Your Next Truck?",
+      "readMore": "Read the Guide",
+      "ctaHeading": "Ready to Find Your Next Truck?",
       "ctaCopy": "Browse checked used trucks at our Swadlincote yard, open 7 days a week, or get an alert when the right one arrives.",
       "ctaPrimary": "Browse Used Trucks",
-      "ctaSecondary": "Get A Stock Alert",
+      "ctaSecondary": "Get a Stock Alert",
       "backToGuides": "All Guides",
       "byline": "By {{name}}",
       "loadError": "This Guide Could Not Load"
@@ -711,17 +714,20 @@
       {
         "title": "Browse Stock",
         "copy": "Tractor units, rigids, tippers and trailers, inspected and ready to view.",
-        "href": "/trucks"
+        "href": "/trucks",
+        "cta": "View Stock"
       },
       {
         "title": "Part Exchange",
         "copy": "Send your current vehicle details and get a valuation against your next truck.",
-        "href": "/part-exchange"
+        "href": "/part-exchange",
+        "cta": "Get a Valuation"
       },
       {
-        "title": "Book A Viewing",
+        "title": "Book a Viewing",
         "copy": "Come and see the stock at our Swadlincote yard, open Monday to Sunday.",
-        "href": "/contact"
+        "href": "/contact",
+        "cta": "Book a Viewing"
       }
     ],
     "aboutStats": [
@@ -812,12 +818,12 @@
     ],
     "faqs": [
       {
-        "question": "Can I Reserve A Truck Remotely?",
+        "question": "Can I Reserve a Truck Remotely?",
         "answer": "Yes. We can share extra photos, arrange a video walkaround and hold the truck after final availability checks and an agreed deposit."
       },
       {
-        "question": "Can I View A Truck Before I Buy?",
-        "answer": "Yes. Viewings are by appointment at our yard in Little Wigston, Swadlincote, DE12 7BJ, so the truck and its paperwork are ready when you arrive."
+        "question": "Can I View a Truck Before I Buy?",
+        "answer": "Yes. Our yard at Little Wigston, Swadlincote, DE12 7BJ is open for viewings Monday to Sunday, 8:00am to 6:00pm. Give us a call before you travel and we will have the truck and its paperwork ready when you arrive."
       },
       {
         "question": "Can I Part Exchange My Vehicle?",
@@ -828,7 +834,7 @@
         "answer": "Each listing shows whether the price is plus VAT, VAT included or no VAT. Final VAT status is confirmed on the invoice before payment."
       },
       {
-        "question": "Do You Show MOT And Clean Air Zone Information?",
+        "question": "Do You Show MOT and Clean Air Zone Information?",
         "answer": "Listings include MOT status and Euro/CAZ notes where available. Buyers should still check registration-specific details before use."
       },
       {
@@ -840,15 +846,15 @@
         "answer": "We are open Monday to Sunday, 8:00am to 6:00pm. Call 0121 663 1118 before you travel so we can have the truck and its paperwork ready for you."
       },
       {
-        "question": "How Do I Know If A Truck Is Euro 6?",
+        "question": "How Do I Know If a Truck Is Euro 6?",
         "answer": "Every listing shows the Euro rating. As a rule, heavy goods vehicles first registered from the start of 2014 are Euro 6, but you should always check the registration on the official clean air zone vehicle checker before driving into a charging zone."
       },
       {
-        "question": "What Should I Check When Buying A Used Truck?",
+        "question": "What Should I Check When Buying a Used Truck?",
         "answer": "Look at the service history, MOT history, tyre condition, cab and body condition, and make sure the VIN matches the V5C. We go through these with you at the viewing and can send extra photos or a walkaround video beforehand."
       },
       {
-        "question": "Can You Tell Me When A Particular Truck Comes In?",
+        "question": "Can You Tell Me When a Particular Truck Comes In?",
         "answer": "Yes. Set up a free stock alert with the make, body type and budget you are looking for, and we will let you know as soon as a matching truck arrives at the yard."
       }
     ]
@@ -856,8 +862,8 @@
   "chat": {
     "launcher": "Ask About Trucks",
     "headerTitle": "Midland Commercials Assistant",
-    "checkingStock": "Checking Live Stock...",
-    "stockSummary": "{{count}} Active Trucks From {{range}}.",
+    "checkingStock": "Checking Stock…",
+    "stockSummary": "{{count}} Trucks in Stock From {{range}}",
     "closeAria": "Close Chat",
     "welcome": "Hi, I'm the Midland Commercials virtual sales assistant. I can help you find a truck, check specifications, value a part exchange and arrange a viewing or callback. What type of vehicle are you looking for?",
     "quickPrompts": {
@@ -865,7 +871,7 @@
       "scaniaMileage": "Scania Mileage?",
       "automaticEuro6": "Automatic Euro 6 Trucks",
       "teamPhone": "Team Phone Number",
-      "bookEnquiry": "Book Enquiry"
+      "bookEnquiry": "Make an Enquiry"
     },
     "form": {
       "nameLabel": "Name",
@@ -883,7 +889,7 @@
       "budgetBasisLabel": "Budget Basis",
       "budgetBasisExcl": "Excluding VAT",
       "budgetBasisIncl": "Including VAT",
-      "timelineLabel": "When Are You Looking To Purchase?",
+      "timelineLabel": "When Are You Looking to Purchase?",
       "timelineSelect": "Please Select",
       "timelineThisWeek": "This Week",
       "timelineWithin7": "Within 7 Days",
@@ -891,22 +897,22 @@
       "timelineWithin3Months": "Within 3 Months",
       "timelineResearching": "Just Researching",
       "callbackLabel": "Preferred Callback Time",
-      "callbackPlaceholder": "Weekdays, 2–4 pm",
+      "callbackPlaceholder": "e.g. Tuesday, 2–4pm",
       "partExchange": "Part Exchange",
       "requirementLabel": "Requirement",
-      "consentText": "I Agree That Midland Commercials May Contact Me About This Enquiry. See The <1>Privacy Policy</1>.",
+      "consentText": "I agree that Midland Commercials may contact me about this enquiry. See the <1>Privacy Policy</1>.",
       "submitSending": "Sending Securely…",
-      "submitCallback": "Request A Sales Callback"
+      "submitCallback": "Request a Sales Callback"
     },
     "suggestedAria": "Suggested Questions",
     "composerPlaceholder": "Ask about mileage, price, MOT, gearbox...",
-    "composerAria": "Ask The Chat Assistant",
+    "composerAria": "Ask the Chat Assistant",
     "sendAria": "Send Chat Message",
     "send": "Send",
     "actions": {
       "contactPage": "Contact Page",
       "allTrucks": "All Trucks",
-      "partExchangePage": "Part-exchange Page"
+      "partExchangePage": "Part Exchange Page"
     },
     "replies": {
       "enquiry": "Certainly. Share your details and the team will come back to you about price, availability, viewing or part exchange.",
@@ -915,20 +921,20 @@
       "budgetWithAmount": "These are the strongest matches under £{{amount}}.",
       "budgetGeneric": "Here are the best-priced trucks in stock right now.",
       "specMatch": "These listings match that requirement. Open one for full photos and inspection notes.",
-      "specNoMatch": "I could not find an exact stock match. Send an enquiry and the team can suggest alternatives.",
-      "viewing": "Viewings are available by appointment so the team can have the truck and inspection information ready. Share the truck, preferred day and contact number, and we will arrange it.",
-      "availability": "Stock status can change quickly. These are the closest active listings; open a truck for its latest status or send an enquiry for confirmation before travelling.",
-      "stockOptions": "There are currently {{count}} trucks in the stock feed. Here are the strongest available options; use all trucks for the complete range.",
+      "specNoMatch": "I could not find an exact match in stock. Send an enquiry and the team can suggest alternatives.",
+      "viewing": "Viewings are available Monday to Sunday, 8:00am to 6:00pm at our Swadlincote yard. Let us know the truck, the day you would like to come and your phone number, and we will have it ready for you.",
+      "availability": "Stock can sell quickly. These are the closest listings; open a truck for its latest status, or send an enquiry to confirm before you travel.",
+      "stockOptions": "We currently have {{count}} trucks in stock. Here are some of the best options, or open All Trucks to see the full range.",
       "thanks": "You're welcome. If you share a make, body type, gearbox, budget or preferred year, I can narrow the stock down further.",
       "greeting": "Hello! Ask me about mileage, price, MOT, gearbox, Euro/CAZ, warranty, location or part exchange. {{stockNote}}",
-      "greetingStockChecking": "I am still checking live stock, but fallback stock is ready.",
+      "greetingStockChecking": "I'm just checking our latest stock.",
       "greetingStockReady": "Current stock: {{count}} trucks.",
-      "fallback": "I found the closest stock options below. For exact availability, final VAT, viewing and inspection sheet, send an enquiry or call the team.",
+      "fallback": "Here are the closest matches in stock. For exact availability, VAT status, a viewing or the inspection notes, send an enquiry or call the team.",
       "thankYou": "Thank you, {{name}}. Your enquiry has been sent to our sales team. They'll contact you at your preferred time. If it's urgent, call {{phone}}.",
       "sendError": "I couldn't send that enquiry just now. Please try again or call our sales team on {{phone}}.",
       "mileageLine": "{{title}} has {{mileage}} showing.",
       "priceLine": "Price is {{price}}.",
-      "motLine": "MOT/prep: {{mot}}. Service: {{service}}.",
+      "motLine": "MOT: {{mot}}. Service history: {{service}}.",
       "gearboxLine": "Gearbox is {{gearbox}}.",
       "locationLine": "Location is {{location}}.",
       "warrantyLine": "Owners: {{owners}}. Warranty: {{warranty}}.",
@@ -946,10 +952,10 @@
   },
   "notFound": {
     "eyebrow": "Page Not Found",
-    "heading": "Sorry, We Can’t Find That Page.",
+    "heading": "Sorry, We Can’t Find That Page",
     "copy": "The page may have moved, or the truck you were looking at may have been sold. Have a look at our current stock or get in touch and we’ll help you find what you need.",
     "cta": "Browse Current Stock",
-    "home": "Back To Home",
+    "home": "Back to Home",
     "contact": "Contact Us"
   },
   "forms": {
@@ -961,17 +967,17 @@
   "thankYou": {
     "eyebrow": "Thank You",
     "browse": "Browse Current Stock",
-    "home": "Back To Home",
+    "home": "Back to Home",
     "enquiry": {
-      "heading": "Thanks, We’ve Got Your Enquiry.",
+      "heading": "Thanks, We’ve Got Your Enquiry",
       "copy": "A member of the sales team will be in touch shortly, usually the same day. If it’s urgent, give us a call."
     },
     "part-exchange": {
-      "heading": "Thanks, We’ve Got Your Vehicle Details.",
+      "heading": "Thanks, We’ve Got Your Vehicle Details",
       "copy": "We’ll look over your part exchange and come back to you with a valuation as soon as we can."
     },
     "stock-alert": {
-      "heading": "You’re On The Stock Alert List.",
+      "heading": "You’re on the Stock Alert List",
       "copy": "We’ll let you know as soon as a truck matching your requirements comes into stock."
     }
   }

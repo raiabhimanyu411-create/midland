@@ -18,10 +18,6 @@ export function ContactPreview() {
       className={`${styles.contactSection} ${inView ? styles.inView : ''}`}
     >
       <div className={styles.salesPanel}>
-        <div className={styles.responseBadge}>
-          <span />
-          {t('contactPreview.badge')}
-        </div>
         <p className="eyebrow">{t('contactPreview.eyebrow')}</p>
         <h2>{t('contactPreview.heading')}</h2>
         <p className={styles.intro}>{t('contactPreview.intro')}</p>
@@ -48,7 +44,6 @@ export function ContactPreview() {
             <span>{t('contactPreview.quickEnquiry')}</span>
             <strong>{t('contactPreview.quickEnquirySub')}</strong>
           </div>
-          <span className={styles.stepBadge}>{t('contactPreview.stepBadge')}</span>
         </div>
         <ContactForm embedded />
         <p className={styles.privacyNote}>

@@ -48,7 +48,7 @@ export function LocationPage({ slug }) {
             <p>Browse checked used trucks at our Swadlincote yard, open 7 days a week, or call 0121 663 1118.</p>
           </div>
           <div className={styles.actions}>
-            <a className="button primary" href="/trucks">View Trucks For Sale</a>
+            <a className="button primary" href="/trucks">View Trucks for Sale</a>
             <a className="button outline" href="/part-exchange">Part Exchange</a>
           </div>
         </aside>

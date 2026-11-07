@@ -50,8 +50,8 @@ export function parseUnsplash(src) {
 // Hero photo per page, used by the server to preload the image the page will show first.
 export const pageHeroImages = {
   home: { photoId: 'photo-1601584115197-04ecc0da31d7', width: 1800 },
-  trucks: { photoId: 'photo-1506306460327-3164753b74c7', width: 1800 },
-  about: { photoId: 'photo-1581092160607-ee22621dd758', width: 1800 },
+  trucks: { photoId: 'photo-1601584115197-04ecc0da31d7', width: 1800 },
+  about: { photoId: 'photo-1619642751034-765dfdf7c58e', width: 1800 },
   contact: { photoId: 'photo-1497366754035-f200968a6e72', width: 1800 },
   faq: { photoId: 'photo-1521791136064-7986c2920216', width: 1800 },
   partExchange: { photoId: 'photo-1592838064575-70ed626d3a0e', width: 1800 },

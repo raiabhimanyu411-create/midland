@@ -56,7 +56,7 @@ const paragraphs = (...texts) => texts.filter(Boolean).map((text) => `<p>${escap
 const list = (items) => (Array.isArray(items) ? items : []);
 const section = (heading, ...html) => `<section>${heading ? `<h2>${escapeHtml(stripTags(heading))}</h2>` : ''}${html.join('')}</section>`;
 const cards = (items, tag = 'h3') => list(items).map((item) => `<${tag}>${escapeHtml(stripTags(item.title))}</${tag}>${paragraphs(item.copy)}`).join('');
-const pageCrumbs = { trucks: 'Used Trucks For Sale', partExchange: 'Part Exchange', faq: 'FAQs', about: 'About Us', contact: 'Contact Us', blog: 'Guides & News', privacy: 'Privacy Policy' };
+const pageCrumbs = { trucks: 'Used Trucks for Sale', partExchange: 'Part Exchange', faq: 'FAQs', about: 'About Us', contact: 'Contact Us', blog: 'Guides & News', privacy: 'Privacy Policy' };
 
 function staticPageBody(pageName) {
   const pages = getCopy().pages || {};
@@ -70,7 +70,7 @@ function staticPageBody(pageName) {
         bodyHtml: paragraphs(home.hero?.copy)
           + section(home.intro?.heading, paragraphs(home.intro?.copy), `<ul>${list(home.intro?.points).map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul>`)
           + section(home.journey?.heading, paragraphs(home.journey?.copy), cards(home.journey?.steps))
-          + section(home.featureBand?.heading, paragraphs(home.featureBand?.copy), cards(home.featureBand?.items))
+          + section(getCopy().videoWalkaround?.heading, paragraphs(getCopy().videoWalkaround?.copy))
           + section(null, cards(content.serviceCards))
           + section(home.featuredStock?.heading)
       };
@@ -222,7 +222,7 @@ function renderBody(meta) {
 }
 
 const allPrimaryLinks = [
-  { label: 'Used Trucks For Sale', href: '/trucks' },
+  { label: 'Used Trucks for Sale', href: '/trucks' },
   { label: 'Part Exchange', href: '/part-exchange' },
   { label: 'Guides & News', href: '/blog' },
   { label: 'About Us', href: '/about' },

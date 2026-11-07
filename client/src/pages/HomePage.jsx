@@ -73,9 +73,8 @@ export function HomePage() {
       <FeaturedStock stock={stock} />
       <BuyerJourney />
       <VideoWalkaround />
-      <ServiceCards />
-      <FeatureBand />
       <StockAlert />
+      <ServiceCards />
       <ContactPreview />
     </div>
   );
@@ -103,7 +102,6 @@ function Hero({ latest }) {
       </div>
       <div className={styles.heroContent}>
         <div className={styles.heroKicker}>
-          <span className={styles.liveDot} />
           {t('pages.home.hero.kicker')}
         </div>
         <p className="eyebrow">{t('pages.home.hero.eyebrow')}</p>
@@ -211,14 +209,14 @@ function ServiceCards() {
 
   return (
     <section className={styles.serviceGrid} aria-label={t('pages.home.featuredStock.eyebrow')}>
-      {serviceCards.map(({ title, copy }, index) => (
-        <ServiceCard key={title} title={title} copy={copy} href={serviceCardHrefs[index]} index={index} />
+      {serviceCards.map(({ title, copy, cta }, index) => (
+        <ServiceCard key={title} title={title} copy={copy} cta={cta} href={serviceCardHrefs[index]} index={index} />
       ))}
     </section>
   );
 }
 
-function ServiceCard({ title, copy, href, index }) {
+function ServiceCard({ title, copy, cta, href, index }) {
   const { t } = useTranslation();
   const [ref, inView] = useInView();
   const Icon = serviceIcons[index];
@@ -237,7 +235,7 @@ function ServiceCard({ title, copy, href, index }) {
       )}
       <span className={styles.serviceTitle}>{title}</span>
       <p>{copy}</p>
-      <strong>{t('pages.home.serviceCard.openPage')}</strong>
+      <strong>{cta || t('pages.home.serviceCard.openPage')} <span aria-hidden="true">→</span></strong>
     </a>
   );
 }

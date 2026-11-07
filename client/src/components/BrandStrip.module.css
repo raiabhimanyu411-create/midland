@@ -118,3 +118,14 @@
     height: 44px;
   }
 }
+
+/* One consistent monochrome look for every make; the logo's own colours show on hover. */
+.list img {
+  filter: grayscale(1) contrast(1.15) brightness(0.55);
+  transition: filter 0.2s ease;
+}
+
+.list a:hover img,
+.list a:focus-visible img {
+  filter: none;
+}
