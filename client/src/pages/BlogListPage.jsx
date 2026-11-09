@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
+import { PageGuide } from '../components/PageGuide.jsx';
 import { BlogHero } from '../components/BlogHero.jsx';
 import { readingMinutes } from '../../../shared/blogContent.js';
 import { api } from '../utils/api.js';
@@ -137,6 +138,8 @@ export function BlogListPage() {
           </>
         )}
       </section>
+
+      <PageGuide page="blog" />
 
       <section className={styles.cta}>
         <div>

@@ -25,7 +25,7 @@ export const businessAddress = {
 // Postcode centroid for DE12 7BJ (postcodes.io). Replace with the yard's exact pin if the client supplies it.
 export const businessGeo = { '@type': 'GeoCoordinates', latitude: 52.685636, longitude: -1.551274 };
 // Date the static page copy last changed, used as <lastmod> in the sitemap. Bump it when page text changes.
-export const SITE_CONTENT_UPDATED = '2026-11-07';
+export const SITE_CONTENT_UPDATED = '2026-11-09';
 // Legal details shown on the privacy policy. Fill these in once the client confirms them;
 // empty values are simply left off the page.
 export const legalDetails = {

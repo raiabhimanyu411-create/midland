@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
+import { PageGuide } from '../components/PageGuide.jsx';
 import { CompareBar } from '../components/CompareBar.jsx';
 import { CompareModal } from '../components/CompareModal.jsx';
 import { PageHero } from '../components/PageHero.jsx';
@@ -251,6 +252,7 @@ export function TrucksPage() {
           </div>
         </div>
       </section>
+      <PageGuide page="trucks" />
       <CompareBar
         trucks={compareTrucks}
         onRemove={removeCompare}

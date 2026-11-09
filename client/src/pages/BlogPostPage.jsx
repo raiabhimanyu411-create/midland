@@ -32,7 +32,7 @@ export function BlogPostPage({ slug }) {
   const [attempt, setAttempt] = useState(0);
   const [related, setRelated] = useState([]);
 
-  // Two related guides (shared tags first, then the newest) for internal linking.
+  // Three related guides (shared tags first, then the newest) for internal linking.
   useEffect(() => {
     if (!post) return undefined;
     let active = true;
@@ -42,7 +42,7 @@ export function BlogPostPage({ slug }) {
       .then((response) => {
         if (!active) return;
         const others = (response.data || []).filter((item) => item.slug !== post.slug);
-        setRelated([...others].sort((a, b) => shared(b) - shared(a)).slice(0, 2));
+        setRelated([...others].sort((a, b) => shared(b) - shared(a)).slice(0, 3));
       })
       .catch(() => active && setRelated([]));
     return () => { active = false; };

@@ -33,6 +33,7 @@ import {
 } from '../../../shared/seo.js';
 import { locationForPath, locationLinks, locationPages, locationPath } from '../../../shared/locations.js';
 import { localImageSet, pageHeroImages } from '../../../shared/images.js';
+import { pageGuides } from '../../../shared/pageGuides.js';
 
 const SEO_BLOCK = /<!-- seo:start[\s\S]*?<!-- seo:end -->/;
 const BODY_MARKER = '<!-- seo:body -->';
@@ -134,6 +135,21 @@ function inlineHtml(text) {
   return parseInline(text).map((part) => (part.href ? `<a href="${escapeHtml(part.href)}">${escapeHtml(part.text)}</a>` : escapeHtml(part.text))).join('');
 }
 
+// Same guide copy the React page shows below its main content (shared/pageGuides.js).
+function guideHtml(pageName) {
+  const guide = pageGuides[pageName];
+  if (!guide) return '';
+  const parts = guide.sections.map((part) => [
+    part.heading ? `<h3>${escapeHtml(part.heading)}</h3>` : '',
+    ...(part.paragraphs || []).map((text) => `<p>${inlineHtml(text)}</p>`),
+    part.list ? `<ul>${part.list.map((text) => `<li>${inlineHtml(text)}</li>`).join('')}</ul>` : ''
+  ].join('')).join('');
+  const faqs = (guide.faqs || []).length
+    ? `<h3>Common Questions</h3><dl>${guide.faqs.map((faq) => `<dt>${escapeHtml(faq.question)}</dt><dd>${escapeHtml(faq.answer)}</dd>`).join('')}</dl>`
+    : '';
+  return `<section><h2>${escapeHtml(guide.heading)}</h2>${parts}${faqs}</section>`;
+}
+
 function blogHtml(content) {
   return parseBlogContent(content).map((block) => {
     if (block.type === 'h2' || block.type === 'h3') return `<${block.type}>${escapeHtml(block.text)}</${block.type}>`;
@@ -226,11 +242,13 @@ const allPrimaryLinks = [
   { label: 'Part Exchange', href: '/part-exchange' },
   { label: 'Guides & News', href: '/blog' },
   { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' }
+  { label: 'Contact', href: '/contact' },
+  { label: 'FAQs', href: '/faq' },
+  { label: 'Privacy Policy', href: '/privacy' }
 ];
 
 // Posts sharing a tag come first, then the newest others.
-function relatedPosts(post, others, count = 2) {
+function relatedPosts(post, others, count = 3) {
   const tags = new Set((post.tags || []).map((tag) => String(tag).toLowerCase()));
   const shared = (item) => (item.tags || []).filter((tag) => tags.has(String(tag).toLowerCase())).length;
   return [...others].sort((a, b) => shared(b) - shared(a)).slice(0, count);
@@ -372,6 +390,8 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
     meta.links = [...rows.map(mapBlog).map((post) => ({ label: post.title, href: blogPath(post) })), ...primaryLinks];
   }
 
+  // Guide copy goes last, matching where the React page shows it.
+  meta.bodyHtml = `${meta.bodyHtml || ''}${guideHtml(pageName)}`;
   return { status: 200, meta };
 }
 

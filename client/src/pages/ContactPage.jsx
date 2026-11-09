@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
+import { PageGuide } from '../components/PageGuide.jsx';
 import { ContactForm } from '../components/ContactForm.jsx';
 import { LocationsSection } from '../components/LocationsSection.jsx';
 import { PageHero } from '../components/PageHero.jsx';
@@ -37,6 +38,7 @@ export function ContactPage() {
         </div>
         <ContactForm />
       </section>
+      <PageGuide page="contact" />
       <LocationsSection />
     </>
   );

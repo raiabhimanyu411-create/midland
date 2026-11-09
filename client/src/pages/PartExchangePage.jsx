@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
+import { PageGuide } from '../components/PageGuide.jsx';
 import { PageHero } from '../components/PageHero.jsx';
 import { api } from '../utils/api.js';
 import { FormPrivacyNote } from '../components/FormPrivacyNote.jsx';
@@ -84,6 +85,7 @@ export function PartExchangePage() {
           <FormPrivacyNote />
         </form>
       </section>
+      <PageGuide page="partExchange" />
     </>
   );
 }

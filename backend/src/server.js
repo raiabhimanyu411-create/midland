@@ -21,6 +21,7 @@ import { mediaRouter, warmMediaCache } from './routes/media.js';
 import { pageHeroImages } from '../../shared/images.js';
 import { clearSeoCache, renderPage } from './seo/render.js';
 import { robotsTxt, sitemapXml } from './seo/sitemap.js';
+import { llmsTxt } from './seo/llms.js';
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -34,6 +35,12 @@ validateRuntimeConfig();
 
 app.disable('x-powered-by');
 if (isProduction) app.set('trust proxy', Number(process.env.TRUST_PROXY || 1));
+
+// Security headers first, so redirects below also carry HSTS (site audits check the redirect responses too).
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
 // Google treats www as canonical: permanently send bare-domain requests to the www host.
 app.use((req, res, next) => {
@@ -50,10 +57,6 @@ app.use((req, res, next) => {
 });
 // Gzip JS, CSS, JSON and XML (nginx only compresses HTML), so pages load faster for visitors and Google.
 app.use(compression());
-app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: 'cross-origin' }
-}));
 
 if (allowedOrigins.length) {
   app.use(cors({
@@ -132,6 +135,7 @@ app.use('/api/{*splat}', (_req, res) => {
 app.use('/media', mediaRouter);
 app.get('/robots.txt', robotsTxt);
 app.get('/sitemap.xml', sitemapXml);
+app.get('/llms.txt', llmsTxt);
 
 if (isProduction) {
   if (!existsSync(path.join(clientDistDir, 'index.html'))) {

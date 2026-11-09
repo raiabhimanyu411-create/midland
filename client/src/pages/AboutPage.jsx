@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
+import { PageGuide } from '../components/PageGuide.jsx';
 import { InfoCard } from '../components/InfoList.jsx';
 import { LocationsSection } from '../components/LocationsSection.jsx';
 import { PageHero } from '../components/PageHero.jsx';
@@ -31,6 +32,7 @@ export function AboutPage() {
           ))}
         </div>
       </section>
+      <PageGuide page="about" />
       <LocationsSection />
       <AboutCta />
     </>
