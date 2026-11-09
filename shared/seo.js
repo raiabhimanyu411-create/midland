@@ -3,6 +3,7 @@
 import { truckDisplayPrice, truckDisplayTitle } from './truck.js';
 import { plainBlogText } from './blogContent.js';
 import { locationPath } from './locations.js';
+import { categoryPath } from './categories.js';
 
 export const SITE_NAME = 'Midland Commercials';
 // Other names people search for the business by (e.g. "midland trucks"), used in JSON-LD.
@@ -316,6 +317,29 @@ export function locationJsonLd(location, siteUrl) {
     },
     breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: location.heading, href: locationPath(location) }], siteUrl),
     faqJsonLd(location.faqs)
+  ].filter(Boolean);
+}
+
+export function categorySeo(page) {
+  return { title: page.title, description: page.description, path: categoryPath(page), type: 'website' };
+}
+
+// Breadcrumbs come from the visible Breadcrumb component on the client, so the client drops that item.
+export function categoryJsonLd(page, siteUrl, trucks = []) {
+  const url = absoluteUrl(siteUrl, categoryPath(page));
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: page.heading,
+      description: page.description,
+      url,
+      isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: absoluteUrl(siteUrl, '/') },
+      about: { '@type': 'AutoDealer', name: SITE_NAME, url: absoluteUrl(siteUrl, '/'), address: businessAddress },
+      ...(trucks.length ? { mainEntity: { ...truckListJsonLd(trucks, siteUrl), '@context': undefined } } : {})
+    },
+    breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Trucks', href: '/trucks' }, { label: page.heading, href: categoryPath(page) }], siteUrl),
+    faqJsonLd(page.faqs)
   ].filter(Boolean);
 }
 

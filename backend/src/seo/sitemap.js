@@ -1,6 +1,7 @@
 import { mapBlog, mapTruck, pool } from '../db/mysql.js';
 import { absoluteUrl, blogPath, SITE_CONTENT_UPDATED, staticPages, truckPath } from '../../../shared/seo.js';
 import { locationPages, locationPath } from '../../../shared/locations.js';
+import { categoryPages, categoryPath, categoryTrucks } from '../../../shared/categories.js';
 
 // Canonical domain — hamesha www + https
 const CANONICAL_SITE_URL = (process.env.CANONICAL_SITE_URL || 'https://www.midlandcommercials.com').replace(/\/+$/, '');
@@ -51,6 +52,12 @@ export async function sitemapXml(req, res, next) {
         lastmod: pageLastmod[name] || SITE_CONTENT_UPDATED,
         changefreq: page.changefreq,
         priority: page.priority
+      })),
+      ...categoryPages.map((page) => ({
+        loc: absoluteUrl(siteUrl, categoryPath(page)),
+        lastmod: latest(SITE_CONTENT_UPDATED, ...categoryTrucks(page, trucks).map((truck) => toDate(truck.updatedAt))),
+        changefreq: 'daily',
+        priority: '0.8'
       })),
       ...locationPages.map((location) => ({
         loc: absoluteUrl(siteUrl, locationPath(location)),

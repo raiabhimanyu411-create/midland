@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { categoryForMake, categoryPath } from '../../../shared/categories.js';
 import styles from './BrandStrip.module.css';
 
 // `make` must match the make names used on truck listings so the /trucks filter picks it up.
@@ -26,7 +27,7 @@ export function BrandStrip() {
               {brands.map(({ make, logo, emblem }) => (
                 <li key={make}>
                   <a
-                    href={`/trucks?make=${encodeURIComponent(make)}`}
+                    href={categoryForMake(make) ? categoryPath(categoryForMake(make)) : `/trucks?make=${encodeURIComponent(make)}`}
                     tabIndex={copy === 1 ? -1 : undefined}
                     title={t('brandStrip.viewMake', { make })}
                   >

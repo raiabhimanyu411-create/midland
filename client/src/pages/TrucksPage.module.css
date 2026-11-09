@@ -222,3 +222,48 @@
   backdrop-filter: var(--glass-blur);
   box-shadow: var(--glass-shadow);
 }
+
+/* Links to the body type and make landing pages. */
+.browse {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  width: min(1180px, calc(100% - 32px));
+  margin: 28px auto 0;
+}
+
+.browse strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #475467;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.browse ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.browse a {
+  display: inline-block;
+  border: 1px solid #d0d5dd;
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #1e3a8a;
+  background: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.browse a:hover,
+.browse a:focus-visible {
+  border-color: #1e3a8a;
+  background: #eef2fb;
+}

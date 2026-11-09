@@ -29,8 +29,11 @@ import {
   breadcrumbJsonLd,
   faqJsonLd,
   locationJsonLd,
-  locationSeo
+  locationSeo,
+  categoryJsonLd,
+  categorySeo
 } from '../../../shared/seo.js';
+import { categoryForPath, categoryGuideLinks, categoryLinks, categoryListingHref, categoryPages, categoryPath, categoryTrucks } from '../../../shared/categories.js';
 import { locationForPath, locationLinks, locationPages, locationPath } from '../../../shared/locations.js';
 import { localImageSet, pageHeroImages } from '../../../shared/images.js';
 import { pageGuides } from '../../../shared/pageGuides.js';
@@ -129,6 +132,22 @@ function locationBody(location) {
   return paragraphs(location.intro)
     + location.sections.map((part) => `<h2>${escapeHtml(part.heading)}</h2>${part.paragraphs.map((text) => `<p>${inlineHtml(text)}</p>`).join('')}`).join('')
     + `<h2>${escapeHtml(`${location.place} Buyers Ask`)}</h2><dl>${location.faqs.map((faq) => `<dt>${escapeHtml(faq.question)}</dt><dd>${escapeHtml(faq.answer)}</dd>`).join('')}</dl>`;
+}
+
+// Same order and text as the React CategoryPage: stock first, then the guide copy, FAQs and related links.
+function categoryBody(page, trucks) {
+  const shown = trucks.slice(0, 6);
+  const stock = shown.length
+    ? `<h2>Current ${escapeHtml(page.name)} Stock</h2>${truckListHtml(shown)}${trucks.length > shown.length ? `<p><a href="${escapeHtml(categoryListingHref(page))}">View all ${trucks.length}</a></p>` : ''}`
+    : `<h2>New Stock Arriving Soon</h2><p>We don’t have any ${escapeHtml(page.kind === 'make' ? `${page.name} trucks` : page.name.toLowerCase())} listed right now, but new stock arrives every week. Set up a free stock alert and we will tell you as soon as a match comes in, or call us on 0121 663 1118.</p>`;
+  const list = (heading, links) => `<h3>${escapeHtml(heading)}</h3><ul>${links.map((link) => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`).join('')}</ul>`;
+  const siblings = categoryPages.filter((item) => item.kind === page.kind && item.slug !== page.slug).map((item) => ({ label: item.heading, href: categoryPath(item) }));
+  const others = categoryPages.filter((item) => item.kind !== page.kind).map((item) => ({ label: item.heading, href: categoryPath(item) }));
+  const guides = categoryGuideLinks(page);
+  return `<section>${stock}</section>`
+    + page.sections.map((part) => `<h2>${escapeHtml(part.heading)}</h2>${part.paragraphs.map((text) => `<p>${inlineHtml(text)}</p>`).join('')}`).join('')
+    + `<h2>${escapeHtml(`${page.name} Questions`)}</h2><dl>${page.faqs.map((faq) => `<dt>${escapeHtml(faq.question)}</dt><dd>${escapeHtml(faq.answer)}</dd>`).join('')}</dl>`
+    + `<nav aria-label="Related pages">${list(page.kind === 'make' ? 'Other Makes' : 'Other Body Types', siblings)}${list(page.kind === 'make' ? 'Browse by Body Type' : 'Browse by Make', others)}${guides.length ? list('Buying Guides', guides) : ''}${list('Areas We Serve', locationPages.map((item) => ({ label: item.heading, href: locationPath(item) })))}</nav>`;
 }
 
 function inlineHtml(text) {
@@ -286,7 +305,7 @@ async function listVisibleTrucks() {
 
 async function resolvePage(pathname, siteUrl) {
   const hasBlogs = await hasPublishedBlogs();
-  const primaryLinks = [...(hasBlogs ? allPrimaryLinks : allPrimaryLinks.filter((link) => link.href !== '/blog')), ...locationLinks()];
+  const primaryLinks = [...(hasBlogs ? allPrimaryLinks : allPrimaryLinks.filter((link) => link.href !== '/blog')), ...categoryLinks(), ...locationLinks()];
   const notFound = () => ({ status: 404, meta: { ...notFoundPage, path: null, links: primaryLinks }, hasBlogs });
   const page = await resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs);
   return { ...page, hasBlogs };
@@ -345,6 +364,22 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
         bodyHtml: `<p>${escapeHtml(byline)}</p>${blogHtml(post.content)}`,
         links: [...related.map((item) => ({ label: item.title, href: blogPath(item) })), ...primaryLinks],
         jsonLd: [blogJsonLd(post, siteUrl), breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Guides & News', href: '/blog' }, { label: post.title }], siteUrl)]
+      }
+    };
+  }
+
+  const category = categoryForPath(pathname);
+  if (category) {
+    const trucks = categoryTrucks(category, await listVisibleTrucks());
+    return {
+      status: 200,
+      meta: {
+        ...categorySeo(category),
+        heading: category.heading,
+        bodyHtml: `<p>${escapeHtml(category.intro)}</p>${categoryBody(category, trucks)}`,
+        heroImage: pageHeroImages.location,
+        links: primaryLinks,
+        jsonLd: categoryJsonLd(category, siteUrl, trucks)
       }
     };
   }

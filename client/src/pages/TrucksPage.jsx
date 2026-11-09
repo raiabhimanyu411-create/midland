@@ -10,6 +10,7 @@ import { TruckStructuredData } from '../components/TruckStructuredData.jsx';
 import { trucks as fallbackTrucks } from '../data/siteData.js';
 import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
+import { categoryLinks } from '../../../shared/categories.js';
 import styles from './TrucksPage.module.css';
 
 const PAGE_SIZE = 6;
@@ -129,6 +130,16 @@ export function TrucksPage() {
         copy={t('pages.trucks.hero.copy')}
         image="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85"
       />
+      <nav className={styles.browse} aria-label="Browse used trucks">
+        <div>
+          <strong>Browse by Body Type</strong>
+          <ul>{categoryLinks('type').map((link) => <li key={link.href}><a href={link.href}>{link.label.replace(/^Used | for Sale$/g, '')}</a></li>)}</ul>
+        </div>
+        <div>
+          <strong>Browse by Make</strong>
+          <ul>{categoryLinks('make').map((link) => <li key={link.href}><a href={link.href}>{link.label.replace(/^Used | Trucks for Sale$/g, '')}</a></li>)}</ul>
+        </div>
+      </nav>
       <section className={`section ${styles.listingSection}`} data-no-tilt>
         <div className={styles.listingLayout}>
           <aside className={styles.filterSidebar} aria-label={t('pages.trucks.sidebar.eyebrow')}>

@@ -1,6 +1,7 @@
 import { mapBlog, pool } from '../db/mysql.js';
 import { absoluteUrl, blogPath, businessLocations, SITE_EMAIL, SITE_NAME, staticPages } from '../../../shared/seo.js';
 import { locationPages, locationPath } from '../../../shared/locations.js';
+import { categoryPages, categoryPath } from '../../../shared/categories.js';
 
 const SITE_URL = (process.env.CANONICAL_SITE_URL || 'https://www.midlandcommercials.com').replace(/\/+$/, '');
 
@@ -31,6 +32,12 @@ export async function llmsTxt(_req, res, next) {
       page('faq', 'Buying FAQs'),
       page('about', 'About us'),
       page('contact', 'Contact'),
+      '',
+      '## Used trucks by body type',
+      ...categoryPages.filter((item) => item.kind === 'type').map((item) => link(item.heading, categoryPath(item), item.description)),
+      '',
+      '## Used trucks by make',
+      ...categoryPages.filter((item) => item.kind === 'make').map((item) => link(item.heading, categoryPath(item), item.description)),
       '',
       '## Areas served',
       ...locationPages.map((item) => link(item.heading, locationPath(item), item.description)),

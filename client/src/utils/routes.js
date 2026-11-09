@@ -1,4 +1,5 @@
 import { locationForPath } from '../../../shared/locations.js';
+import { categoryForPath } from '../../../shared/categories.js';
 
 export const routeNames = [
   'home',
@@ -14,7 +15,8 @@ export const routeNames = [
   'contact',
   'admin',
   'thankYou',
-  'location'
+  'location',
+  'category'
 ];
 
 export function getRouteTitle(t, name) {
@@ -51,6 +53,11 @@ export function getRoute() {
     return { name: location ? 'location' : 'notFound', locationSlug: location?.slug || null, truckId: null, blogSlug: null, hash: `${route}${window.location.search}` };
   }
 
+  if (route.startsWith('trucks/')) {
+    const category = categoryForPath(`/${route}`);
+    return { name: category ? 'category' : 'notFound', categorySlug: category?.slug || null, truckId: null, blogSlug: null, hash: `${route}${window.location.search}` };
+  }
+
   if (route.startsWith('blog/')) {
     const encodedSlug = route.slice('blog/'.length);
     let blogSlug = encodedSlug;
@@ -59,7 +66,7 @@ export function getRoute() {
   }
 
   const routeName = route === 'part-exchange' ? 'partExchange' : route === 'thank-you' ? 'thankYou' : route || 'home';
-  const knownRoute = routeNames.includes(routeName) && !['truckDetail', 'blogPost', 'notFound', 'location'].includes(routeName) && route !== 'partExchange' && route !== 'thankYou';
+  const knownRoute = routeNames.includes(routeName) && !['truckDetail', 'blogPost', 'notFound', 'location', 'category'].includes(routeName) && route !== 'partExchange' && route !== 'thankYou';
   return { name: knownRoute ? routeName : 'notFound', truckId: null, blogSlug: null, hash: `${route}${window.location.search}` };
 }
 

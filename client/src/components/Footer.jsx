@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { locations } from '../data/siteData.js';
 import { SITE_EMAIL } from '../../../shared/seo.js';
 import { locationPages, locationPath } from '../../../shared/locations.js';
+import { categoryLinks } from '../../../shared/categories.js';
 import { BrandMark } from './BrandLogo.jsx';
 import { OPEN_COOKIE_SETTINGS } from '../utils/analytics.js';
 import styles from './Footer.module.css';
@@ -26,6 +27,7 @@ export function Footer() {
       heading: t('footer.stockHeading'),
       links: [
         { label: t('footer.links.allTrucks'), href: '/trucks' },
+        ...categoryLinks('type').map((link) => ({ ...link, label: link.label.replace(/^Used | for Sale$/g, '') })),
         { label: t('footer.links.partExchange'), href: '/part-exchange' }
       ]
     },

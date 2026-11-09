@@ -8,8 +8,9 @@ import { CinematicEffects } from './components/CinematicEffects.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Header } from './components/Header.jsx';
 import { HomePage } from './pages/HomePage.jsx';
-import { adminPage, faqJsonLd, locationJsonLd, locationSeo, notFoundPage, thankYouPage, organizationJsonLd, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
+import { adminPage, categoryJsonLd, categorySeo, faqJsonLd, locationJsonLd, locationSeo, notFoundPage, thankYouPage, organizationJsonLd, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
 import { locationPages } from '../../shared/locations.js';
+import { categoryPages } from '../../shared/categories.js';
 import { getRoute, getRouteDescription, getRouteTitle, onNavigate } from './utils/routes.js';
 import { setPageMeta, siteUrl } from './utils/seo.js';
 import { trackPageView } from './utils/analytics.js';
@@ -28,6 +29,7 @@ const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage.jsx'), 'NotFoun
 const ThankYouPage = lazyPage(() => import('./pages/ThankYouPage.jsx'), 'ThankYouPage');
 const PartExchangePage = lazyPage(() => import('./pages/PartExchangePage.jsx'), 'PartExchangePage');
 const LocationPage = lazyPage(() => import('./pages/LocationPage.jsx'), 'LocationPage');
+const CategoryPage = lazyPage(() => import('./pages/CategoryPage.jsx'), 'CategoryPage');
 const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage.jsx'), 'PrivacyPage');
 const TruckDetailPage = lazyPage(() => import('./pages/TruckDetailPage.jsx'), 'TruckDetailPage');
 const TrucksPage = lazyPage(() => import('./pages/TrucksPage.jsx'), 'TrucksPage');
@@ -41,6 +43,10 @@ function routeMeta(t, language, routeName, route) {
     const location = locationPages.find((item) => item.slug === route.locationSlug);
     // The visible Breadcrumb component adds its own BreadcrumbList, so drop the server's copy here.
     if (location) return { ...locationSeo(location), jsonLd: locationJsonLd(location, siteUrl()).filter((data) => data['@type'] !== 'BreadcrumbList') };
+  }
+  if (routeName === 'category') {
+    const category = categoryPages.find((item) => item.slug === route.categorySlug);
+    if (category) return { ...categorySeo(category), jsonLd: categoryJsonLd(category, siteUrl()).filter((data) => data['@type'] !== 'BreadcrumbList') };
   }
   if (routeName === 'admin') return { ...adminPage, path: null };
   if (routeName === 'notFound') return { ...notFoundPage, path: null };
@@ -181,7 +187,7 @@ function App() {
   useEffect(() => {
     if (pagesWithOwnMeta.has(route.name)) return;
     setPageMeta(routeMeta(t, i18n.language, route.name, route));
-  }, [route.name, route.locationSlug, t, i18n.language]);
+  }, [route.name, route.locationSlug, route.categorySlug, t, i18n.language]);
 
   return (
     <>
@@ -197,6 +203,7 @@ function App() {
             {route.name === 'faq' && <FaqPage />}
             {route.name === 'privacy' && <PrivacyPage />}
             {route.name === 'location' && <LocationPage slug={route.locationSlug} />}
+            {route.name === 'category' && <CategoryPage slug={route.categorySlug} />}
             {route.name === 'about' && <AboutPage />}
             {route.name === 'contact' && <ContactPage />}
             {route.name === 'blog' && <BlogListPage />}
