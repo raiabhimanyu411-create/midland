@@ -17,7 +17,7 @@ export function BlogHero({ eyebrow, title, copy, meta, image, imageAlt, children
         </div>
         {image && (
           <figure className={styles.media}>
-            <img src={image} alt={imageAlt || ''} fetchPriority="high" decoding="async" />
+            <img src={image} alt={imageAlt || ''} width="1440" height="960" fetchPriority="high" decoding="async" />
           </figure>
         )}
       </div>

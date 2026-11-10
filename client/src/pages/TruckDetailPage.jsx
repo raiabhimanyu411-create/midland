@@ -92,7 +92,7 @@ export function TruckDetailPage({ truckId }) {
       <section className={styles.detailLayout} data-no-tilt>
         <div>
           {activeImage
-            ? <img className={styles.detailImage} src={activeImage} alt={displayTitle} decoding="async" />
+            ? <img className={styles.detailImage} src={activeImage} alt={displayTitle} width="1280" height="720" decoding="async" />
             : <div className={`${styles.detailImage} ${styles.detailImagePlaceholder}`}>{t('pages.truckDetail.photosComingSoon')}</div>}
           {gallery.length > 1 && (
             <div className={styles.thumbnailRow} aria-label={t('pages.truckDetail.galleryAria')}>
@@ -105,7 +105,7 @@ export function TruckDetailPage({ truckId }) {
                   onClick={() => setSelectedImage(image)}
                   key={image}
                 >
-                  <img src={image} alt="" loading="lazy" decoding="async" />
+                  <img src={image} alt="" loading="lazy" decoding="async" width="400" height="300" />
                 </button>
               ))}
             </div>

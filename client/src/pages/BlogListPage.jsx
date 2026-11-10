@@ -27,7 +27,7 @@ function FeaturedPost({ post }) {
     <article className={styles.featured}>
       <a className={styles.featuredVisual} href={postHref(post)} tabIndex={-1} aria-hidden="true">
         {post.coverImage
-          ? <img src={post.coverImage} alt="" loading="lazy" decoding="async" />
+          ? <img src={post.coverImage} alt="" loading="lazy" decoding="async" width="1280" height="720" />
           : (
             <span className={styles.visualFallback}>
               <span className={styles.visualLabel}>{t('pages.blog.featured')}</span>

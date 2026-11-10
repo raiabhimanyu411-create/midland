@@ -96,6 +96,8 @@ function Hero({ latest }) {
         <img
           {...responsiveImage('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85')}
           alt={t('pages.home.hero.imageAlt')}
+          width="1440"
+          height="960"
           fetchPriority="high"
           decoding="async"
         />

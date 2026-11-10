@@ -20,6 +20,8 @@ export function VideoWalkaround() {
           decoding="async"
           {...responsiveImage('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80', '(max-width: 900px) 100vw, 50vw')}
           alt={t('videoWalkaround.imageAlt')}
+          width="1200"
+          height="800"
         />
         <span className={styles.playButton}>
           <IconPlay />

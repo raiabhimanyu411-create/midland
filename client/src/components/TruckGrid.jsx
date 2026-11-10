@@ -56,7 +56,7 @@ function TruckCard({ truck, index, compareEnabled, checked, compareFull, onToggl
     >
       <div className={styles.truckImage}>
         {truck.image
-          ? <img {...responsiveImage(truck.image, '(max-width: 900px) 100vw, 400px')} alt={truckDisplayTitle(truck)} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
+          ? <img {...responsiveImage(truck.image, '(max-width: 900px) 100vw, 400px')} width="800" height="600" alt={truckDisplayTitle(truck)} loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
           : <div className={styles.imagePlaceholder}>{t('truckGrid.photoComingSoon')}</div>}
         {truck.badge && <span>{truck.badge}</span>}
         {truck.featured && <span className={styles.featuredBadge}>{t('truckGrid.hotDeal')}</span>}

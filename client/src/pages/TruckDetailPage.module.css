@@ -10,6 +10,7 @@
 
 .detailImage {
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   border-radius: 8px;
   object-fit: cover;
@@ -51,6 +52,7 @@
 
 .thumbnailRow img {
   width: 100%;
+  height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   background: #d0d5dd;

@@ -155,7 +155,14 @@ if (isProduction) {
     next();
   });
   app.use('/assets', express.static(path.join(clientDistDir, 'assets'), { maxAge: '1y', immutable: true }));
-  app.use(express.static(clientDistDir, { maxAge: '1h', index: false }));
+  // Icons rarely change, so cache them for a week; other root files (robots.txt etc.) stay at 1 hour.
+  app.use(express.static(clientDistDir, {
+    maxAge: '1h',
+    index: false,
+    setHeaders(res, filePath) {
+      if (/\.(svg|png|ico|webmanifest)$/i.test(filePath)) res.set('Cache-Control', 'public, max-age=604800');
+    }
+  }));
   app.get('/{*splat}', renderPage);
 }
 
