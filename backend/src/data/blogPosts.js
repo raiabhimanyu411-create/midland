@@ -229,57 +229,122 @@ On a 6x2 the third axle can sit in front of the drive axle (mid-lift) or behind 
 Still unsure? Read our [used tractor unit buying checklist](/blog/used-tractor-unit-buying-checklist), browse our [used tractor units for sale](/trucks), or [tell us what you carry](/contact) and we will suggest the right specification.`
   },
   {
-    title: "How To Check A Used HGV's MOT History And Paperwork",
+    title: "HGV MOT Check: How To Check A Truck's MOT History (Free)",
     slug: 'check-used-hgv-mot-history-paperwork',
-    metaTitle: "Check A Used HGV's MOT History",
-    metaDescription: 'How to check a used truck’s annual test history, plating certificate, tachograph calibration and V5C before you buy, and the warning signs to look for.',
-    excerpt: 'The paperwork tells you more about a used truck than a quick walk round. Here is how to check the annual test history, plating, tachograph and V5C before you buy.',
+    revision: 2,
+    metaTitle: 'HGV MOT Check: Free Truck MOT History Check',
+    metaDescription: 'How to do a free HGV MOT check on GOV.UK, step by step. Read a truck’s test history, failures, advisories and mileage, then check the plating, tacho and V5C.',
+    excerpt: 'A free HGV MOT check takes two minutes on GOV.UK and tells you more about a used truck than a quick walk round. Here is how to run it, how to read the results and which other papers to check.',
     tags: 'MOT, Paperwork, Buying Guide',
     daysAgo: 18,
-    content: `A used truck can look tidy on the day you view it. The paperwork shows how it has been looked after over the years. Before you agree a price, take ten minutes to check the documents below.
+    content: `A used truck can look tidy on the day you view it. Its MOT history shows how it has really been looked after. An HGV MOT check is free, takes about two minutes and can be done from your phone before you travel to see a truck. This guide shows you how to run the check on GOV.UK step by step, how to read the results, and which other papers to look at before you agree a price.
 
-## The HGV Annual Test
+## What Is An HGV MOT?
 
-Heavy goods vehicles have an annual test rather than a car MOT. The first test is due one year after the truck was first registered, and then every year after that. Tests are carried out by DVSA examiners at authorised testing facilities.
+Lorries do not have a car-style MOT. They have an annual test, which most people still call the HGV MOT. The main differences are:
 
-## Checking The Test History Online
+- The first test is due one year after the truck was first registered, not three years like a car.
+- After that the truck must be tested every 12 months.
+- Tests are carried out by DVSA examiners at authorised testing facilities (ATFs), not at an ordinary MOT garage.
+- Trailers over 3,500 kg also need an annual test, and they are identified by a trailer ID rather than a registration number.
 
-You can see a truck's test history free of charge on the GOV.UK check MOT history service using the registration number. Look for:
+A truck without a valid annual test certificate cannot legally be used on the road, so the test date is one of the first things to check on any used HGV.
 
-- Repeat failures for the same item, which can point to a problem that has never been properly fixed.
-- Advisories, such as corrosion, worn brake components or oil leaks, and whether they were dealt with by the next test.
-- Mileage recorded at each test, to check it rises steadily and matches the odometer.
-- Gaps in the history, which may mean the truck was off the road.
+## How To Do A Free HGV MOT Check On GOV.UK
+
+The official tool is the GOV.UK "Check the MOT history of a vehicle" service. It covers lorries, buses and trailers as well as cars and vans, and it does not cost anything. Follow these steps:
+
+1. Go to the GOV.UK check MOT history page at [gov.uk/check-mot-history](https://www.gov.uk/check-mot-history) and press Start now.
+2. Type in the truck's registration number. For a trailer, use the trailer ID shown on the trailer's plate and documents.
+3. Check that the make and colour shown on screen match the truck in the advert. If they do not, stop and ask the seller why.
+4. Look at the summary at the top. It shows when the current test certificate expires.
+5. Scroll down to the list of past tests. Each one shows the date, the result, the odometer reading and any failure items or advisories.
+6. Open each test in turn, starting with the oldest, and note anything that keeps coming back.
+
+Do not rely on a screenshot or printout from the seller. Run the check yourself on GOV.UK so you know you are looking at the official record.
+
+## How To Read The Results
+
+The test list tells a story if you read it from oldest to newest. Look out for:
+
+- Repeat failures for the same item. Brakes, suspension or steering failing at test after test can point to a problem that has never been properly fixed.
+- Advisories that never go away. Corrosion, worn brake components, oil leaks and play in the steering are often noted as advisories first. Check whether they were dealt with by the next test.
+- First-time passes. A truck that passes first time year after year has usually been maintained properly between tests.
+- Gaps in the history. A missing year may simply mean the truck was off the road, but it is worth asking why.
+- The odometer reading. It should rise steadily from one test to the next. Some readings may be recorded in kilometres rather than miles, so compare like with like.
+
+A long list of advisories on a recent test is not always a reason to walk away. It is a reason to ask what has been repaired since, and to look closely at those areas when you view the truck.
+
+## Check The Test Date Against Your Plans
+
+If the current test expires soon, budget for the next one. Ask whether the seller will put a fresh test on the truck before sale, and if not, plan time to book one yourself. A truck that has just passed its test gives you the most time before the next one is due.
 
 ## The Plating Certificate
 
-The plating certificate, often called the Ministry plate, shows the maximum weights the truck is legally allowed to run at, including the gross vehicle weight, gross train weight and individual axle weights. Check it matches the work you plan to do. A tractor unit plated at 40 tonnes cannot legally run at 44 tonnes without being re-plated.
+The plating certificate, often called the Ministry plate, shows the maximum weights the truck can legally run at: the gross vehicle weight, the gross train weight and each axle weight. Check it matches the work you plan to do. A tractor unit plated at 40 tonnes cannot legally run at 44 tonnes without being re-plated, and an 8x4 tipper plated below 32 tonnes will carry less than you expect.
 
 ## The V5C
 
 - The VIN on the V5C should match the chassis number stamped on the truck.
-- Check the registered keeper details and the number of previous keepers.
-- Look at the date of first registration and the body type.
+- Check the registered keeper and the number of previous keepers.
+- Look at the date of first registration, the body type and the revenue weight.
+- Make sure the seller has the right to sell the truck.
 
 ## Tachograph Calibration
 
-The tachograph must be calibrated at an approved centre at least every two years, and after certain repairs. Look for the calibration plaque near the tachograph or on the door pillar and check the date. If you run internationally, also check the tachograph meets the current requirements for international journeys.
+The tachograph must be calibrated at an approved centre at least every two years, and after certain repairs. Look for the calibration plaque near the tachograph or on the door pillar and check the date. If you run internationally, also check the tachograph meets the current rules for international journeys.
 
 ## Service And Inspection Records
 
-Operators must carry out regular safety inspections. A full set of inspection sheets and service invoices is one of the best signs of a well-kept truck. Ask to see them and check:
+Operators must carry out regular safety inspections between annual tests. A full set of inspection sheets and service invoices is one of the best signs of a well-kept truck. Ask to see them and check:
 
 - Inspections were done at regular intervals.
-- Defects found were repaired.
+- Defects found were repaired and signed off.
 - Recent brake test results are within the limits.
+- Major parts, such as the clutch, turbo or DPF, have been replaced when you would expect.
 
 ## Emissions Paperwork
 
-If you work in or near a clean air zone, confirm the Euro rating on the V5C or certificate of conformity and run the registration through the GOV.UK vehicle checker. Our [clean air zone guide for HGVs](/blog/clean-air-zones-hgv-guide) has more detail.
+If you work in or near a clean air zone, confirm the Euro rating on the V5C or certificate of conformity and run the registration through the GOV.UK vehicle checker. Our [clean air zone guide for HGVs](/blog/clean-air-zones-hgv-guide) has more detail, and our [Euro 6 truck checklist](/blog/euro-6-truck-checklist-adblue-dpf) covers the emissions parts worth checking on the truck itself.
+
+## A Quick HGV MOT Checklist
+
+- Current test certificate valid, with a sensible amount of time left.
+- No repeat failures on brakes, steering or suspension.
+- Advisories on the last test repaired, or reflected in the price.
+- Odometer readings rising steadily.
+- Plated weights right for your work.
+- V5C, VIN and keeper details all match.
+- Tacho calibration in date.
+- Service and inspection records available.
+
+## Frequently Asked Questions
+
+### Is the HGV MOT check free?
+
+Yes. The GOV.UK check MOT history service is free to use for lorries, buses, trailers, cars and vans. You only need the registration number, or the trailer ID for a trailer.
+
+### Can I check a trailer's MOT history?
+
+Yes. Trailers over 3,500 kg have an annual test like a truck. Use the trailer ID from the trailer's plate or test certificate instead of a registration number.
+
+### How often does an HGV need an MOT?
+
+An HGV needs its first annual test one year after it was first registered, and then every 12 months. A car's first MOT is not due until it is three years old.
+
+### Does a clean MOT history mean a truck is in good condition?
+
+Not on its own. The annual test is a snapshot of one day. A clean history is a very good sign, but you should still look at the truck, the service records and the safety inspection sheets before you buy.
+
+### What should I do if the MOT history does not match the advert?
+
+Ask the seller to explain before you travel. A different colour can simply mean the truck was resprayed, but a wrong make, a missing year or odd mileage readings need a clear answer.
 
 ## Paperwork With Every Truck We Sell
 
-We list the MOT, VAT status and Euro rating on every vehicle in our [used truck stock](/trucks), and the available paperwork can be checked when you view at our Swadlincote yard. If you would like documents before you travel, [contact our sales team](/contact).`
+We list the MOT, VAT status and Euro rating on every vehicle in our [used truck stock](/trucks), and the paperwork can be checked when you view at our Swadlincote yard. If you would like documents or the registration before you travel, [contact our sales team](/contact) and run the HGV MOT check yourself.
+
+[View stock](/trucks)`
   },
   {
     title: 'How Truck Part Exchange Works And How To Get A Better Valuation',

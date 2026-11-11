@@ -3,6 +3,7 @@ import { trucks as seedTrucks } from '../data/trucks.js';
 import { starterBlogPosts } from '../data/blogPosts.js';
 import { moreBlogPosts } from '../data/moreBlogPosts.js';
 import bcrypt from 'bcryptjs';
+import { createHash } from 'node:crypto';
 
 export const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
@@ -208,6 +209,7 @@ export async function initializeDatabase() {
   await ensureDefaultAdmin();
   await seedStarterBlogs();
   await seedMoreBlogs();
+  await refreshSeededBlogs();
 
   if (process.env.NODE_ENV !== 'production' || process.env.SEED_DEMO_DATA === 'true') {
     await seedTruckData();
@@ -243,6 +245,50 @@ async function seedMoreBlogs() {
       [post.title, post.slug, post.excerpt, post.content, post.tags, post.metaTitle, post.metaDescription, post.daysAgo]
     );
     await pool.query('INSERT IGNORE INTO blog_seed_log (slug) VALUES (?)', [post.slug]);
+  }
+}
+
+const contentHash = (text) => createHash('sha256').update(String(text || '')).digest('hex');
+
+// Rewrites of seeded guides: a post with a higher `revision` in the data files replaces the
+// live copy, but only if nobody has edited it in the admin panel since we last wrote it.
+// Edited posts are left alone and logged, so manual changes are never overwritten.
+async function refreshSeededBlogs() {
+  await pool.query(`CREATE TABLE IF NOT EXISTS blog_revision_log (
+    slug VARCHAR(220) PRIMARY KEY, revision INT NOT NULL, content_hash CHAR(64) NOT NULL DEFAULT '',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  )`);
+  const [logged] = await pool.query('SELECT slug, revision, content_hash FROM blog_revision_log');
+  const log = new Map(logged.map((row) => [row.slug, row]));
+
+  for (const post of [...starterBlogPosts, ...moreBlogPosts]) {
+    if (!post.revision) continue;
+    const previous = log.get(post.slug);
+    if (previous && previous.revision >= post.revision) continue;
+
+    const [rows] = await pool.query(
+      'SELECT content, TIMESTAMPDIFF(SECOND, created_at, updated_at) < 60 AS untouched FROM blogs WHERE slug = ?',
+      [post.slug]
+    );
+    if (!rows.length) continue;
+    // First rewrite: the post must never have been changed since it was seeded.
+    // Later rewrites: the post must still hold exactly what we wrote last time.
+    const unedited = previous ? previous.content_hash === contentHash(rows[0].content) : Boolean(rows[0].untouched);
+
+    let hash = '';
+    if (unedited) {
+      await pool.query(
+        'UPDATE blogs SET title = ?, excerpt = ?, content = ?, tags = ?, meta_title = ?, meta_description = ? WHERE slug = ?',
+        [post.title, post.excerpt, post.content, post.tags, post.metaTitle, post.metaDescription, post.slug]
+      );
+      hash = contentHash(post.content);
+    } else {
+      console.warn(`Blog "${post.slug}" was edited in the admin panel, so revision ${post.revision} was not applied.`);
+    }
+    await pool.query(
+      'INSERT INTO blog_revision_log (slug, revision, content_hash) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE revision = VALUES(revision), content_hash = VALUES(content_hash)',
+      [post.slug, post.revision, hash]
+    );
   }
 }
 

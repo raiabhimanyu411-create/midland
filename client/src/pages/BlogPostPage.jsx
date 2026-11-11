@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Breadcrumb } from '../components/Breadcrumb.jsx';
 import { BlogHero } from '../components/BlogHero.jsx';
 import { api } from '../utils/api.js';
-import { blogJsonLd, blogSeo, notFoundPage } from '../../../shared/seo.js';
+import { blogFaqJsonLd, blogJsonLd, blogSeo, notFoundPage } from '../../../shared/seo.js';
 import { setPageMeta, siteUrl } from '../utils/seo.js';
 import { parseBlogContent, parseInline, readingMinutes } from '../../../shared/blogContent.js';
 import styles from './BlogPostPage.module.css';
@@ -57,7 +57,7 @@ export function BlogPostPage({ slug }) {
       .then((response) => {
         if (!active) return;
         setPost(response.data);
-        setPageMeta({ ...blogSeo(response.data), jsonLd: [blogJsonLd(response.data, siteUrl())] });
+        setPageMeta({ ...blogSeo(response.data), jsonLd: [blogJsonLd(response.data, siteUrl()), blogFaqJsonLd(response.data)].filter(Boolean) });
       })
       .catch((requestError) => {
         if (!active) return;

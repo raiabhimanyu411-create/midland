@@ -8,6 +8,7 @@ import { parseBlogContent, parseInline } from '../../../shared/blogContent.js';
 import {
   absoluteUrl,
   adminPage,
+  blogFaqJsonLd,
   blogJsonLd,
   blogPath,
   blogSeo,
@@ -363,7 +364,7 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
         heading: post.title,
         bodyHtml: `<p>${escapeHtml(byline)}</p>${blogHtml(post.content)}`,
         links: [...related.map((item) => ({ label: item.title, href: blogPath(item) })), ...primaryLinks],
-        jsonLd: [blogJsonLd(post, siteUrl), breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Guides & News', href: '/blog' }, { label: post.title }], siteUrl)]
+        jsonLd: [blogJsonLd(post, siteUrl), blogFaqJsonLd(post), breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Guides & News', href: '/blog' }, { label: post.title }], siteUrl)].filter(Boolean)
       }
     };
   }

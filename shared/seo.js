@@ -1,7 +1,7 @@
 // SEO metadata shared by the server (initial HTML, sitemap) and the client (route changes),
 // so crawlers and browsers always see the same title, description, canonical URL and JSON-LD.
 import { truckDisplayPrice, truckDisplayTitle } from './truck.js';
-import { plainBlogText } from './blogContent.js';
+import { blogFaqs, plainBlogText } from './blogContent.js';
 import { locationPath } from './locations.js';
 import { categoryPath } from './categories.js';
 
@@ -242,6 +242,11 @@ export function blogJsonLd(post, siteUrl) {
     publisher: { '@type': 'Organization', name: SITE_NAME, url: absoluteUrl(siteUrl, '/'), logo: { '@type': 'ImageObject', url: absoluteUrl(siteUrl, '/logo.svg') } },
     mainEntityOfPage: absoluteUrl(siteUrl, blogPath(post))
   };
+}
+
+// FAQPage data for a post that ends with a "## Frequently Asked Questions" section, or null.
+export function blogFaqJsonLd(post) {
+  return faqJsonLd(blogFaqs(post?.content));
 }
 
 export function breadcrumbJsonLd(items, siteUrl) {

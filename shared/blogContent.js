@@ -43,3 +43,24 @@ export function readingMinutes(content) {
   const words = plainBlogText(content).split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 220));
 }
+
+// Questions and answers from a "## Frequently Asked Questions" (or "## FAQs") section:
+// each "### " sub-heading is a question and the paragraphs under it are the answer.
+// Used for FAQPage structured data on blog posts.
+export function blogFaqs(content) {
+  const faqs = [];
+  let inFaq = false;
+  let current = null;
+  for (const block of parseBlogContent(content)) {
+    if (block.type === 'h2') {
+      inFaq = /^(frequently asked questions|faqs?)\b/i.test(block.text);
+      current = null;
+    } else if (inFaq && block.type === 'h3') {
+      current = { question: block.text, answer: '' };
+      faqs.push(current);
+    } else if (inFaq && current && block.type === 'p') {
+      current.answer = current.answer ? `${current.answer} ${block.text}` : block.text;
+    }
+  }
+  return faqs.filter((faq) => faq.answer);
+}
