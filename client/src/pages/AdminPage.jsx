@@ -379,6 +379,23 @@ export function AdminPage() {
     }
   }
 
+  // Uploads a photo and adds it to the end of the post as ![alt](url). The alt text is a
+  // placeholder the writer should replace with what the photo shows (good for image search).
+  async function insertBlogPhoto(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    try {
+      setMessage({ type: 'success', text: 'Uploading photo…' });
+      const result = await api.uploadTruckImage(await compressTruckPhoto(file));
+      const line = `![Describe the photo, e.g. used Scania R450 tractor unit](${apiAssetUrl(result.url)})`;
+      setBlogForm((current) => ({ ...current, content: `${current.content.trimEnd()}\n\n${line}\n` }));
+      setMessage({ type: 'success', text: 'Photo added at the end of the post. Move it where you want it, change the description in [ ], then save.' });
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message });
+    }
+  }
+
   async function saveBlogPost(event) {
     event.preventDefault();
     setMessage(null);
@@ -959,6 +976,10 @@ export function AdminPage() {
                     <label className={styles.formWide}>
                       Description
                       <textarea maxLength={20000} value={form.description} onChange={(event) => updateForm('description', event.target.value)} />
+                      <small>
+                        {wordCount(form.description)} words. Aim for 80+ words written for this truck only: condition, service history, spec and the work it suits. Google ignores copied text.
+                        {form.description.trim() && trucks.some((item) => item.id !== editingId && String(item.description || '').trim() === form.description.trim()) && <strong> Another listing has exactly the same description. Please make this one different.</strong>}
+                      </small>
                     </label>
                     <h3 className={styles.formWide}>Search engine details</h3>
                     <AdminInput label="URL slug" value={form.slug} onChange={(value) => updateForm('slug', value)} maxLength={220} placeholder="Auto-created from the truck title" />
@@ -1171,6 +1192,7 @@ export function AdminPage() {
               onTitleChange={updateBlogTitle}
               onFieldChange={updateBlogForm}
               onUploadCover={uploadBlogCover}
+              onInsertPhoto={insertBlogPhoto}
               onSubmit={saveBlogPost}
               onNew={() => { setEditingBlogId(null); setBlogForm(emptyBlog); setBlogView('form'); }}
               onCancelEdit={() => { setEditingBlogId(null); setBlogForm(emptyBlog); setBlogView('list'); }}
@@ -1238,7 +1260,9 @@ function AdminNavGlyph({ name }) {
   return <svg className={styles.navIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{glyphs[name] || glyphs.overview}</svg>;
 }
 
-function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, onFieldChange, onUploadCover, onSubmit, onNew, onCancelEdit, onEdit, onDelete }) {
+const wordCount = (text) => String(text || '').split(/\s+/).filter(Boolean).length;
+
+function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, onFieldChange, onUploadCover, onInsertPhoto, onSubmit, onNew, onCancelEdit, onEdit, onDelete }) {
   return (
     <section className={styles.inventorySection}>
       <div className={styles.subTabs}>
@@ -1265,8 +1289,9 @@ function BlogPanel({ posts, view, onViewChange, form, editingId, onTitleChange, 
           <label>
             Content
             <textarea className={styles.contentArea} value={form.content} onChange={(event) => onFieldChange('content', event.target.value)} required />
-            <small>Leave a blank line between paragraphs. Start a line with ## for a heading, ### for a sub-heading, - for a bullet point. Add a link like [used trucks](/trucks).</small>
+            <small>Leave a blank line between paragraphs. Start a line with ## for a heading, ### for a sub-heading, - for a bullet point. Add a link like [used trucks](/trucks). Photos go on their own line as ![what the photo shows](link).</small>
           </label>
+          <label>Insert photo into post<input type="file" accept="image/jpeg,image/png,image/webp" onChange={onInsertPhoto} /></label>
           <AdminInput label="Cover image URL" value={form.coverImage} onChange={(value) => onFieldChange('coverImage', value)} />
           <label>Upload cover image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={onUploadCover} /></label>
           <AdminInput label="Tags (comma separated)" value={form.tags} onChange={(value) => onFieldChange('tags', value)} />

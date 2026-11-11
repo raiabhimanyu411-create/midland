@@ -3,7 +3,7 @@ import path from 'node:path';
 import { clientDistDir, projectRoot } from '../config/paths.js';
 import { mapBlog, mapTruck, pool } from '../db/mysql.js';
 import { positiveInt } from '../utils/validation.js';
-import { truckDisplayPrice } from '../../../shared/truck.js';
+import { similarTrucks, truckDisplayPrice } from '../../../shared/truck.js';
 import { parseBlogContent, parseInline } from '../../../shared/blogContent.js';
 import {
   absoluteUrl,
@@ -173,6 +173,9 @@ function guideHtml(pageName) {
 function blogHtml(content) {
   return parseBlogContent(content).map((block) => {
     if (block.type === 'h2' || block.type === 'h3') return `<${block.type}>${escapeHtml(block.text)}</${block.type}>`;
+    if (block.type === 'img') {
+      return `<figure><img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" loading="lazy" />${block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : ''}</figure>`;
+    }
     if (block.type === 'ul' || block.type === 'ol') return `<${block.type}>${block.items.map((item) => `<li>${inlineHtml(item)}</li>`).join('')}</${block.type}>`;
     return `<p>${inlineHtml(block.text)}</p>`;
   }).join('');
@@ -330,6 +333,8 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
     if (!rows[0]) return notFound();
     const truck = mapTruck(rows[0]);
     const seo = truckSeo(truck);
+    const sold = truck.status === 'sold';
+    const similar = similarTrucks(truck, await listVisibleTrucks());
     const specs = [
       ['Price', truck.price ? truckDisplayPrice(truck) : ''], ['Year', truck.year], ['Mileage', truck.mileage], ['Gearbox', truck.gearbox],
       ['Body', truck.type], ['Location', truck.location], ['Status', truck.status]
@@ -339,9 +344,11 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
       meta: {
         ...seo,
         heading: truck.title,
-        bodyHtml: `<dl>${specs.map(([label, value]) => `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`).join('')}</dl>`
-          + (truck.description ? `<p>${escapeHtml(truck.description)}</p>` : ''),
-        links: [{ label: 'Enquire about this truck', href: `/contact?truck=${truck.id}` }, ...primaryLinks],
+        bodyHtml: (sold ? '<p>This truck has been sold. Similar trucks still for sale are listed below.</p>' : '')
+          + `<dl>${specs.map(([label, value]) => `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`).join('')}</dl>`
+          + (truck.description ? `<p>${escapeHtml(truck.description)}</p>` : '')
+          + (similar.length ? `<h2>Similar Trucks</h2>${truckListHtml(similar)}` : ''),
+        links: [{ label: sold ? 'Find me a similar truck' : 'Enquire about this truck', href: `/contact?truck=${truck.id}` }, ...primaryLinks],
         jsonLd: [truckJsonLd(truck, siteUrl), breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Trucks', href: '/trucks' }, { label: truck.title }], siteUrl)]
       }
     };

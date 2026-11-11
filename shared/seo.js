@@ -140,13 +140,35 @@ export function truckPath(truck) {
   return `/truck/${truck.id}${slug ? `-${encodeURIComponent(slug)}` : ''}`;
 }
 
+// "<title> | Midland Commercials" when it fits in 70 characters. A longer title drops the
+// site name instead of being cut short, so search results never show "… | Midland…".
+export function withSiteName(title, maxLength = 70) {
+  const text = String(title || '').trim();
+  const full = `${text} | ${SITE_NAME}`;
+  return full.length <= maxLength ? full : truncate(text, maxLength);
+}
+
+// Listing name for search results: always leads with the year and make (e.g. "2019 DAF XF 480 ..."),
+// even when the admin title leaves them out.
+export function truckSeoName(truck) {
+  let name = truckDisplayTitle(truck);
+  const make = String(truck.make || '').trim();
+  const year = String(truck.year || '').trim();
+  if (make && !name.toLowerCase().includes(make.toLowerCase())) name = `${make} ${name}`;
+  if (year && !name.includes(year)) name = `${year} ${name}`;
+  return name;
+}
+
 export function truckSeo(truck) {
-  const title = truckDisplayTitle(truck);
-  const price = truck.price ? ` – ${truckDisplayPrice(truck)}` : '';
+  const title = truckSeoName(truck);
+  const sold = truck.status === 'sold';
+  const price = truck.price && !sold ? ` – ${truckDisplayPrice(truck)}` : '';
   const facts = [truck.year, truck.mileage, truck.gearbox, truck.badge, truck.location].filter(Boolean).join(', ');
   const images = Array.isArray(truck.images) && truck.images.length ? truck.images : [truck.image];
   return {
-    title: truncate(truck.metaTitle || `${title}${price} | ${SITE_NAME}`, 70),
+    title: truck.metaTitle
+      ? truncate(truck.metaTitle, 70)
+      : withSiteName(sold ? `Sold: ${title}` : `${title}${price}`),
     description: truncate(truck.metaDescription || `${title} for sale${facts ? `: ${facts}` : ''}. ${truck.description || ''}`, 160),
     path: truckPath(truck),
     image: images.find(Boolean) || DEFAULT_IMAGE,
@@ -218,7 +240,7 @@ export function blogPath(post) {
 
 export function blogSeo(post) {
   return {
-    title: truncate(`${post.metaTitle || post.title} | ${SITE_NAME}`, 70),
+    title: withSiteName(post.metaTitle || post.title),
     description: truncate(post.metaDescription || post.excerpt || plainBlogText(post.content), 160),
     path: blogPath(post),
     image: post.coverImage || DEFAULT_IMAGE,

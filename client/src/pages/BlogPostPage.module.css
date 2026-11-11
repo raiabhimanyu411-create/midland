@@ -105,3 +105,21 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+.figure {
+  margin: 28px 0;
+}
+
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #d0d5dd;
+}
+
+.figure figcaption {
+  margin-top: 8px;
+  color: #5b6475;
+  font-size: 0.9rem;
+}

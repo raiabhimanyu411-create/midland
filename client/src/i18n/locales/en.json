@@ -605,6 +605,10 @@
         "tacho": "Tacho"
       },
       "reserveEnquire": "Reserve or Enquire",
+      "soldNotice": "This truck has been sold. Take a look at similar trucks still for sale below, or tell us what you need and we will let you know when a match arrives.",
+      "soldEnquire": "Find Me a Similar Truck",
+      "similarEyebrow": "Still for sale",
+      "similarHeading": "Similar Trucks",
       "photosComingSoon": "Truck Photos Coming Soon",
       "walkaround": {
         "eyebrow": "Truck Walkaround",

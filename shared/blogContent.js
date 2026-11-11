@@ -2,7 +2,9 @@
 // Blank lines separate blocks. "## " starts a heading, "### " a sub-heading,
 // lines starting "- " make a bullet list and "1. " a numbered list.
 // Links are written [text](/trucks) and only site paths or https:// URLs are allowed.
+// A photo goes on its own line as ![alt text](/uploads/photo.webp "optional caption").
 
+const IMAGE = /^!\[([^\]]*)\]\(((?:\/|https:\/\/)[^)\s]+)(?:\s+"([^"]*)")?\)$/;
 const LINK = /\[([^\]]+)\]\(((?:\/|https:\/\/)[^)\s]*)\)/g;
 
 export function parseInline(text) {
@@ -26,6 +28,8 @@ export function parseBlogContent(content) {
     .map((block) => {
       if (block.startsWith('### ')) return { type: 'h3', text: block.slice(4).trim() };
       if (block.startsWith('## ')) return { type: 'h2', text: block.slice(3).trim() };
+      const image = block.match(IMAGE);
+      if (image) return { type: 'img', alt: image[1].trim(), src: image[2], caption: (image[3] || '').trim() };
       const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
       if (lines.every((line) => line.startsWith('- '))) return { type: 'ul', items: lines.map((line) => line.slice(2)) };
       if (lines.every((line) => /^\d+\.\s/.test(line))) return { type: 'ol', items: lines.map((line) => line.replace(/^\d+\.\s+/, '')) };
@@ -35,7 +39,7 @@ export function parseBlogContent(content) {
 
 // Plain text with link markup removed, for meta descriptions and excerpts.
 export function plainBlogText(content) {
-  return String(content || '').replace(LINK, '$1').replace(/^#{2,3}\s+/gm, '').replace(/^(?:-|\d+\.)\s+/gm, '');
+  return String(content || '').replace(/^!\[[^\]]*\]\([^)]*\)$/gm, '').replace(LINK, '$1').replace(/^#{2,3}\s+/gm, '').replace(/^(?:-|\d+\.)\s+/gm, '');
 }
 
 // Minutes to read at about 220 words a minute.

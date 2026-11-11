@@ -8,7 +8,8 @@ import { api } from '../utils/api.js';
 import { demoDataEnabled } from '../utils/runtime.js';
 import { formatTruckStatus } from '../utils/truckStatus.js';
 import { notFoundPage, truckJsonLd, truckSeo } from '../../../shared/seo.js';
-import { truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
+import { similarTrucks, truckDisplayPrice, truckDisplayTitle } from '../../../shared/truck.js';
+import { TruckGrid } from '../components/TruckGrid.jsx';
 import { setPageMeta, siteUrl } from '../utils/seo.js';
 import styles from './TruckDetailPage.module.css';
 
@@ -22,6 +23,16 @@ export function TruckDetailPage({ truckId }) {
   const [error, setError] = useState('');
   const [requestStatus, setRequestStatus] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [stock, setStock] = useState([]);
+
+  // Other trucks for the "Similar Trucks" section, so a sold listing still leads somewhere.
+  useEffect(() => {
+    let active = true;
+    api.listTrucks({ sort: 'newest' })
+      .then((response) => { if (active) setStock(response.data || []); })
+      .catch(() => { if (active) setStock(demoDataEnabled ? fallbackTrucks : []); });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -79,6 +90,8 @@ export function TruckDetailPage({ truckId }) {
   const activeImage = gallery.includes(selectedImage) ? selectedImage : gallery[0] || '';
   const videoEmbedUrl = getYoutubeEmbedUrl(truck.videoUrl);
   const displayTitle = truckDisplayTitle(truck);
+  const isSold = truck.status === 'sold';
+  const similar = similarTrucks(truck, stock);
 
   return (
     <>
@@ -119,6 +132,7 @@ export function TruckDetailPage({ truckId }) {
         </div>
         <aside className={styles.detailPanel}>
           <span className={styles.statusBadge}>{formatTruckStatus(t, truck.status)}</span>
+          {isSold && <p className={styles.soldNotice}>{t('pages.truckDetail.soldNotice')}</p>}
           <strong>{truckDisplayPrice(truck)}</strong>
           <p className={styles.priceNote}>
             {truck.vatStatus
@@ -148,7 +162,7 @@ export function TruckDetailPage({ truckId }) {
             <Spec label={t('pages.truckDetail.specs.tacho')} value={truck.tacho || confirm} />
             <Spec label={t('pages.truckDetail.specs.warranty')} value={truck.warranty || confirm} />
           </dl>
-          <a className="button primary" href={`/contact?truck=${truck.id}`}>{t('pages.truckDetail.reserveEnquire')}</a>
+          <a className="button primary" href={`/contact?truck=${truck.id}`}>{t(isSold ? 'pages.truckDetail.soldEnquire' : 'pages.truckDetail.reserveEnquire')}</a>
         </aside>
       </section>
       {truck.videoUrl && (
@@ -158,6 +172,13 @@ export function TruckDetailPage({ truckId }) {
           {videoEmbedUrl
             ? <div className={styles.videoFrame}><iframe src={videoEmbedUrl} title={`${displayTitle} walkaround video`} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div>
             : <a className="button secondary" href={truck.videoUrl} target="_blank" rel="noopener noreferrer">{t('pages.truckDetail.walkaround.watch')}</a>}
+        </section>
+      )}
+      {similar.length > 0 && (
+        <section className="section">
+          <p className="eyebrow">{t('pages.truckDetail.similarEyebrow')}</p>
+          <h2>{t('pages.truckDetail.similarHeading')}</h2>
+          <TruckGrid trucks={similar} />
         </section>
       )}
     </>

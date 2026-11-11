@@ -100,6 +100,94 @@ export const categoryPages = [
     guides: ['used-tipper-truck-buying-guide', 'clean-air-zones-hgv-guide', 'check-used-hgv-mot-history-paperwork']
   },
   {
+    slug: 'grab-loaders',
+    kind: 'type',
+    name: 'Grab Loaders',
+    match: (truck) => /grab/.test(bodyText(truck)),
+    title: 'Used Grab Lorry for Sale UK | Midland Commercials',
+    description: 'Used grab lorries for sale: 8x4 and 6x4 tipper grabs with behind-cab cranes, checked before sale. LOLER, MOT, VAT and Euro rating shown on every listing.',
+    heading: 'Used Grab Lorries for Sale',
+    intro: 'Used grab lorries and tipper grabs for groundworkers, landscapers, waste firms and plant hire companies. Every truck is checked before sale and listed with its chassis, crane, body, mileage, VAT status, MOT and Euro rating.',
+    sections: [
+      {
+        heading: 'Choosing a Used Grab Lorry',
+        paragraphs: [
+          'Most grab lorries in the UK are 8x4 tippers at 32 tonnes with the crane mounted behind the cab. They carry the most and suit muck-away, aggregates and site clearance. A 6x4 grab at 26 tonnes is shorter and easier to place on tight sites and in town, while a 4x2 grab suits landscaping and smaller jobs.',
+          'Think about payload before anything else. The crane, stabilisers and grab can weigh several tonnes, so a grab lorry carries less than a plain tipper on the same chassis. We list the unladen weight where we have it, so you can work out what the truck will legally carry.'
+        ]
+      },
+      {
+        heading: 'What We Check on the Crane and Grab',
+        paragraphs: [
+          'We run the crane through every movement and look for play in the slew ring, worn pins and bushes, leaks at the rams and hoses, and stabilisers that creep. We check the rotator, the grab bucket and its teeth, and the seat or remote controls. On the truck we look at the tipping body, the subframe around the crane mounting, the suspension and the service history.',
+          'Grab cranes need a LOLER thorough examination at least every 12 months. We show the date of the last examination where we have the report. Our [grab lorry buying guide](/blog/grab-lorry-buying-guide) explains everything worth checking when you view one yourself.'
+        ]
+      },
+      {
+        heading: 'Grab Lorries and Tippers',
+        paragraphs: [
+          'Not every job needs a crane. If you are loading with a machine on site, a plain tipper carries more for the same money. See our [used tipper trucks for sale](/trucks/tippers) and our [used tipper buying guide](/blog/used-tipper-truck-buying-guide) to compare.'
+        ]
+      },
+      {
+        heading: 'Part Exchange and Stock Alerts',
+        paragraphs: [
+          'We take tippers, grabs, rigids and vans in [part exchange](/part-exchange). Grab lorries do not stay in stock long, so tell us the chassis, crane and controls you want and we will let you know when a match arrives.'
+        ]
+      }
+    ],
+    faqs: [
+      { question: 'What is a grab lorry?', answer: 'A grab lorry is a tipper truck with a hydraulic crane and grab bucket, so the driver can load and unload loose material such as soil, aggregates and waste without a separate machine.' },
+      { question: 'Do your grab lorries come with LOLER paperwork?', answer: 'We show the date of the last LOLER thorough examination on the listing where we have the report, and you can see the paperwork when you view the truck.' },
+      { question: 'Can I see the crane working before I buy?', answer: 'Yes. Our Swadlincote yard is open Monday to Sunday, 8:00am to 6:00pm. Call 0121 663 1118 before you travel and we will have the truck ready to demonstrate.' }
+    ],
+    guides: ['grab-lorry-buying-guide', 'used-tipper-truck-buying-guide', 'euro-6-truck-checklist-adblue-dpf']
+  },
+  {
+    slug: 'crane',
+    kind: 'type',
+    name: 'HIAB and Crane Trucks',
+    match: (truck) => /crane|hiab|palfinger|fassi|effer|loader crane/.test(bodyText(truck)) && !/grab/.test(bodyText(truck)),
+    title: 'HIAB Lorry for Sale UK | Crane Trucks | Midland Commercials',
+    description: 'Used HIAB lorries and crane trucks for sale: tractor units and rigids with loader cranes, checked before sale, with LOLER, MOT, VAT and Euro rating shown.',
+    heading: 'Used HIAB and Crane Trucks for Sale',
+    intro: 'Used crane tractor units and crane rigids for building materials, steel, timber, precast and plant. Every truck is checked before sale and listed with its crane, chassis, mileage, VAT status, MOT and Euro rating.',
+    sections: [
+      {
+        heading: 'Crane Tractor Unit or Crane Rigid?',
+        paragraphs: [
+          'A crane tractor unit pulls a flatbed trailer and suits long lengths such as steel, timber and roof trusses, with the most payload per trip. A crane rigid carries its load on its own flatbed and is easier to place on tight urban sites. Most crane tractor units are 6x2, because the extra axle helps carry the weight of the crane.',
+          'People in the UK often call any lorry with a loader crane a HIAB, after the best-known maker. We list the actual crane make and model, such as HIAB, Palfinger or Fassi, on every advert where we have it.'
+        ]
+      },
+      {
+        heading: 'Crane Size, Reach and Payload',
+        paragraphs: [
+          'Loader cranes are rated in tonne-metres. Look at the load chart for the weight the crane can lift at the reach you need, not just its maximum lift close to the truck. A bigger crane lifts more but weighs more, which comes off your payload, so choose the crane for the work you do most often.',
+          'Our [HIAB and crane tractor unit buying guide](/blog/hiab-crane-tractor-unit-buying-guide) explains crane sizes, fifth wheel position and what to check on a used crane.'
+        ]
+      },
+      {
+        heading: 'What We Check Before Sale',
+        paragraphs: [
+          'We run the crane through its full range, test the controls, overload protection and stabilisers, and look for play in the slew, worn pins, damaged extensions and leaks. On the truck we check the chassis around the crane mounting, the fifth wheel on tractor units, the brakes, tyres and service history. We show the date of the last LOLER thorough examination where we have the report.'
+        ]
+      },
+      {
+        heading: 'Part Exchange and Stock Alerts',
+        paragraphs: [
+          'Crane trucks are hard to find in good condition, so tell us the crane size, reach and chassis you need and we will let you know when one arrives. We also take your current truck in [part exchange](/part-exchange).'
+        ]
+      }
+    ],
+    faqs: [
+      { question: 'What is a HIAB lorry?', answer: 'A HIAB lorry is a truck with a hydraulic loader crane. HIAB is a crane maker, but the name is used in the UK for any lorry-mounted crane.' },
+      { question: 'Do you sell tractor units with cranes?', answer: 'Yes, when they come in from UK fleets. Crane tractor units are listed here and on our used tractor units page.' },
+      { question: 'What paperwork comes with a crane truck?', answer: 'Where we have them, we provide the latest LOLER thorough examination report, the crane manual and load chart, and the truck’s service and MOT records.' }
+    ],
+    guides: ['hiab-crane-tractor-unit-buying-guide', 'what-is-a-tractor-unit', 'best-used-tractor-units-uk']
+  },
+  {
     slug: 'rigids',
     kind: 'type',
     name: 'Rigids',
@@ -441,14 +529,18 @@ export const guideTitles = {
   'clean-air-zones-hgv-guide': 'Clean Air Zones: A Guide for HGV Operators',
   'used-tractor-unit-buying-checklist': 'Used Tractor Unit Buying Checklist',
   '4x2-vs-6x2-tractor-units': '4x2 vs 6x2 Tractor Units',
-  'check-used-hgv-mot-history-paperwork': 'How to Check a Used HGV’s MOT History',
+  'check-used-hgv-mot-history-paperwork': 'HGV MOT Check: How to Check a Truck’s MOT History',
   'truck-part-exchange-guide': 'How Truck Part Exchange Works',
   'hgv-road-user-levy-rates': 'HGV Road User Levy Rates',
   'london-direct-vision-standard-hgv-safety-permit': 'London Direct Vision Standard Guide',
   'used-tipper-truck-buying-guide': 'Used Tipper Truck Buying Guide',
   'best-used-tractor-units-uk': 'Best Used Tractor Units in the UK',
   'starting-haulage-business-operator-licence': 'Starting a Haulage Business',
-  'rigid-truck-vs-tractor-unit': 'Rigid Truck vs Tractor Unit'
+  'rigid-truck-vs-tractor-unit': 'Rigid Truck vs Tractor Unit',
+  'what-is-a-tractor-unit': 'What Is a Tractor Unit?',
+  'grab-lorry-buying-guide': 'Grab Lorry Buying Guide',
+  'hiab-crane-tractor-unit-buying-guide': 'HIAB and Crane Tractor Unit Buying Guide',
+  'euro-6-truck-checklist-adblue-dpf': 'Euro 6 Truck Checklist: AdBlue and DPF'
 };
 
 export function categoryGuideLinks(page) {
@@ -457,7 +549,8 @@ export function categoryGuideLinks(page) {
 
 /** Full listing on /trucks with this page's filter applied. */
 export function categoryListingHref(page) {
-  return `/trucks?${new URLSearchParams(page.filter).toString()}`;
+  // Pages that match on keywords (grab, crane) have no single listing filter, so link to all stock.
+  return page.filter ? `/trucks?${new URLSearchParams(page.filter).toString()}` : '/trucks';
 }
 
 export function categoryPath(page) {

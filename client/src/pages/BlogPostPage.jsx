@@ -15,6 +15,14 @@ function Inline({ text }) {
 function BlogBlock({ block }) {
   if (block.type === 'h2') return <h2>{block.text}</h2>;
   if (block.type === 'h3') return <h3>{block.text}</h3>;
+  if (block.type === 'img') {
+    return (
+      <figure className={styles.figure}>
+        <img src={block.src} alt={block.alt} width="1280" height="853" loading="lazy" decoding="async" />
+        {block.caption && <figcaption>{block.caption}</figcaption>}
+      </figure>
+    );
+  }
   if (block.type === 'ul' || block.type === 'ol') {
     const List = block.type;
     return <List>{block.items.map((item, index) => <li key={index}><Inline text={item} /></li>)}</List>;

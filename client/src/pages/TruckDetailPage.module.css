@@ -185,3 +185,13 @@
   backdrop-filter: var(--glass-blur);
   box-shadow: var(--glass-shadow);
 }
+
+.soldNotice {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-left: 4px solid #1e3a8a;
+  background: #eef2fb;
+  color: #111a2e;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

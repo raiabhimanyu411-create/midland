@@ -108,7 +108,7 @@ Tell us if you need a truck for London work and we will check the DVS rating and
   {
     title: 'Used Tipper Truck Buying Guide: What To Check Before You Buy',
     slug: 'used-tipper-truck-buying-guide',
-    revision: 2,
+    revision: 3,
     metaTitle: 'Tipper Trucks For Sale UK: Used Tipper Buying Guide',
     metaDescription: 'Looking at tipper trucks for sale in the UK? What to check on a used 8x4 or 6x4 tipper: body, ram, hydraulics, chassis, suspension and paperwork.',
     excerpt: 'Tippers work harder than almost any other truck, so condition varies a lot. Before you look at tipper trucks for sale, use this guide to check the body, ram, hydraulics, chassis and paperwork.',
@@ -121,7 +121,7 @@ Tell us if you need a truck for London work and we will check the DVS rating and
 - 8x4 tippers are the most common choice for aggregates and muck-away, with a gross weight of 32 tonnes and the biggest payload of any rigid tipper.
 - 6x4 tippers are a little shorter and more manoeuvrable, at 26 tonnes gross.
 - 4x2 tippers, usually at 18 tonnes, suit lighter local work, such as landscaping and builders' merchants.
-- Tipper grabs add a loading crane behind the cab, so you can load and unload without a separate machine. See our [grab lorry buying guide](/blog/grab-lorry-buying-guide) if that is the kind of truck you need.
+- Tipper grabs add a loading crane behind the cab, so you can load and unload without a separate machine. See our [grab lorry buying guide](/blog/grab-lorry-buying-guide) and [used grab lorries for sale](/trucks/grab-loaders) if that is the kind of truck you need.
 
 Also think about the body. Steel bodies handle rubble and demolition waste well. Aluminium bodies are lighter, so you can carry more payload on aggregates. An insulated body is needed for hot asphalt work, and some operators specify a half-pipe body that empties cleanly with sticky loads.
 
@@ -195,7 +195,7 @@ An 8x4 or 6x4 tipper needs a category C licence and a valid Driver CPC. Smaller 
 
 ### Do you sell grab loaders as well as tippers?
 
-Yes. Tipper grabs are listed with our tippers when we have them in stock. Tell us what you need and we will let you know when a match arrives.
+Yes. Tipper grabs have their own page: see our used grab lorries for sale. Tell us what you need and we will let you know when a match arrives.
 
 ## Find Your Next Tipper
 
@@ -567,6 +567,7 @@ We stock 4x2 and 6x2 tractor units from DAF, Scania, Volvo, MAN, Mercedes-Benz a
   {
     title: 'Grab Lorry Buying Guide: What To Check Before You Buy',
     slug: 'grab-lorry-buying-guide',
+    revision: 2,
     metaTitle: 'Grab Lorry For Sale? Used Grab Lorry Buying Guide',
     metaDescription: 'Buying a used grab lorry? What to check on the crane, grab, hydraulics, tipping body and chassis, plus LOLER paperwork, payload and operator tickets.',
     excerpt: 'A grab lorry combines a tipper with a loading crane, so there is twice as much to check. Here is what to look at on the crane, grab, body and paperwork before you buy a used grab lorry.',
@@ -668,13 +669,14 @@ Behind-cab cranes keep the weight forward and are the most common in the UK. Rea
 
 ## Looking For A Grab Lorry For Sale?
 
-We list grab lorries alongside our [used tipper trucks for sale](/trucks/tippers) when they come in from UK fleets. Every truck shows its VAT status, MOT and Euro rating. If you are looking for a particular chassis or crane, [tell us what you need](/contact) and we will let you know when a match arrives.
+See our [used grab lorries for sale](/trucks/grab-loaders) as they come in from UK fleets, or compare them with our [used tipper trucks](/trucks/tippers). Every truck shows its VAT status, MOT and Euro rating. If you are looking for a particular chassis or crane, [tell us what you need](/contact) and we will let you know when a match arrives.
 
-[View tipper and grab stock](/trucks/tippers)`
+[View grab lorry stock](/trucks/grab-loaders)`
   },
   {
     title: 'HIAB And Crane Tractor Units: A Used Buying Guide',
     slug: 'hiab-crane-tractor-unit-buying-guide',
+    revision: 2,
     metaTitle: 'HIAB Lorry For Sale? Crane Tractor Unit Buying Guide',
     metaDescription: 'Buying a used HIAB lorry or tractor unit with a crane? Crane sizes, what to check on the crane and chassis, LOLER paperwork, payload and trailer choice.',
     excerpt: 'A tractor unit with a crane behind the cab can load and unload its own trailer anywhere. Here is how to choose a used HIAB or crane tractor unit and what to check before you buy.',
@@ -762,9 +764,9 @@ You need training to operate a lorry loader safely, and most sites ask for a rec
 
 ## Looking For A HIAB Or Crane Tractor Unit?
 
-We list crane tractor units with our [used tractor units for sale](/trucks/tractor-units) when they come in from UK fleets. If you are looking for a particular crane size or reach, [tell us what you need](/contact) and we will let you know when a match arrives.
+See our [used HIAB and crane trucks for sale](/trucks/crane) as they come in from UK fleets, along with our other [used tractor units](/trucks/tractor-units). If you are looking for a particular crane size or reach, [tell us what you need](/contact) and we will let you know when a match arrives.
 
-[View tractor unit stock](/trucks/tractor-units)`
+[View crane truck stock](/trucks/crane)`
   },
   {
     title: 'Euro 6 Truck Checklist: AdBlue, DPF And Common Faults',
