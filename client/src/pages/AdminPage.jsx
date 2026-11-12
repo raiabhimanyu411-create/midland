@@ -3,6 +3,7 @@ import { api, apiAssetUrl, SESSION_EXPIRED_EVENT } from '../utils/api.js';
 import styles from './AdminPage.module.css';
 import { BrandMark } from '../components/BrandLogo.jsx';
 import { truckDisplayTitle, truckDisplayPrice } from '../../../shared/truck.js';
+import { truckPath } from '../../../shared/seo.js';
 
 const emptyTruck = {
   title: '',
@@ -828,7 +829,7 @@ export function AdminPage() {
                     <h2>{editingId ? `Edit: ${truckDisplayTitle(form)}` : 'Add a truck'}</h2>
                     <p className={styles.panelSub}>Every field is optional — save now and add the rest later. The preview updates as you type.</p>
                   </div>
-                  {editingId && form.status !== 'draft' && form.status !== 'archived' && <a className={styles.ghostButton} href={`/truck/${editingId}${form.slug ? `-${form.slug}` : ''}`} target="_blank" rel="noreferrer"><AdminIcon name="external" />View live</a>}
+                  {editingId && form.status !== 'draft' && form.status !== 'archived' && <a className={styles.ghostButton} href={truckPath({ id: editingId, slug: form.slug })} target="_blank" rel="noreferrer"><AdminIcon name="external" />View live</a>}
                 </div>
                 <div className={styles.formSteps} role="group" aria-label="Truck form sections">
                   {TRUCK_FORM_STEPS.map((step, index) => (
@@ -1080,7 +1081,7 @@ export function AdminPage() {
                                 <div className={styles.rowActions}>
                                   <button type="button" className={styles.rowPrimary} onClick={() => editTruck(truck)}>Edit</button>
                                   <button type="button" className={styles.iconButton} title="Duplicate as a draft" aria-label={`Duplicate ${title}`} onClick={() => duplicateTruck(truck)}><AdminIcon name="copy" /></button>
-                                  {isLive && <a className={styles.iconButton} href={`/truck/${truck.id}${truck.slug ? `-${truck.slug}` : ''}`} target="_blank" rel="noreferrer" title="View on the website" aria-label={`View ${title} on the website`}><AdminIcon name="external" /></a>}
+                                  {isLive && <a className={styles.iconButton} href={truckPath(truck)} target="_blank" rel="noreferrer" title="View on the website" aria-label={`View ${title} on the website`}><AdminIcon name="external" /></a>}
                                   {user.role === 'admin' && truck.status !== 'archived' && <button type="button" className={`${styles.iconButton} ${styles.iconDanger}`} title="Archive (hide from the website)" aria-label={`Archive ${title}`} onClick={() => deleteTruck(truck)}><AdminIcon name="archive" /></button>}
                                 </div>
                               </td>

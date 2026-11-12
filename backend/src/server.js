@@ -20,7 +20,7 @@ import { blogsRouter } from './routes/blogs.js';
 import { mediaRouter, warmMediaCache } from './routes/media.js';
 import { pageHeroImages } from '../../shared/images.js';
 import { clearSeoCache, renderPage } from './seo/render.js';
-import { robotsTxt, sitemapXml } from './seo/sitemap.js';
+import { robotsTxt, sitemapXml, truckSitemapXml } from './seo/sitemap.js';
 import { llmsTxt } from './seo/llms.js';
 
 const app = express();
@@ -46,14 +46,6 @@ app.use(helmet({
 app.use((req, res, next) => {
   if (String(req.hostname || '').toLowerCase() !== 'midlandcommercials.com') return next();
   res.redirect(301, `https://www.midlandcommercials.com${req.originalUrl}`);
-});
-// Pages that no longer exist (finance and delivery were dropped) permanently point to the closest live page,
-// so Google transfers their ranking instead of keeping a 404.
-const retiredPages = { '/finance': '/trucks', '/delivery': '/contact' };
-app.use((req, res, next) => {
-  const target = retiredPages[req.path.replace(/\/+$/, '') || '/'];
-  if (!target || (req.method !== 'GET' && req.method !== 'HEAD')) return next();
-  res.redirect(301, target);
 });
 // Gzip JS, CSS, JSON and XML (nginx only compresses HTML), so pages load faster for visitors and Google.
 app.use(compression());
@@ -135,6 +127,7 @@ app.use('/api/{*splat}', (_req, res) => {
 app.use('/media', mediaRouter);
 app.get('/robots.txt', robotsTxt);
 app.get('/sitemap.xml', sitemapXml);
+app.get('/sitemap-trucks.xml', truckSitemapXml);
 app.get('/llms.txt', llmsTxt);
 
 if (isProduction) {

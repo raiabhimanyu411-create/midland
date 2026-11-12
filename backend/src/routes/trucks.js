@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import express from 'express';
-import { mapTruck, pool } from '../db/mysql.js';
+import { mapTruck, pool, PUBLIC_TRUCKS_SQL } from '../db/mysql.js';
 import { cleanNumber, cleanText, positiveInt, queryText } from '../utils/validation.js';
 import { lookupVehicleByRegistration, getVehicleLookupStatus } from '../utils/vehicleLookups.js';
 import { allowRoles, audit, requireAuth } from '../middleware/auth.js';
@@ -30,7 +30,7 @@ trucksRouter.get('/', async (req, res, next) => {
     const maxPrice = positiveInt(req.query.maxPrice);
     const year = positiveInt(req.query.year);
     const mileage = positiveInt(req.query.mileage);
-    const where = ["status NOT IN ('archived','draft')"];
+    const where = [PUBLIC_TRUCKS_SQL];
     const values = [];
     if (make) { where.push('make = ?'); values.push(make); }
     if (body) { where.push('type = ?'); values.push(body); }
@@ -53,7 +53,7 @@ trucksRouter.get('/', async (req, res, next) => {
 
 trucksRouter.get('/filters', async (_req, res, next) => {
   try {
-    const visible = "status NOT IN ('archived','draft')";
+    const visible = PUBLIC_TRUCKS_SQL;
     const [[makes], [bodies], [gearboxes]] = await Promise.all([
       pool.query(`SELECT DISTINCT make FROM trucks WHERE ${visible} ORDER BY make`),
       pool.query(`SELECT DISTINCT type FROM trucks WHERE ${visible} ORDER BY type`),
@@ -184,7 +184,7 @@ trucksRouter.get('/:id', async (req, res, next) => {
   try {
     const id = positiveInt(String(req.params.id).match(/^\d+/)?.[0]);
     if (!id) return res.status(404).json({ message: 'Truck not found' });
-    const [rows] = await pool.query("SELECT * FROM trucks WHERE id = ? AND status NOT IN ('archived','draft')", [id]);
+    const [rows] = await pool.query(`SELECT * FROM trucks WHERE id = ? AND ${PUBLIC_TRUCKS_SQL}`, [id]);
     if (!rows[0]) return res.status(404).json({ message: 'Truck not found' });
     res.json({ data: mapTruck(rows[0]) });
   } catch (error) { next(error); }

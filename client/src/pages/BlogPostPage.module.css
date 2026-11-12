@@ -123,3 +123,40 @@
   color: #5b6475;
   font-size: 0.9rem;
 }
+
+/* Comparison tables scroll sideways on phones instead of squashing the text. */
+.tableWrap {
+  margin: 28px 0;
+  overflow-x: auto;
+  border: 1px solid #d9dee7;
+  border-radius: 8px;
+}
+
+.tableWrap table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 0.97rem;
+}
+
+.tableWrap th,
+.tableWrap td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #e4e8ef;
+}
+
+.tableWrap th {
+  background: #111a2e;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tableWrap tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tableWrap tbody tr:nth-child(even) {
+  background: #f5f7fa;
+}

@@ -1,4 +1,4 @@
-import { absoluteUrl, DEFAULT_IMAGE, serializeJsonLd } from '../../../shared/seo.js';
+import { absoluteUrl, DEFAULT_IMAGE, organizationJsonLd, serializeJsonLd } from '../../../shared/seo.js';
 
 const DEFAULT_ROBOTS = 'index, follow, max-image-preview:large';
 
@@ -62,5 +62,6 @@ export function setPageMeta({ title, description, path = null, image = DEFAULT_I
   upsertMeta('name', 'twitter:title', title);
   upsertMeta('name', 'twitter:description', description);
   upsertMeta('name', 'twitter:image', imageUrl);
-  setJsonLd(jsonLd);
+  // Same as the server: the dealer schema sits on every indexable page.
+  setJsonLd(robots.startsWith('noindex') ? jsonLd : [...jsonLd, organizationJsonLd(siteUrl())]);
 }

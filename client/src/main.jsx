@@ -8,7 +8,7 @@ import { CinematicEffects } from './components/CinematicEffects.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Header } from './components/Header.jsx';
 import { HomePage } from './pages/HomePage.jsx';
-import { adminPage, categoryJsonLd, categorySeo, faqJsonLd, locationJsonLd, locationSeo, notFoundPage, thankYouPage, organizationJsonLd, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
+import { adminPage, categoryJsonLd, categorySeo, faqJsonLd, locationJsonLd, locationSeo, notFoundPage, thankYouPage, websiteJsonLd, SITE_NAME, staticPages } from '../../shared/seo.js';
 import { locationPages } from '../../shared/locations.js';
 import { categoryPages } from '../../shared/categories.js';
 import { getRoute, getRouteDescription, getRouteTitle, onNavigate } from './utils/routes.js';
@@ -59,7 +59,7 @@ function routeMeta(t, language, routeName, route) {
     description: (isEnglish ? page.description : getRouteDescription(t, routeName)) || page.description,
     path: page.path,
     jsonLd: routeName === 'home'
-      ? [organizationJsonLd(siteUrl()), websiteJsonLd(siteUrl())]
+      ? [websiteJsonLd(siteUrl())]
       : routeName === 'faq'
         ? [faqJsonLd(t('content.faqs', { returnObjects: true }))]
         : []

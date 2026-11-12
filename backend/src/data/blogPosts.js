@@ -180,6 +180,7 @@ Every truck we sell is checked over before sale and listed with its VAT, MOT and
   {
     title: '4x2 vs 6x2 Tractor Units: Which Is Right For Your Work?',
     slug: '4x2-vs-6x2-tractor-units',
+    revision: 2,
     metaTitle: '4x2 vs 6x2 Tractor Units Explained',
     metaDescription: '4x2 or 6x2 tractor unit? How weight limits, tyre costs, fuel use and manoeuvrability compare, and which axle layout suits your UK haulage work.',
     excerpt: 'The axle layout decides how much you can legally carry and what the truck costs to run. Here is a plain guide to choosing between a 4x2 and a 6x2 tractor unit.',
@@ -199,6 +200,19 @@ This is the biggest difference.
 - A 6x2 tractor unit with a tri-axle trailer makes a six-axle combination, which can run at up to 44,000 kg when the other conditions in the regulations are met.
 
 If your loads are regularly heavy, such as steel, aggregates, drinks or building materials, the extra 4 tonnes of a 6x2 can make a big difference to every load you carry.
+
+## 4x2 vs 6x2 At A Glance
+
+| | 4x2 Tractor Unit | 6x2 Tractor Unit |
+| Axles on the unit | Two, one driven | Three, one driven |
+| Usual maximum with a tri-axle trailer | 40,000 kg on five axles | 44,000 kg on six axles |
+| Unladen weight | Lighter | Heavier, because of the extra axle |
+| Tyres on the unit | Six | Eight on most mid-lift layouts |
+| Used purchase price | Usually lower | Usually higher |
+| Running costs | Lower tyre and maintenance bills | Higher, partly offset by lifting the axle when empty |
+| Manoeuvrability | Tighter turning circle | Good with a steering mid-lift, wider without |
+| Best suited to | Volume loads, multi-drop, fridge and box work | Heavy general haulage, bulk and tipping work |
+| Used demand in the UK | Steady | Strong |
 
 ## Why Choose A 4x2
 
@@ -226,7 +240,37 @@ On a 6x2 the third axle can sit in front of the drive axle (mid-lift) or behind 
 - Regular heavy loads, bulk or tipping work: a 6x2 is usually worth the extra cost.
 - Mixed work: a 6x2 mid-lift gives you the flexibility to take heavier jobs when they come up.
 
-Still unsure? Read our [used tractor unit buying checklist](/blog/used-tractor-unit-buying-checklist), browse our [used tractor units for sale](/trucks), or [tell us what you carry](/contact) and we will suggest the right specification.`
+## Tractor Units In Stock
+
+Our [used tractor units for sale](/trucks/tractor-units) page lists every 4x2 and 6x2 in the yard, with the axle layout, Euro rating and MOT shown on each listing. If you already know the make you want, go straight to [used DAF trucks](/trucks/daf), [used Scania trucks](/trucks/scania) or [used Volvo trucks](/trucks/volvo). You can view any of them at our Swadlincote yard seven days a week.
+
+## Frequently Asked Questions
+
+### Can A 4x2 Tractor Unit Pull 44 Tonnes?
+
+No. In the UK a 44 tonne combination needs six axles, which means a three-axle tractor unit with a tri-axle trailer. A 4x2 with a tri-axle trailer has five axles and is limited to 40 tonnes.
+
+### Is A 6x2 More Expensive To Run Than A 4x2?
+
+Usually, yes. There are two more tyres to replace, an extra axle to maintain, and the heavier unit uses a little more fuel. Raising the lift axle when running empty or lightly loaded takes back some of that cost.
+
+### What Is A Mid-Lift Axle?
+
+It is a third, undriven axle fitted in front of the drive axle. It can be lowered to carry weight and raised when the truck is empty or lightly loaded. It is the most common 6x2 layout on UK general haulage.
+
+### Which Holds Its Value Better, A 4x2 Or A 6x2?
+
+In the UK a 6x2 is normally easier to sell on, because most hauliers want the option of running at 44 tonnes. A tidy 4x2 still sells well to operators on volume, container and fridge work.
+
+### What Is The Difference Between A 6x2 And A 6x4?
+
+Both have three axles. A 6x2 drives one of them and a 6x4 drives two. A 6x4 gives more traction for site work, tipping off road and heavy haulage, but it weighs more and uses more fuel, so most road hauliers choose a 6x2.
+
+### Do I Need A Different Licence For A 6x2?
+
+No. Any articulated combination over 3.5 tonnes needs a category C+E licence, whatever the axle layout of the tractor unit.
+
+Still unsure? Read our [used tractor unit buying checklist](/blog/used-tractor-unit-buying-checklist) and [what is a tractor unit](/blog/what-is-a-tractor-unit) guides, or [tell us what you carry](/contact) and we will suggest the right specification.`
   },
   {
     title: "HGV MOT Check: How To Check A Truck's MOT History (Free)",

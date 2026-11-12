@@ -4,6 +4,7 @@ import { starterBlogPosts } from '../data/blogPosts.js';
 import { moreBlogPosts } from '../data/moreBlogPosts.js';
 import bcrypt from 'bcryptjs';
 import { createHash } from 'node:crypto';
+import { SOLD_GRACE_DAYS } from '../../../shared/seo.js';
 
 export const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
@@ -455,6 +456,17 @@ function normalizeStoredImages(value, primaryImage) {
     .filter((image) => typeof image === 'string' && image.trim())
     .map((image) => image.trim()))]
     .slice(0, 9);
+}
+
+// Which trucks the public site shows. Drafts and archived trucks are hidden, and a sold truck
+// drops off 28 days after it sold (its page then answers 410 Gone, see seo/render.js).
+export const SOLD_EXPIRED_SQL = `(status = 'sold' AND COALESCE(sold_at, updated_at) < NOW() - INTERVAL ${SOLD_GRACE_DAYS} DAY)`;
+export const PUBLIC_TRUCKS_SQL = `status NOT IN ('archived','draft') AND NOT ${SOLD_EXPIRED_SQL}`;
+
+export function soldExpired(row) {
+  if (row?.status !== 'sold') return false;
+  const soldAt = new Date(row.sold_at || row.updated_at || 0).getTime();
+  return Date.now() - soldAt > SOLD_GRACE_DAYS * 24 * 60 * 60 * 1000;
 }
 
 export function mapBlog(row) {

@@ -7,7 +7,7 @@ import { categoryPath } from './categories.js';
 
 export const SITE_NAME = 'Midland Commercials';
 // Other names people search for the business by (e.g. "midland trucks"), used in JSON-LD.
-export const SITE_ALT_NAMES = ['Midland Trucks', 'Midland Commercial Vehicles'];
+export const SITE_ALT_NAMES = ['Midland Commercials Swadlincote', 'Midland Trucks', 'Midland Commercial Vehicles'];
 export const SITE_EMAIL = 'sales@midlandcommercials.com';
 // Official profiles (Google Business Profile, Facebook, LinkedIn…), added to JSON-LD as sameAs.
 // Fill these in once the client shares the links; an empty list is left out.
@@ -26,7 +26,7 @@ export const businessAddress = {
 // Postcode centroid for DE12 7BJ (postcodes.io). Replace with the yard's exact pin if the client supplies it.
 export const businessGeo = { '@type': 'GeoCoordinates', latitude: 52.685636, longitude: -1.551274 };
 // Date the static page copy last changed, used as <lastmod> in the sitemap. Bump it when page text changes.
-export const SITE_CONTENT_UPDATED = '2026-11-09';
+export const SITE_CONTENT_UPDATED = '2026-11-13';
 // Legal details shown on the privacy policy. Fill these in once the client confirms them;
 // empty values are simply left off the page.
 export const legalDetails = {
@@ -44,8 +44,8 @@ export const DEFAULT_IMAGE = '/og-image.jpg';
 export const staticPages = {
   home: {
     path: '/',
-    title: 'Midland Trucks | Used Trucks for Sale UK | Midland Commercials',
-    description: 'Midland Trucks for sale at Midland Commercials, Swadlincote. Used tractor units, rigids and trailers with clear VAT and MOT details. Part exchange welcome.',
+    title: 'Midland Commercials Swadlincote | Used Trucks & HGVs for Sale',
+    description: 'Midland Commercials, Swadlincote: used trucks and HGVs for sale. Tractor units, rigids, tippers and trailers with VAT and MOT details. Part exchange welcome.',
     changefreq: 'daily',
     priority: '1.0'
   },
@@ -106,6 +106,13 @@ export const notFoundPage = {
   robots: 'noindex, follow'
 };
 
+// Pages removed on purpose (finance, delivery, old sold listings) answer 410 Gone with this.
+export const gonePage = {
+  title: 'Page Removed | Midland Commercials',
+  description: 'This page has been removed. Browse our current used truck stock instead.',
+  robots: 'noindex, follow'
+};
+
 export const thankYouPage = {
   title: 'Thank You | Midland Commercials',
   description: 'Thank you for your enquiry. The Midland Commercials sales team will be in touch shortly.',
@@ -135,9 +142,29 @@ export function truncate(text, maxLength) {
   return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), maxLength * 0.6)).trim()}…`;
 }
 
+// Listing URL, e.g. /used-trucks/daf-xf-480-tractor-unit-2019-12. The id on the end keeps every
+// URL unique and lets the page be found even if the slug is edited later.
 export function truckPath(truck) {
-  const slug = String(truck.slug || '').trim();
-  return `/truck/${truck.id}${slug ? `-${encodeURIComponent(slug)}` : ''}`;
+  const slug = String(truck.slug || '').trim().replace(/[^a-z0-9-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'truck';
+  return `/used-trucks/${slug}-${truck.id}`;
+}
+
+// Truck id from a listing path: the new /used-trucks/<slug>-<id>, or the old /truck/<id>-<slug>
+// (`legacy: true`), which the server permanently redirects.
+export function truckIdFromPath(pathname) {
+  const path = String(pathname || '');
+  const current = path.match(/^\/used-trucks\/(?:[^/]*-)?(\d{1,9})$/);
+  if (current) return { id: Number(current[1]), legacy: false };
+  const old = path.match(/^\/truck\/(\d{1,9})(?:-[^/]*)?$/);
+  return old ? { id: Number(old[1]), legacy: true } : null;
+}
+
+// Sold listings stay live this long (with a Sold note and similar trucks), then answer 410 Gone.
+export const SOLD_GRACE_DAYS = 28;
+
+// One id for the dealer, so every page's schema points at the same business.
+export function dealerId(siteUrl) {
+  return `${absoluteUrl(siteUrl, '/')}#dealer`;
 }
 
 // "<title> | Midland Commercials" when it fits in 70 characters. A longer title drops the
@@ -214,7 +241,7 @@ export function truckJsonLd(truck, siteUrl) {
       price: Number(truck.priceValue),
       itemCondition: 'https://schema.org/UsedCondition',
       availability: availabilityByStatus[status] || availabilityByStatus.available,
-      seller: { '@type': 'AutoDealer', name: SITE_NAME }
+      seller: { '@type': 'AutoDealer', '@id': dealerId(siteUrl), name: SITE_NAME }
     };
   }
 
@@ -288,8 +315,10 @@ export function organizationJsonLd(siteUrl, locations = businessLocations) {
   return {
     '@context': 'https://schema.org',
     '@type': 'AutoDealer',
+    '@id': dealerId(siteUrl),
     name: SITE_NAME,
     alternateName: SITE_ALT_NAMES,
+    description: 'Independent used truck dealer in Swadlincote. Used tractor units, rigids, tippers, grab lorries, crane trucks and HGV trailers from UK fleets. Part exchange welcome.',
     url: absoluteUrl(siteUrl, '/'),
     logo: absoluteUrl(siteUrl, '/logo.svg'),
     image: absoluteUrl(siteUrl, DEFAULT_IMAGE),
@@ -339,7 +368,7 @@ export function locationJsonLd(location, siteUrl) {
       name: location.heading,
       description: location.description,
       url: absoluteUrl(siteUrl, locationPath(location)),
-      about: { '@type': 'AutoDealer', name: SITE_NAME, url: absoluteUrl(siteUrl, '/'), address: businessAddress, geo: businessGeo },
+      about: { '@id': dealerId(siteUrl) },
       areaServed: { '@type': location.slug === 'east-midlands' ? 'AdministrativeArea' : 'City', name: location.place }
     },
     breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: location.heading, href: locationPath(location) }], siteUrl),
@@ -362,7 +391,7 @@ export function categoryJsonLd(page, siteUrl, trucks = []) {
       description: page.description,
       url,
       isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: absoluteUrl(siteUrl, '/') },
-      about: { '@type': 'AutoDealer', name: SITE_NAME, url: absoluteUrl(siteUrl, '/'), address: businessAddress },
+      about: { '@id': dealerId(siteUrl) },
       ...(trucks.length ? { mainEntity: { ...truckListJsonLd(trucks, siteUrl), '@context': undefined } } : {})
     },
     breadcrumbJsonLd([{ label: 'Home', href: '/' }, { label: 'Trucks', href: '/trucks' }, { label: page.heading, href: categoryPath(page) }], siteUrl),

@@ -2,6 +2,7 @@
 // Blank lines separate blocks. "## " starts a heading, "### " a sub-heading,
 // lines starting "- " make a bullet list and "1. " a numbered list.
 // Links are written [text](/trucks) and only site paths or https:// URLs are allowed.
+// A table is written with one row per line: | Heading | Heading | then | cell | cell | (the first row is the header).
 // A photo goes on its own line as ![alt text](/uploads/photo.webp "optional caption").
 
 const IMAGE = /^!\[([^\]]*)\]\(((?:\/|https:\/\/)[^)\s]+)(?:\s+"([^"]*)")?\)$/;
@@ -31,6 +32,10 @@ export function parseBlogContent(content) {
       const image = block.match(IMAGE);
       if (image) return { type: 'img', alt: image[1].trim(), src: image[2], caption: (image[3] || '').trim() };
       const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
+      if (lines.length > 1 && lines.every((line) => line.startsWith('|') && line.endsWith('|'))) {
+        const rows = lines.map((line) => line.slice(1, -1).split('|').map((cell) => cell.trim())).filter((cells) => !cells.every((cell) => /^:?-+:?$/.test(cell)));
+        return { type: 'table', head: rows[0], rows: rows.slice(1) };
+      }
       if (lines.every((line) => line.startsWith('- '))) return { type: 'ul', items: lines.map((line) => line.slice(2)) };
       if (lines.every((line) => /^\d+\.\s/.test(line))) return { type: 'ol', items: lines.map((line) => line.replace(/^\d+\.\s+/, '')) };
       return { type: 'p', text: block };
@@ -39,7 +44,7 @@ export function parseBlogContent(content) {
 
 // Plain text with link markup removed, for meta descriptions and excerpts.
 export function plainBlogText(content) {
-  return String(content || '').replace(/^!\[[^\]]*\]\([^)]*\)$/gm, '').replace(LINK, '$1').replace(/^#{2,3}\s+/gm, '').replace(/^(?:-|\d+\.)\s+/gm, '');
+  return String(content || '').replace(/^!\[[^\]]*\]\([^)]*\)$/gm, '').replace(LINK, '$1').replace(/^#{2,3}\s+/gm, '').replace(/^(?:-|\d+\.)\s+/gm, '').replace(/^\|(.*)\|$/gm, (_row, cells) => cells.split('|').map((cell) => cell.trim()).join(', '));
 }
 
 // Minutes to read at about 220 words a minute.

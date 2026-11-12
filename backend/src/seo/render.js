@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { clientDistDir, projectRoot } from '../config/paths.js';
-import { mapBlog, mapTruck, pool } from '../db/mysql.js';
+import { mapBlog, mapTruck, pool, PUBLIC_TRUCKS_SQL, soldExpired } from '../db/mysql.js';
 import { positiveInt } from '../utils/validation.js';
 import { similarTrucks, truckDisplayPrice } from '../../../shared/truck.js';
 import { parseBlogContent, parseInline } from '../../../shared/blogContent.js';
@@ -14,6 +14,8 @@ import {
   blogSeo,
   DEFAULT_IMAGE,
   notFoundPage,
+  gonePage,
+  truckIdFromPath,
   thankYouPage,
   organizationJsonLd,
   websiteJsonLd,
@@ -176,6 +178,10 @@ function blogHtml(content) {
     if (block.type === 'img') {
       return `<figure><img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" loading="lazy" />${block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : ''}</figure>`;
     }
+    if (block.type === 'table') {
+      const row = (cells, tag) => `<tr>${cells.map((cell) => `<${tag}>${inlineHtml(cell)}</${tag}>`).join('')}</tr>`;
+      return `<table><thead>${row(block.head, 'th')}</thead><tbody>${block.rows.map((cells) => row(cells, 'td')).join('')}</tbody></table>`;
+    }
     if (block.type === 'ul' || block.type === 'ol') return `<${block.type}>${block.items.map((item) => `<li>${inlineHtml(item)}</li>`).join('')}</${block.type}>`;
     return `<p>${inlineHtml(block.text)}</p>`;
   }).join('');
@@ -303,7 +309,7 @@ export function hasPublishedBlogs() {
 }
 
 async function listVisibleTrucks() {
-  const [rows] = await pool.query("SELECT * FROM trucks WHERE status NOT IN ('archived','draft') ORDER BY featured DESC, sort_order ASC, CAST(year AS UNSIGNED) DESC, id DESC");
+  const [rows] = await pool.query(`SELECT * FROM trucks WHERE ${PUBLIC_TRUCKS_SQL} ORDER BY featured DESC, sort_order ASC, CAST(year AS UNSIGNED) DESC, id DESC`);
   return rows.map(mapTruck);
 }
 
@@ -311,11 +317,22 @@ async function resolvePage(pathname, siteUrl) {
   const hasBlogs = await hasPublishedBlogs();
   const primaryLinks = [...(hasBlogs ? allPrimaryLinks : allPrimaryLinks.filter((link) => link.href !== '/blog')), ...categoryLinks(), ...locationLinks()];
   const notFound = () => ({ status: 404, meta: { ...notFoundPage, path: null, links: primaryLinks }, hasBlogs });
-  const page = await resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs);
+  const gone = () => ({ status: 410, meta: { ...gonePage, path: null, links: primaryLinks } });
+  const page = await resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs, gone);
+  // The dealer schema goes on every indexable page, so Google ties each one to the same business.
+  if (page.status === 200 && page.meta && !page.meta.robots?.startsWith('noindex')) {
+    page.meta.jsonLd = [...(page.meta.jsonLd || []), organizationJsonLd(siteUrl)];
+  }
   return { ...page, hasBlogs };
 }
 
-async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) {
+// Pages removed on purpose. They answer 410 Gone (not a redirect to an unrelated page, which
+// Google treats as a soft 404), so they drop out of the index quickly.
+const GONE_PATHS = /^\/(finance|delivery)(\/|$)/i;
+
+async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs, gone) {
+  if (GONE_PATHS.test(pathname)) return gone();
+
   if (pathname === '/admin' || pathname.startsWith('/admin/')) {
     return { status: 200, meta: { ...adminPage, path: null } };
   }
@@ -324,14 +341,18 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
     return { status: 200, meta: { ...thankYouPage, path: null, links: primaryLinks } };
   }
 
-  const truckMatch = pathname.match(/^\/truck\/(\d+)(?:-[^/]+)?$/);
-  if (truckMatch) {
-    const id = positiveInt(truckMatch[1]);
-    const [rows] = id
-      ? await pool.query("SELECT * FROM trucks WHERE id = ? AND status NOT IN ('archived','draft')", [id])
-      : [[]];
-    if (!rows[0]) return notFound();
-    const truck = mapTruck(rows[0]);
+  if (pathname.startsWith('/used-trucks/') || pathname.startsWith('/truck/')) {
+    const truckMatch = truckIdFromPath(pathname);
+    const id = truckMatch && positiveInt(truckMatch.id);
+    const [rows] = id ? await pool.query('SELECT * FROM trucks WHERE id = ?', [id]) : [[]];
+    const row = rows[0];
+    // Old /truck/<id> links to trucks that were removed are gone for good; an unknown new URL is a plain 404.
+    if (!row) return truckMatch?.legacy ? gone() : notFound();
+    if (row.status === 'draft') return notFound();
+    if (row.status === 'archived' || soldExpired(row)) return gone();
+    const truck = mapTruck(row);
+    // One URL per truck: old /truck/ links and out-of-date slugs permanently redirect to the current one.
+    if (pathname !== truckPath(truck)) return { redirect: truckPath(truck) };
     const seo = truckSeo(truck);
     const sold = truck.status === 'sold';
     const similar = similarTrucks(truck, await listVisibleTrucks());
@@ -417,7 +438,7 @@ async function resolveMeta(pathname, siteUrl, primaryLinks, notFound, hasBlogs) 
   if (body.bodyHtml) meta.bodyHtml = body.bodyHtml;
 
   if (pageName === 'home') {
-    meta.jsonLd.push(organizationJsonLd(siteUrl), websiteJsonLd(siteUrl));
+    meta.jsonLd.push(websiteJsonLd(siteUrl));
   }
 
   if (pageName === 'trucks' || pageName === 'home') {
@@ -450,6 +471,7 @@ export async function renderPage(req, res, next) {
       page = { status: 200, meta: { ...staticPages.home, path: pageForPath(req.path) ? req.path : null } };
     }
 
+    if (page.redirect) return res.redirect(301, `${page.redirect}${req.originalUrl.slice(req.path.length)}`);
     if (page.meta.robots?.startsWith('noindex')) res.set('X-Robots-Tag', page.meta.robots);
     const html = getTemplate()
       .replace(SEO_BLOCK, `${renderHead(page.meta, siteUrl)}\n    <meta name="midland:has-blog" content="${page.hasBlogs === false ? '0' : '1'}" />`)

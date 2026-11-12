@@ -23,6 +23,20 @@ function BlogBlock({ block }) {
       </figure>
     );
   }
+  if (block.type === 'table') {
+    return (
+      <div className={styles.tableWrap}>
+        <table>
+          <thead><tr>{block.head.map((cell, index) => <th key={index} scope="col"><Inline text={cell} /></th>)}</tr></thead>
+          <tbody>
+            {block.rows.map((cells, rowIndex) => (
+              <tr key={rowIndex}>{cells.map((cell, index) => <td key={index}><Inline text={cell} /></td>)}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
   if (block.type === 'ul' || block.type === 'ol') {
     const List = block.type;
     return <List>{block.items.map((item, index) => <li key={index}><Inline text={item} /></li>)}</List>;

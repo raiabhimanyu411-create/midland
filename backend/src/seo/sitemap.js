@@ -1,4 +1,4 @@
-import { mapBlog, mapTruck, pool } from '../db/mysql.js';
+import { mapBlog, mapTruck, pool, PUBLIC_TRUCKS_SQL } from '../db/mysql.js';
 import { absoluteUrl, blogPath, SITE_CONTENT_UPDATED, staticPages, truckPath } from '../../../shared/seo.js';
 import { locationPages, locationPath } from '../../../shared/locations.js';
 import { categoryPages, categoryPath, categoryTrucks } from '../../../shared/categories.js';
@@ -30,7 +30,7 @@ export async function sitemapXml(req, res, next) {
   try {
     const siteUrl = CANONICAL_SITE_URL;
     const [[truckRows], [blogRows]] = await Promise.all([
-      pool.query("SELECT * FROM trucks WHERE status NOT IN ('archived','draft') ORDER BY id DESC"),
+      pool.query(`SELECT * FROM trucks WHERE ${PUBLIC_TRUCKS_SQL} ORDER BY id DESC`),
       pool.query("SELECT * FROM blogs WHERE status = 'published' ORDER BY published_at DESC")
     ]);
 
@@ -65,12 +65,8 @@ export async function sitemapXml(req, res, next) {
         changefreq: 'monthly',
         priority: '0.7'
       })),
-      ...trucks.map((truck) => ({
-        loc: absoluteUrl(siteUrl, truckPath(truck)),
-        lastmod: toDate(truck.updatedAt) || SITE_CONTENT_UPDATED,
-        changefreq: 'weekly',
-        priority: '0.8'
-      })),
+      // Sold trucks keep their page for a while but are not offered to Google as new URLs.
+      ...trucks.filter((truck) => truck.status !== 'sold').map(truckEntry),
       ...posts.map((post) => ({
         loc: absoluteUrl(siteUrl, blogPath(post)),
         lastmod: toDate(post.updatedAt || post.publishedAt) || SITE_CONTENT_UPDATED,
@@ -81,6 +77,27 @@ export async function sitemapXml(req, res, next) {
 
     res.type('application/xml').set('Cache-Control', 'public, max-age=3600').send(
       `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.map(urlEntry).join('\n')}\n</urlset>\n`
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+function truckEntry(truck) {
+  return {
+    loc: absoluteUrl(CANONICAL_SITE_URL, truckPath(truck)),
+    lastmod: toDate(truck.updatedAt) || SITE_CONTENT_UPDATED,
+    changefreq: 'weekly',
+    priority: '0.8'
+  };
+}
+
+// Trucks only (unsold), submitted separately in Search Console so truck indexing can be tracked on its own.
+export async function truckSitemapXml(_req, res, next) {
+  try {
+    const [rows] = await pool.query(`SELECT * FROM trucks WHERE ${PUBLIC_TRUCKS_SQL} AND status <> 'sold' ORDER BY updated_at DESC, id DESC`);
+    res.type('application/xml').set('Cache-Control', 'public, max-age=3600').send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.map(mapTruck).map(truckEntry).map(urlEntry).join('\n')}\n</urlset>\n`
     );
   } catch (error) {
     next(error);
@@ -102,6 +119,7 @@ export function robotsTxt(req, res) {
       'Disallow: /api/',
       'Disallow: /thank-you',
       '',
-      `Sitemap: ${absoluteUrl(CANONICAL_SITE_URL, '/sitemap.xml')}`, ''].join('\n')
+      `Sitemap: ${absoluteUrl(CANONICAL_SITE_URL, '/sitemap.xml')}`,
+      `Sitemap: ${absoluteUrl(CANONICAL_SITE_URL, '/sitemap-trucks.xml')}`, ''].join('\n')
   );
 }

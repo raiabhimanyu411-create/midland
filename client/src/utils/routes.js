@@ -1,5 +1,6 @@
 import { locationForPath } from '../../../shared/locations.js';
 import { categoryForPath } from '../../../shared/categories.js';
+import { truckIdFromPath, truckPath } from '../../../shared/seo.js';
 
 export const routeNames = [
   'home',
@@ -34,7 +35,7 @@ export function getRouteDescription(t, name) {
 export const primaryRoutes = ['home', 'trucks', 'partExchange', 'about', 'contact'];
 
 export function truckUrl(truck) {
-  return `/truck/${truck.id}${truck.slug ? `-${encodeURIComponent(truck.slug)}` : ''}`;
+  return truckPath(truck);
 }
 
 export const routePaths = { home: '/', trucks: '/trucks', partExchange: '/part-exchange', faq: '/faq', privacy: '/privacy', about: '/about', contact: '/contact', blog: '/blog', admin: '/admin', thankYou: '/thank-you' };
@@ -42,10 +43,10 @@ export const routePaths = { home: '/', trucks: '/trucks', partExchange: '/part-e
 export function getRoute() {
   const route = window.location.pathname.replace(/^\/+|\/+$/g, '');
 
-  if (route.startsWith('truck/')) {
-    const identifier = route.split('/')[1];
-    const truckId = Number(identifier.match(/^\d+/)?.[0]);
-    return { name: 'truckDetail', truckId: Number.isInteger(truckId) && truckId > 0 ? truckId : null, hash: `${route}${window.location.search}` };
+  // Listings live at /used-trucks/<slug>-<id>. Old /truck/<id> links are redirected by the server.
+  if (route.startsWith('used-trucks/')) {
+    const truckId = truckIdFromPath(`/${route}`)?.id || null;
+    return { name: 'truckDetail', truckId, hash: `${route}${window.location.search}` };
   }
 
   if (route.startsWith('used-trucks-for-sale/')) {
