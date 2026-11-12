@@ -96,8 +96,20 @@ function truckEntry(truck) {
 export async function truckSitemapXml(_req, res, next) {
   try {
     const [rows] = await pool.query(`SELECT * FROM trucks WHERE ${PUBLIC_TRUCKS_SQL} AND status <> 'sold' ORDER BY updated_at DESC, id DESC`);
+    const trucks = rows.map(mapTruck);
+    // The stock listing page always comes first, so the file is never empty: Search Console
+    // reports a sitemap with no <url> as an error ("Missing XML tag") when the yard has no stock.
+    const entries = [
+      {
+        loc: absoluteUrl(CANONICAL_SITE_URL, staticPages.trucks.path),
+        lastmod: [SITE_CONTENT_UPDATED, ...trucks.map((truck) => toDate(truck.updatedAt))].filter(Boolean).sort().pop(),
+        changefreq: 'daily',
+        priority: '0.9'
+      },
+      ...trucks.map(truckEntry)
+    ];
     res.type('application/xml').set('Cache-Control', 'public, max-age=3600').send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.map(mapTruck).map(truckEntry).map(urlEntry).join('\n')}\n</urlset>\n`
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.map(urlEntry).join('\n')}\n</urlset>\n`
     );
   } catch (error) {
     next(error);
